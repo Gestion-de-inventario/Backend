@@ -7,5 +7,5 @@ public class Beneficiario {
     private String dni;
     private String name;
     private String lastname;
-    private Estado estado = Estado.ACTIVO;
+    private Estado status = Estado.ACTIVO;
 }

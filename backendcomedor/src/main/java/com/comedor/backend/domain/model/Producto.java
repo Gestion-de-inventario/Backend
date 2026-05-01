@@ -5,12 +5,12 @@ import com.comedor.backend.domain.model.enums.Estado;
 import java.math.BigDecimal;
 
 public class Producto {
-    private Long id;
+    private int id;
     private String name;
     private Categoria categoria;
     private Subcategoria subcategoria;
     private String unit;
-    private Estado estado = Estado.ACTIVO;
+    private Estado status = Estado.ACTIVO;
     private BigDecimal stock;
-    private BigDecimal reorder_point;
+    private BigDecimal reorderPoint;
 }

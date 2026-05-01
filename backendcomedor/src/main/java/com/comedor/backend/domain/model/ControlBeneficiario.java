@@ -6,7 +6,6 @@ public class ControlBeneficiario {
     private int id;
     private Beneficiario beneficiario;
     private boolean received;
-    private Integer menus_amount;
-    private BigDecimal menu_price;
-    private BigDecimal total_earned;
+    private Integer menusAmount;
+    private BigDecimal menuPrice;
 }

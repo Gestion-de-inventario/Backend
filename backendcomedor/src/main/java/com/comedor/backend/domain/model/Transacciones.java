@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 public class Transacciones {
     private int id;
-    private int product_id;
-    private int user_id;
-    private LocalDateTime date_time;
+    private Producto product;
+    private Usuario user;
+    private LocalDateTime dateTime;
     private TipoMovimiento type;
     private BigDecimal amount;
 

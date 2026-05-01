@@ -9,7 +9,5 @@ public class Registro {
     private Producto product;
     private BigDecimal amount;
     private FuenteProducto fuenteProducto;
-    private BigDecimal unit_price;
-    private BigDecimal total_spent;
-
+    private BigDecimal unitPrice;
 }

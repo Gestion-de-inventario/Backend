@@ -5,5 +5,5 @@ import com.comedor.backend.domain.model.enums.Estado;
 public class Categoria {
     private Integer id;
     private String name;
-    private Estado estado = Estado.ACTIVO;
+    private Estado status = Estado.ACTIVO;
 }
