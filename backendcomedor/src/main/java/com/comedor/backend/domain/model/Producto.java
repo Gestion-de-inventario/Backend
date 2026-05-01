@@ -1,7 +1,16 @@
 package com.comedor.backend.domain.model;
 
+import com.comedor.backend.domain.model.enums.Estado;
+
+import java.math.BigDecimal;
+
 public class Producto {
-    private Long id;
-    private String nombre;
-    private Double stock;
+    private int id;
+    private String name;
+    private Categoria categoria;
+    private Subcategoria subcategoria;
+    private String unit;
+    private Estado status = Estado.ACTIVO;
+    private BigDecimal stock;
+    private BigDecimal reorderPoint;
 }
