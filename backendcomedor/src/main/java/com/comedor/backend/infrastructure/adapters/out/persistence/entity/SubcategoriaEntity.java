@@ -23,7 +23,7 @@ public class SubcategoriaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="subcategoria_id")
-    private Integer id;
+    private int id;
 
     private String name;
 

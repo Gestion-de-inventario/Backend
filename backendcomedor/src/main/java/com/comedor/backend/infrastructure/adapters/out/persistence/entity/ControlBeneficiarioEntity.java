@@ -26,7 +26,7 @@ public class ControlBeneficiarioEntity {
     private boolean received;
 
     @Column(name = "menus_amount")
-    private Integer menusAmount;
+    private int menusAmount;
 
     @Column(name = "menu_price", precision = 10, scale = 2)
     private BigDecimal menuPrice;
