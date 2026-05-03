@@ -13,6 +13,7 @@ public class Persona {
         this.lastname = lastname;
         this.dni = dni;
     }
+    public Persona() {}
 
     public String getName (){
         return name;
@@ -31,5 +32,21 @@ public class Persona {
 
     public Usuario getUser() {
         return user;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
     }
 }

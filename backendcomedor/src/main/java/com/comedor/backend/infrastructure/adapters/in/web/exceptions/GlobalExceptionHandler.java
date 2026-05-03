@@ -2,11 +2,15 @@ package com.comedor.backend.infrastructure.adapters.in.web.exceptions;
 
 import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
 import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,5 +25,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleBadCredentials(CredencialesInvalidasException ex) {
         return ResponseEntity.status(401)
                 .body(new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), ""));
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicate(DataIntegrityViolationException ex) {
+
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "DATO_DUPLICADO");
+        response.put("message", "El usuario ya existe");
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
     }
 }
