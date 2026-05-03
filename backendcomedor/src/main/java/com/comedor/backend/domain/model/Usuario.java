@@ -18,6 +18,7 @@ public class Usuario {
         this.status = status;
         this.persona = persona;
     }
+    public Usuario() {}
 
     public Persona getPersona() { return persona;}
 
@@ -37,4 +38,23 @@ public class Usuario {
         return status;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Rol role) {
+        this.role = role;
+    }
+
+    public void setStatus(Estado status) {
+        this.status = status;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
 }

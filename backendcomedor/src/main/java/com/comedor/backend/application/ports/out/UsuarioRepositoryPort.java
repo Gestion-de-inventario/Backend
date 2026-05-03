@@ -2,6 +2,7 @@ package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Usuario;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepositoryPort {
@@ -11,4 +12,6 @@ public interface UsuarioRepositoryPort {
     Optional<Usuario> findById(Integer id);
 
     Usuario save(Usuario usuario);
+
+    List<Usuario> getAllUsuarios();
 }

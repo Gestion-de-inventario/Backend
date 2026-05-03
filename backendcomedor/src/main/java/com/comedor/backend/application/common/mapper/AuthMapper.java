@@ -3,9 +3,6 @@ package com.comedor.backend.application.common.mapper;
 import com.comedor.backend.domain.model.Usuario;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
-import com.comedor.backend.infrastructure.adapters.out.persistence.entity.UsuarioEntity;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.stereotype.Component;

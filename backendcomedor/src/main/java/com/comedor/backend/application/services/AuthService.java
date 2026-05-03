@@ -8,18 +8,21 @@ import com.comedor.backend.domain.model.Usuario;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
 public class AuthService implements LoginUseCase {
 
     private final UsuarioRepositoryPort usuarioRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthMapper authMapper;
+
+    public AuthService(UsuarioRepositoryPort usuarioRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthMapper authMapper) {
+        this.usuarioRepository = usuarioRepository;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.authMapper = authMapper;
+    }
 
     @Override
     public AuthResponseDTO login(AuthRequestDTO request) {

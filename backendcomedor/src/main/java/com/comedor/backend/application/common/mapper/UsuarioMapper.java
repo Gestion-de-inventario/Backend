@@ -1,43 +1,63 @@
 package com.comedor.backend.application.common.mapper;
 
+
+import com.comedor.backend.domain.model.Persona;
+import com.comedor.backend.domain.model.Rol;
 import com.comedor.backend.domain.model.Usuario;
-import com.comedor.backend.infrastructure.adapters.out.persistence.entity.UsuarioEntity;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import org.springframework.stereotype.Component;
+
+import javax.management.relation.Role;
+import java.util.List;
 
 @Component
 public class UsuarioMapper {
-    private final RolMapper rolMapper;
-    private final PersonaMapper personaMapper;
 
-    public UsuarioMapper(RolMapper rolMapper, PersonaMapper personaMapper) {
-        this.rolMapper = rolMapper;
-        this.personaMapper = personaMapper;
-}
 
-    public Usuario toDomain(UsuarioEntity entity) {
-        if (entity == null) return null;
 
-        return new Usuario(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getPassword(),
-                rolMapper.toDomain(entity.getRole()),
-                entity.getStatus(),
-                personaMapper.toDomain(entity.getPersona())
-        );
+    public Usuario toDomain(UsuarioRequestDTO dto) {
+
+        if (dto == null) return null;
+
+        Usuario user = new Usuario();
+        user.setUsername(dto.getDni());
+        Persona persona = new Persona();
+        persona.setName(dto.getName());
+        persona.setLastname(dto.getLastname());
+        persona.setDni(dto.getDni());
+
+        user.setPersona(persona);
+
+        return user;
     }
 
-    public UsuarioEntity toEntity(Usuario user) {
-        if (user == null) return null;
+    public UsuarioResponseDTO toUsuarioResponseDTO(Usuario u) {
 
-        UsuarioEntity entity = new UsuarioEntity();
-        entity.setId(user.getId());
-        entity.setUsername(user.getUsername());
-        entity.setPassword(user.getPassword());
-        entity.setRole(rolMapper.toEntity(user.getRol()));
-        entity.setStatus(user.getStatus());
-        entity.setPersona(personaMapper.toEntity(user.getPersona()));
+        if (u == null) return null;
 
-        return entity;
+        UsuarioResponseDTO dto = new UsuarioResponseDTO();
+
+        dto.setUser_id(u.getId());
+        dto.setStatus(u.getStatus());
+
+        if (u.getRol() != null) {
+            dto.setRole(u.getRol().getNombre());
+        }
+
+        if (u.getPersona() != null) {
+            System.out.println(u.getPersona().toString());
+            dto.setDni(u.getPersona().getDni());
+            dto.setName(u.getPersona().getName());
+            dto.setLastname(u.getPersona().getLastname());
+        }
+
+        return dto;
     }
+
+    public List<UsuarioResponseDTO> toListUsuarioResponseDto(List<Usuario> usuarios) {
+        return usuarios.stream().map(this::toUsuarioResponseDTO).toList();
+    }
+
+
 }
