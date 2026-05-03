@@ -18,5 +18,6 @@ public class BackendcomedorApplication {
         );
 
         SpringApplication.run(BackendcomedorApplication.class, args);
+
     }
 }

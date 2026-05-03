@@ -33,4 +33,4 @@ build/
 .vscode/
 .env
 .sql
-.src/main/resources/datos.sql
+/src/main/resources/datos.sql
