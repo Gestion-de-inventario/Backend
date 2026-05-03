@@ -13,5 +13,11 @@ public interface UsuarioRepositoryPort {
 
     Usuario save(Usuario usuario);
 
+    Usuario update(Usuario usuario);
+
+    List<Usuario> getAllUsuariosActivos();
+
     List<Usuario> getAllUsuarios();
+
+    Usuario deactivateById(Integer id);
 }

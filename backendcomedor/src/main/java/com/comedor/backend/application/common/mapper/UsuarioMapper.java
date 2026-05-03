@@ -27,8 +27,8 @@ public class UsuarioMapper {
         persona.setLastname(dto.getLastname());
         persona.setDni(dto.getDni());
 
+        persona.setUser(user);
         user.setPersona(persona);
-
         return user;
     }
 
@@ -46,7 +46,6 @@ public class UsuarioMapper {
         }
 
         if (u.getPersona() != null) {
-            System.out.println(u.getPersona().toString());
             dto.setDni(u.getPersona().getDni());
             dto.setName(u.getPersona().getName());
             dto.setLastname(u.getPersona().getLastname());

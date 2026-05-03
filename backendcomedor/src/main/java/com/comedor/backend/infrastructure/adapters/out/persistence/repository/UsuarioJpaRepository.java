@@ -9,6 +9,13 @@ import java.util.Optional;
 public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Integer> {
 
     Optional<UsuarioEntity> findByUsername(String username);
+    @Query("SELECT u FROM UsuarioEntity u " +
+            "JOIN FETCH u.persona " +
+            "JOIN FETCH u.role " +
+            "WHERE u.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+    List<UsuarioEntity> getActiveUsers();
+
     @Query("SELECT u FROM UsuarioEntity u JOIN FETCH u.persona JOIN FETCH u.role")
-    List<UsuarioEntity> getAll();
+    List<UsuarioEntity> getAllUsers();
+
 }
