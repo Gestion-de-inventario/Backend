@@ -88,12 +88,13 @@ public class UseCaseConfig {
                 usuarioMapper
         );
     }
-}
-
+    
     @Bean
     public RegistrarBeneficiarioService beneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
         return new RegistrarBeneficiarioService(beneficiarioRepositoryPort);
     }
-
 }
+
+
+
 
