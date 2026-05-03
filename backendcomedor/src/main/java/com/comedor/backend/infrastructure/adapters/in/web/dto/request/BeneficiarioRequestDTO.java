@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.request;
 
+import com.comedor.backend.domain.model.enums.Estado;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -16,4 +17,6 @@ public class BeneficiarioRequestDTO {
 
     @NotBlank(message = "Los apellidos son obligatorios")
     private String lastname;
+
+    private Estado estado;
 }

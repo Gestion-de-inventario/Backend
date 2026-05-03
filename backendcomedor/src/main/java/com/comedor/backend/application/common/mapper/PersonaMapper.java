@@ -8,7 +8,6 @@ import java.util.List;
 
 @Component
 public class PersonaMapper {
-
     public PersonaResponseDTO toResponseDTO(Persona persona) {
         PersonaResponseDTO personaResponseDTO = new PersonaResponseDTO();
         personaResponseDTO.setId(persona.getId());

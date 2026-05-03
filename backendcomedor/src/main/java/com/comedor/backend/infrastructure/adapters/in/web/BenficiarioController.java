@@ -8,6 +8,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.Beneficia
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiarioPersistenceMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/beneficiarios")
-@AllArgsConstructor
+@RequestMapping("/beneficiario")
+@RequiredArgsConstructor
 public class BenficiarioController {
 
     private final RegistrarBeneficiarioUseCase registrarBeneficiarioUseCase;

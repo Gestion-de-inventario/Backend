@@ -8,13 +8,10 @@ import java.util.Optional;
 
 @Component
 public class RolMapper {
-
     public RolResponseDTO toRolDto (Rol rol)
     {
         RolResponseDTO rolDto = new RolResponseDTO();
         rolDto.setRol(rol.getNombre());
         return rolDto;
     }
-
-
 }

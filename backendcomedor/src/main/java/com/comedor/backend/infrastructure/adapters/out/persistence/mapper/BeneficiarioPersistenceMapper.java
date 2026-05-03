@@ -9,16 +9,30 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 public class BeneficiarioPersistenceMapper {
-    private final ModelMapper modelMapper;
 
     public BeneficiarioEntity convertToEntity(Beneficiario beneficiario) {
-        return modelMapper.map(beneficiario, BeneficiarioEntity.class);
+        BeneficiarioEntity beneficiarioEntity = new BeneficiarioEntity();
+
+        if(beneficiario.getId() > 0) {
+            beneficiarioEntity.setId(beneficiario.getId());
+        }
+
+        beneficiarioEntity.setDni(beneficiario.getDni());
+        beneficiarioEntity.setName(beneficiario.getName());
+        beneficiarioEntity.setLastname(beneficiario.getLastname());
+        beneficiarioEntity.setStatus(beneficiario.getStatus());
+        return beneficiarioEntity;
     }
 
-    public Beneficiario convertToDomain(BeneficiarioEntity entity) {
-        return modelMapper.map(entity, Beneficiario.class);
+    public Beneficiario convertToDomain(BeneficiarioEntity beneficiarioEntity) {
+        return new Beneficiario(
+                beneficiarioEntity.getId(),
+                beneficiarioEntity.getDni(),
+                beneficiarioEntity.getName(),
+                beneficiarioEntity.getLastname(),
+                beneficiarioEntity.getStatus()
+        );
     }
 
     public List<Beneficiario> convertToListDomain(List<BeneficiarioEntity> entities) {
