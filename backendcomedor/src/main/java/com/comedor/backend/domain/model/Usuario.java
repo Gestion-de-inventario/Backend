@@ -9,4 +9,32 @@ public class Usuario {
     private Rol role;
     private Estado status = Estado.ACTIVO;
     private Persona persona;
+
+    public Usuario(Integer id, String username, String password, Rol role, Estado status, Persona persona) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+        this.persona = persona;
+    }
+
+    public Persona getPersona() { return persona;}
+
+    public Integer getId() { return id;}
+
+    public Rol getRol() { return role;}
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Estado getStatus() {
+        return status;
+    }
+
 }
