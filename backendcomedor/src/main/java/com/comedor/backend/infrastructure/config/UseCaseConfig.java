@@ -14,30 +14,13 @@ import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
+import com.comedor.backend.application.services.RegistrarBeneficiarioService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class UseCaseConfig {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Bean
     public LoginUseCase loginUseCase(
             UsuarioRepositoryPort usuarioRepository,
@@ -106,3 +89,11 @@ public class UseCaseConfig {
         );
     }
 }
+
+    @Bean
+    public RegistrarBeneficiarioService beneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
+        return new RegistrarBeneficiarioService(beneficiarioRepositoryPort);
+    }
+
+}
+
