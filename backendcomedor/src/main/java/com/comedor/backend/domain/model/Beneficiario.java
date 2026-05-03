@@ -10,6 +10,10 @@ public class Beneficiario {
     private String lastname;
     private Estado status = Estado.ACTIVO;
 
+    public Beneficiario() {
+        return;
+    }
+
     public Beneficiario(int id, String dni, String name, String lastname, Estado status){
         this.id = id;
         this.dni = dni;
@@ -22,6 +26,7 @@ public class Beneficiario {
     public String getDni() { return dni; }
     public String getName() { return name; }
     public String getLastname() { return lastname; }
+    public Estado getStatus() { return status;}
 
 
     public void marcarComoInactivo(){

@@ -14,7 +14,7 @@ public class PersonaMapper {
         return new Persona(
                 entity.getId(),
                 entity.getDni(),
-                entity.getFirstName(),
+                entity.getName(),
                 entity.getLastName()
         );
     }
@@ -25,7 +25,7 @@ public class PersonaMapper {
         PersonaEntity entity = new PersonaEntity();
         entity.setId(persona.getId());
         entity.setDni(persona.getDni());
-        entity.setFirstName(persona.getName());
+        entity.setName(persona.getName());
         entity.setLastName(persona.getLastname());
 
         return entity;

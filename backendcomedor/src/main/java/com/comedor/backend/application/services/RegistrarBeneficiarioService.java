@@ -16,7 +16,7 @@ public class RegistrarBeneficiarioService implements RegistrarBeneficiarioUseCas
     public Beneficiario registrarBeneficiario(Beneficiario beneficiario)  {
 
         if (beneficiarioRepositoryPort.existePorDni(beneficiario.getDni())) {
-            throw new IllegalArgumentException("Ya existe un beneficiario registrado con el DNI" + beneficiario.getDni());
+            throw new IllegalArgumentException("Ya existe un beneficiario registrado con el DNI " + beneficiario.getDni());
         }
         return beneficiarioRepositoryPort.guardar(beneficiario);
     }

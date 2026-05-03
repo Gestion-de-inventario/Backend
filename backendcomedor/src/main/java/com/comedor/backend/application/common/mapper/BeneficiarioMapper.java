@@ -1,6 +1,7 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Beneficiario;
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
 import lombok.AllArgsConstructor;
@@ -10,17 +11,27 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 public class BeneficiarioMapper {
 
-    private final ModelMapper modelMapper;
-
     public Beneficiario convertToDomain(BeneficiarioRequestDTO requestDTO) {
-        return modelMapper.map(requestDTO, Beneficiario.class);
+       return new Beneficiario(
+               0,
+               requestDTO.getDni(),
+               requestDTO.getName(),
+               requestDTO.getLastname(),
+               Estado.ACTIVO
+       );
     }
 
     public BeneficiarioResponseDTO convertToDTO(Beneficiario beneficiario) {
-        return modelMapper.map(beneficiario, BeneficiarioResponseDTO.class);
+        BeneficiarioResponseDTO beneficiarioResponseDTO = new BeneficiarioResponseDTO();
+
+        beneficiarioResponseDTO.setId(beneficiario.getId());
+        beneficiarioResponseDTO.setDni(beneficiario.getDni());
+        beneficiarioResponseDTO.setName(beneficiario.getName());
+        beneficiarioResponseDTO.setLastname(beneficiario.getLastname());
+        beneficiarioResponseDTO.setStatus(beneficiario.getStatus());
+        return beneficiarioResponseDTO;
     }
 
     public List<BeneficiarioResponseDTO> convertToListDTO(List<Beneficiario> beneficiarios) {

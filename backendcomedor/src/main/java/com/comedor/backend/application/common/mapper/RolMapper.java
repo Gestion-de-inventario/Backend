@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RolMapper {
 
+
     public Rol toDomain(RolEntity entity) {
         if (entity == null) return null;
 
