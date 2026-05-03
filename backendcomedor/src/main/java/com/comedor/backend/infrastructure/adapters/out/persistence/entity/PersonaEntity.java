@@ -18,7 +18,7 @@ public class PersonaEntity {
     private int id;
 
     @Column(nullable = false, length = 70)
-    private String firstName;
+    private String name;
 
     @Column(nullable = false, length = 80)
     private String lastName;
