@@ -1,8 +1,9 @@
-package com.comedor.backend.infrastructure.adapters.out.persistence;
+package com.comedor.backend.infrastructure.adapters.out.external;
 
 import com.comedor.backend.application.ports.out.ReniecPort;
 import com.comedor.backend.domain.model.DatosPersonales;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReniecResponseExternalDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,7 +19,8 @@ public class ReniecRespositoryAdapter implements ReniecPort {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final String TOKEN = "sk_15194.L5ESynTp8GuKHF35nTtCcxPBoDiBegv9";
+    @Value("${RENIEC_TOKEN}")
+    private String token;
 
     @Override
     public Optional<DatosPersonales> consultarPorDni(String dni) {
@@ -27,7 +29,7 @@ public class ReniecRespositoryAdapter implements ReniecPort {
 
         try{
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization","Bearer " + TOKEN);
+            headers.set("Authorization","Bearer " + token);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<ReniecResponseExternalDTO> responseEntity = restTemplate.exchange(
