@@ -1,9 +1,11 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Beneficiario;
+import com.comedor.backend.domain.model.DatosPersonales;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DatosPersonalesResponseDTO;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -38,5 +40,13 @@ public class BeneficiarioMapper {
         return beneficiarios.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public DatosPersonalesResponseDTO convertDatosPersonalesToDTO(DatosPersonales datosPersonales) {
+        return new DatosPersonalesResponseDTO(
+                datosPersonales.getDni(),
+                datosPersonales.getNames(),
+                datosPersonales.getLastnames()
+        );
     }
 }

@@ -8,4 +8,5 @@ public interface BeneficiarioRepositoryPort {
     Beneficiario guardar(Beneficiario beneficiario);
     boolean existePorDni(String dni);
 
+    Optional<Beneficiario> buscarPorDni(String dni);
 }

@@ -8,6 +8,8 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.repository.Be
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @AllArgsConstructor
 public class BeneficiarioRepositoryAdapter implements BeneficiarioRepositoryPort {
@@ -28,6 +30,17 @@ public class BeneficiarioRepositoryAdapter implements BeneficiarioRepositoryPort
     @Override
     public boolean existePorDni(String dni) {
         return jpaRepository.existsByDni(dni);
+    }
+
+    @Override
+    public Optional<Beneficiario> buscarPorDni(String dni) {
+
+        Optional<BeneficiarioEntity> entityOptional = jpaRepository.findByDni(dni);
+
+        if(entityOptional.isPresent()) {
+            return Optional.of(persistenceMapper.convertToDomain(entityOptional.get()));
+        }
+        return Optional.empty();
     }
 
 
