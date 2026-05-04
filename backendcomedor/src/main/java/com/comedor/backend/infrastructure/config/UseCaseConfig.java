@@ -1,10 +1,8 @@
 package com.comedor.backend.infrastructure.config;
 
+import com.comedor.backend.application.common.mapper.CategoriaMapper;
 import com.comedor.backend.application.common.mapper.UsuarioMapper;
-import com.comedor.backend.application.ports.in.CrearUsuarioUseCase;
-import com.comedor.backend.application.ports.in.ListarTodosLosUsuariosUseCase;
-import com.comedor.backend.application.ports.in.ListarUsuariosActivosUseCase;
-import com.comedor.backend.application.ports.in.LoginUseCase;
+import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.application.services.*;
 import com.comedor.backend.application.common.mapper.AuthMapper;
@@ -97,6 +95,23 @@ public class UseCaseConfig {
     @Bean
     public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
         return new ConsultarYRegistrarReniecService(beneficiarioRepositoryPort,consultarDatosPorDniUseCase);
+    }
+
+    @Bean
+    public CrearCategoriaService crearCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new CrearCategoriaService(
+                categoriaRepositoryPort,
+                categoriaMapper
+        );
+    }
+
+    @Bean
+    public ListarCategoriasPorEstadoService listarCategoriasPorEstadoService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper)
+    {
+        return new ListarCategoriasPorEstadoService(
+                categoriaRepositoryPort,
+                categoriaMapper
+        );
     }
 }
 

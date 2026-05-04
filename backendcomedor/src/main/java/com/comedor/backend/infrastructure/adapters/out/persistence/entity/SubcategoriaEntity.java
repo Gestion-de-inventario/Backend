@@ -28,6 +28,6 @@ public class SubcategoriaEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado status;
 
 }

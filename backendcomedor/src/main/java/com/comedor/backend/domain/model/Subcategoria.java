@@ -5,4 +5,8 @@ public class Subcategoria {
     private int id;
     private String name;
     private Estado status = Estado.ACTIVO;
+
+    public void setName(String name) {
+        this.name = name.toUpperCase();
+    }
 }

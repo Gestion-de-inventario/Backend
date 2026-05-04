@@ -13,4 +13,8 @@ public class Producto {
     private Estado status = Estado.ACTIVO;
     private BigDecimal stock;
     private BigDecimal reorderPoint;
+
+    public void setName(String name) {
+        this.name = name.toUpperCase();
+    }
 }
