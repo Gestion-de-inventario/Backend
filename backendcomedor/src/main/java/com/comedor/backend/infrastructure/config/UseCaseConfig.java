@@ -5,16 +5,13 @@ import com.comedor.backend.application.ports.in.CrearUsuarioUseCase;
 import com.comedor.backend.application.ports.in.ListarTodosLosUsuariosUseCase;
 import com.comedor.backend.application.ports.in.ListarUsuariosActivosUseCase;
 import com.comedor.backend.application.ports.in.LoginUseCase;
-import com.comedor.backend.application.ports.out.PersonaRepositoryPort;
-import com.comedor.backend.application.ports.out.RolRepositoryPort;
+import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.application.services.*;
 import com.comedor.backend.application.common.mapper.AuthMapper;
-import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
 import com.comedor.backend.application.services.RegistrarBeneficiarioService;
 
 @Configuration
@@ -90,6 +87,16 @@ public class UseCaseConfig {
     @Bean
     public RegistrarBeneficiarioService beneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
         return new RegistrarBeneficiarioService(beneficiarioRepositoryPort);
+    }
+
+    @Bean
+    public ConsultarDatosPorDniService consultarDatosPorDniService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ReniecPort reniecPort) {
+        return new ConsultarDatosPorDniService(beneficiarioRepositoryPort, reniecPort);
+    }
+
+    @Bean
+    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
+        return new ConsultarYRegistrarReniecService(beneficiarioRepositoryPort,consultarDatosPorDniUseCase);
     }
 }
 
