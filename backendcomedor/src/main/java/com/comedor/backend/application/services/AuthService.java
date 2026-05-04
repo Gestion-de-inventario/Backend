@@ -4,7 +4,9 @@ import com.comedor.backend.application.common.mapper.AuthMapper;
 import com.comedor.backend.application.ports.in.LoginUseCase;
 import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
 import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
+import com.comedor.backend.domain.exceptions.UsuarioDeshabilitadoException;
 import com.comedor.backend.domain.model.Usuario;
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
@@ -32,6 +34,12 @@ public class AuthService implements LoginUseCase {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CredencialesInvalidasException();
+        }
+
+        if(user.getStatus().equals(Estado.INACTIVO))
+        {
+            throw new UsuarioDeshabilitadoException("El usuario :"+user.getPersona().getName()+
+                    " "+user.getPersona().getLastname()+" se encuentra deshabilitado, comunicarse con la administradora.");
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
