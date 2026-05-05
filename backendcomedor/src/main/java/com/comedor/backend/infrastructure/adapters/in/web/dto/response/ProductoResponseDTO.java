@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class ProductoResponseDTO {
     private int id;
     private String name;
+    private Estado status;
     private int categoryId;
     private String categoryName;
     private Estado categoryState;

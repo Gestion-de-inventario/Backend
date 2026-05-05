@@ -2,20 +2,15 @@ package com.comedor.backend.application.common.mapper;
 
 
 import com.comedor.backend.domain.model.Persona;
-import com.comedor.backend.domain.model.Rol;
 import com.comedor.backend.domain.model.Usuario;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import org.springframework.stereotype.Component;
 
-import javax.management.relation.Role;
 import java.util.List;
 
 @Component
 public class UsuarioMapper {
-
-
-
     public Usuario toDomain(UsuarioRequestDTO dto) {
 
         if (dto == null) return null;

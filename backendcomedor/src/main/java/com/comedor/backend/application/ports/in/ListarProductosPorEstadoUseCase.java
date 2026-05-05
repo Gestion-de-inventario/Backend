@@ -1,0 +1,10 @@
+package com.comedor.backend.application.ports.in;
+
+import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
+
+import java.util.List;
+
+public interface ListarProductosPorEstadoUseCase {
+    List<ProductoResponseDTO> listarProductosPorEstado(Estado estado);
+}

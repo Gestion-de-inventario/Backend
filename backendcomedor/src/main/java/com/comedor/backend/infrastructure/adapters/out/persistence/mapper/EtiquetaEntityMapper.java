@@ -11,6 +11,7 @@ public class EtiquetaEntityMapper {
     {
         if (etiquetaEntity == null) return null;
         Etiqueta etiqueta = new Etiqueta();
+        etiqueta.setId(etiquetaEntity.getId());
         etiqueta.setName(etiquetaEntity.getName());
         etiqueta.setStatus(etiquetaEntity.getStatus());
         return etiqueta;

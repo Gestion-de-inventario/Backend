@@ -22,6 +22,8 @@ public class EtiquetaMapper {
         if (etiqueta == null)return null;
         EtiquetaResponseDTO etiquetaResponseDTO = new EtiquetaResponseDTO();
         etiquetaResponseDTO.setName(etiqueta.getName());
+        etiquetaResponseDTO.setId(etiqueta.getId());
+        etiquetaResponseDTO.setStatus(etiqueta.getStatus());
         return etiquetaResponseDTO;
     }
 

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoriaJpaRepository extends JpaRepository<CategoriaEntity,Integer> {
 
@@ -15,6 +16,6 @@ public interface CategoriaJpaRepository extends JpaRepository<CategoriaEntity,In
     @Query("SELECT c FROM CategoriaEntity c " +
             "WHERE c.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
     List<CategoriaEntity> getAllCategoriasActivas();
-
+    Optional<CategoriaEntity> findById(int id);
     boolean existsByName(String name);
 }

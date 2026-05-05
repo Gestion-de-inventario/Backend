@@ -12,5 +12,6 @@ public interface EtiquetaRepositoryPort {
     Etiqueta activateById(int id);
     List<Etiqueta> getEtiquetas(Estado estado);
     boolean existByName(String name);
+    Etiqueta getEtiquetaById(int id);
 
 }

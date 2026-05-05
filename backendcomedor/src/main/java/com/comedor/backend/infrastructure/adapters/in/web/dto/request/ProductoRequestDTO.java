@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 @Data
 public class ProductoRequestDTO {
     private String name;
-    private int categoryId;
-    private int etiquetaId;
+    private Integer  categoryId;
+    private Integer  etiquetaId;
     private String unit;
     private BigDecimal stock;
     private BigDecimal reorderPoint;

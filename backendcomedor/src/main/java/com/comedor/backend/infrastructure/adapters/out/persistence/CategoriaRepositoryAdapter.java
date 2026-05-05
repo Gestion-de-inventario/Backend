@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.CategoriaRepositoryPort;
+import com.comedor.backend.domain.exceptions.CategoriaNoEncontradaException;
 import com.comedor.backend.domain.exceptions.EtiquetaNoEncontradaException;
 import com.comedor.backend.domain.model.Categoria;
 import com.comedor.backend.domain.model.enums.Estado;
@@ -30,14 +31,14 @@ public class CategoriaRepositoryAdapter implements CategoriaRepositoryPort {
     @Override
     public Categoria deactivateById(int id) {
 
-        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new EtiquetaNoEncontradaException("Etiqueta no encontrada"));
+        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
         entity.setStatus(Estado.INACTIVO);
         return categoriaEntityMapper.toDomain(categoriaJpaRepository.save(entity));
     }
 
     @Override
     public Categoria activateById(int id) {
-        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new EtiquetaNoEncontradaException("Etiqueta no encontrada"));
+        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
         entity.setStatus(Estado.ACTIVO);
         return categoriaEntityMapper.toDomain(categoriaJpaRepository.save(entity));
     }
@@ -60,6 +61,13 @@ public class CategoriaRepositoryAdapter implements CategoriaRepositoryPort {
     @Override
     public boolean existByName(String name) {
         return categoriaJpaRepository.existsByName(name);
+    }
+
+    @Override
+    public Categoria getCategoriaById(int id) {
+
+        CategoriaEntity categoriaEntity = categoriaJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
+        return categoriaEntityMapper.toDomain(categoriaEntity);
     }
 
 }

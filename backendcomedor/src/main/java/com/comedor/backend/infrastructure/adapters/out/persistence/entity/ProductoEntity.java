@@ -32,7 +32,7 @@ public class ProductoEntity {
     private String unit;
 
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado status;
 
     @Column(precision = 10, scale = 3)
     private BigDecimal stock;

@@ -12,4 +12,5 @@ public interface CategoriaRepositoryPort {
     Categoria activateById(int id);
     List<Categoria> getCategorys(Estado estado);
     boolean existByName(String name);
+    Categoria getCategoriaById(int id);
 }

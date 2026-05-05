@@ -23,7 +23,6 @@ public class EtiquetaRepositoryAdapter implements EtiquetaRepositoryPort {
     private final EtiquetaEntityMapper etiquetaEntityMapper;
     @Override
     public Etiqueta createEtiqueta(Etiqueta etiqueta) {
-
         EtiquetaEntity etiquetaEntity = etiquetaEntityMapper.toEntity(etiqueta);
         return etiquetaEntityMapper.toDomain(etiquetaJpaRepository.save(etiquetaEntity));
     }
@@ -59,5 +58,11 @@ public class EtiquetaRepositoryAdapter implements EtiquetaRepositoryPort {
     @Override
     public boolean existByName(String name) {
         return etiquetaJpaRepository.existsByName(name);
+    }
+
+    @Override
+    public Etiqueta getEtiquetaById(int id) {
+        EtiquetaEntity entity = etiquetaJpaRepository.findById(id).orElseThrow(() -> new EtiquetaNoEncontradaException("Etiqueta no encontrada"));
+        return etiquetaEntityMapper.toDomain(entity);
     }
 }

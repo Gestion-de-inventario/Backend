@@ -19,7 +19,7 @@ public class CrearEtiquetaService implements CrearEtiquetaUseCase {
 
     @Override
     public EtiquetaResponseDTO crearEtiqueta(EtiquetaRequestDTO etiquetaRequestDTO) {
-        if(etiquetaRepositoryPort.existByName(etiquetaRequestDTO.getName()))
+        if(etiquetaRepositoryPort.existByName(etiquetaRequestDTO.getName().toUpperCase()))
         {
             throw new EtiquetaExistenteException("Ya existe la etiqueta "+etiquetaRequestDTO.getName());
         }
