@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.CategoriaRepositoryPort;
+import com.comedor.backend.domain.exceptions.EtiquetaNoEncontradaException;
 import com.comedor.backend.domain.model.Categoria;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoriaEntity;
@@ -27,13 +28,18 @@ public class CategoriaRepositoryAdapter implements CategoriaRepositoryPort {
     }
 
     @Override
-    public Categoria updateCategory(Categoria categoria) {
-        return null;
+    public Categoria deactivateById(int id) {
+
+        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new EtiquetaNoEncontradaException("Etiqueta no encontrada"));
+        entity.setStatus(Estado.INACTIVO);
+        return categoriaEntityMapper.toDomain(categoriaJpaRepository.save(entity));
     }
 
     @Override
-    public Categoria deactivateById(int id) {
-        return null;
+    public Categoria activateById(int id) {
+        CategoriaEntity entity = categoriaJpaRepository.findById(id).orElseThrow(()-> new EtiquetaNoEncontradaException("Etiqueta no encontrada"));
+        entity.setStatus(Estado.ACTIVO);
+        return categoriaEntityMapper.toDomain(categoriaJpaRepository.save(entity));
     }
 
     @Override

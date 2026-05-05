@@ -10,7 +10,6 @@ import java.util.List;
 
 public class ListarCategoriasPorEstadoService implements ListarCategoriasPorEstadoUseCase {
     private final CategoriaRepositoryPort categoriaRepositoryPort;
-
     private final CategoriaMapper categoriaMapper;
 
     public ListarCategoriasPorEstadoService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {

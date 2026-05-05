@@ -18,7 +18,7 @@ public class ReniecRespositoryAdapter implements ReniecPort {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final String TOKEN = "sk_15194.L5ESynTp8GuKHF35nTtCcxPBoDiBegv9";
+    private final String TOKEN = "";
 
     @Override
     public Optional<DatosPersonales> consultarPorDni(String dni) {

@@ -1,11 +1,14 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
+import com.comedor.backend.application.ports.in.ActivarCategoriaUseCase;
 import com.comedor.backend.application.ports.in.CrearCategoriaUseCase;
+import com.comedor.backend.application.ports.in.DesactivarCategoriaUseCase;
 import com.comedor.backend.application.ports.in.ListarCategoriasPorEstadoUseCase;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoriaRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoriaResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,8 @@ import java.util.List;
 public class CategoriaController {
     private final ListarCategoriasPorEstadoUseCase listarCategoriasPorEstadoUseCase;
     private final CrearCategoriaUseCase crearCategoriaUseCase;
+    private final ActivarCategoriaUseCase activarCategoriaUseCase;
+    private final DesactivarCategoriaUseCase desactivarCategoriaUseCase;
 
     @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     @GetMapping("/listar")
@@ -32,5 +37,19 @@ public class CategoriaController {
         return crearCategoriaUseCase.crearCategoria(categoriaRequestDTO);
     }
 
+    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PostMapping("/changeStatus/{id}")
+    public CategoriaResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
+    {
+
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
+
+        return switch (estado) {
+            case ACTIVO -> activarCategoriaUseCase.activarCategoriaPorId(id);
+            case INACTIVO -> desactivarCategoriaUseCase.desactivarCategoriaPorId(id);
+        };
+    }
 
 }

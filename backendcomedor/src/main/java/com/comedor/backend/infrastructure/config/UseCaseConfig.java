@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.config;
 
 import com.comedor.backend.application.common.mapper.CategoriaMapper;
+import com.comedor.backend.application.common.mapper.EtiquetaMapper;
 import com.comedor.backend.application.common.mapper.UsuarioMapper;
 import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.*;
@@ -111,6 +112,45 @@ public class UseCaseConfig {
         return new ListarCategoriasPorEstadoService(
                 categoriaRepositoryPort,
                 categoriaMapper
+        );
+    }
+
+    @Bean
+    public CrearEtiquetaService crearEtiquetaService(EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new CrearEtiquetaService(etiquetaRepositoryPort,etiquetaMapper);
+    }
+
+    @Bean
+    public ListarEtiquetasPorEstadoService listarEtiquetasPorEstadoService(EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new ListarEtiquetasPorEstadoService(etiquetaRepositoryPort,etiquetaMapper);
+    }
+
+    @Bean
+    DesactivarCategoriaService desactivarCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new DesactivarCategoriaService(
+                categoriaRepositoryPort,categoriaMapper
+        );
+    }
+    @Bean
+    DesactivarEtiquetaService desactivarEtiquetaService (EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper) {
+        return new DesactivarEtiquetaService(
+                etiquetaRepositoryPort,etiquetaMapper
+        );
+    }
+
+    @Bean
+    ActivarCategoriaService activarCategoriaService (CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new ActivarCategoriaService(
+                categoriaRepositoryPort,categoriaMapper
+        );
+    }
+    @Bean
+    ActivarEtiquetaService activarEtiquetaService (EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new ActivarEtiquetaService(
+                etiquetaRepositoryPort,etiquetaMapper
         );
     }
 }

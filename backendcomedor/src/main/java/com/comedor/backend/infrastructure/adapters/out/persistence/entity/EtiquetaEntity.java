@@ -14,15 +14,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "subcategoria")
+@Table(name = "etiqueta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubcategoriaEntity {
+public class EtiquetaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="subcategoria_id")
+    @Column(name="etiqueta_id")
     private int id;
 
     private String name;

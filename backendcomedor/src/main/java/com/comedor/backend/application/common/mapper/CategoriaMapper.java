@@ -18,7 +18,6 @@ public class CategoriaMapper {
         if(categoriaRequestDTO == null) return null;
         Categoria categoria = new Categoria();
         categoria.setName(categoriaRequestDTO.getName());
-        categoria.setStatus(Estado.ACTIVO);
         return categoria;
     }
 

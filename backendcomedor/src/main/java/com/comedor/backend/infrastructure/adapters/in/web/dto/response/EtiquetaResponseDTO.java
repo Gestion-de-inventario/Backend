@@ -4,8 +4,8 @@ import com.comedor.backend.domain.model.enums.Estado;
 import lombok.Data;
 
 @Data
-public class SubCategoriaResponseDTO {
-    private Integer id;
+public class EtiquetaResponseDTO {
+    private int id;
     private String name;
     private Estado status;
 }

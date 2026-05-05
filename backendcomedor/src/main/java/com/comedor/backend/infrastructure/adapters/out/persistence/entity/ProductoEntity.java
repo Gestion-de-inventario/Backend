@@ -26,8 +26,8 @@ public class ProductoEntity {
     private CategoriaEntity categoria;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "subcategoria_id", nullable = true)
-    private SubcategoriaEntity subcategoria;
+    @JoinColumn(name = "etiqueta_id", nullable = true)
+    private EtiquetaEntity etiqueta;
 
     private String unit;
 
