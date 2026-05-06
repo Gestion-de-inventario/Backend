@@ -1,7 +1,6 @@
 package com.comedor.backend.domain.model;
 
 import com.comedor.backend.domain.model.enums.Estado;
-import lombok.Getter;
 
 public class Beneficiario {
     private int id;
@@ -28,13 +27,16 @@ public class Beneficiario {
     public String getLastname() { return lastname; }
     public Estado getStatus() { return status;}
 
+    public Beneficiario actualizar(String dni, String name, String lastname, Estado status ) {
+        return new Beneficiario(this.id, dni, name, lastname, status);
+    }
 
     public void marcarComoInactivo(){
-        this.status = status.INACTIVO;
+        this.status = Estado.INACTIVO;
     }
 
     public void marcarComoActivo(){
-        this.status = status.ACTIVO;
+        this.status = Estado.ACTIVO;
     }
 
 }

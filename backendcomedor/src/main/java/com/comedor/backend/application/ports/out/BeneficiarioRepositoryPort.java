@@ -9,4 +9,6 @@ public interface BeneficiarioRepositoryPort {
     boolean existePorDni(String dni);
 
     Optional<Beneficiario> buscarPorDni(String dni);
+
+    Optional<Beneficiario> findById(Integer id);
 }

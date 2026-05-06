@@ -25,11 +25,12 @@ public class ReniecRespositoryAdapter implements ReniecPort {
     @Override
     public Optional<DatosPersonales> consultarPorDni(String dni) {
 
-        String url = "https://api.apis.net.pe/v1/dni?numero=" + dni;
+        String url = "https://api.decolecta.com/v1/reniec/dni?numero=" + dni;
 
         try{
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization","Bearer " + token);
+            headers.set("Content-Type","application/json");
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<ReniecResponseExternalDTO> responseEntity = restTemplate.exchange(
@@ -42,20 +43,20 @@ public class ReniecRespositoryAdapter implements ReniecPort {
             ReniecResponseExternalDTO response = responseEntity.getBody();
 
 
-            if (response != null && response.getNumeroDocumento() != null) {
+            if (response != null && response.getDocument_number() != null) {
 
-                String apellidosCompletos = response.getApellidoPaterno() + " " + response.getApellidoMaterno();
+                String apellidosCompletos = response.getFirst_last_name() + " " + response.getSecond_last_name();
 
                 return Optional.of(new DatosPersonales(
-                   response.getNumeroDocumento(),
-                   response.getNombres(),
+                   response.getDocument_number(),
+                   response.getFirst_name(),
                    apellidosCompletos
                 ));
             }
         } catch (HttpClientErrorException.NotFound e) {
             return Optional.empty();
         } catch (Exception e) {
-            System.err.println("Error consltando RENIEC: " + e.getMessage());
+            System.err.println("Error consultando RENIEC: " + e.getMessage());
         }
 
         return Optional.empty();

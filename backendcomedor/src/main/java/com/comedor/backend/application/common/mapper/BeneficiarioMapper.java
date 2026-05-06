@@ -4,6 +4,7 @@ import com.comedor.backend.domain.model.Beneficiario;
 import com.comedor.backend.domain.model.DatosPersonales;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequest;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DatosPersonalesResponseDTO;
 import lombok.AllArgsConstructor;
@@ -49,4 +50,14 @@ public class BeneficiarioMapper {
                 datosPersonales.getLastnames()
         );
     }
+
+    public Beneficiario convertToDomainUpdate(EditarBeneficiarioRequest editarBeneficiarioRequest, int id) {
+        return new Beneficiario(
+                id,
+                editarBeneficiarioRequest.getDni(),
+                editarBeneficiarioRequest.getName(),
+                editarBeneficiarioRequest.getLastName(),
+                editarBeneficiarioRequest.getStatus());
+    }
+
 }

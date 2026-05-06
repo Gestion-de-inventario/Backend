@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class ReniecResponseExternalDTO {
-    private String nombres;
-    private String apellidoPaterno;
-    private String apellidoMaterno;
-    private String numeroDocumento;
+    private String first_name;
+    private String first_last_name;
+    private String second_last_name;
+    private String document_number;
 }
