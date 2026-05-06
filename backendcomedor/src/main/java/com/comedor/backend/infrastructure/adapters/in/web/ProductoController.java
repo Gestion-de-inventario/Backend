@@ -1,7 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 
+import com.comedor.backend.application.ports.in.ActivarProductoUseCase;
 import com.comedor.backend.application.ports.in.CrearProductoUseCase;
+import com.comedor.backend.application.ports.in.DesactivarProductoUseCase;
 import com.comedor.backend.application.ports.in.ListarProductosPorEstadoUseCase;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRequestDTO;
@@ -19,6 +21,8 @@ public class ProductoController {
 
     private final CrearProductoUseCase crearProductoUseCase;
     private final ListarProductosPorEstadoUseCase listarProductosPorEstadoUseCase;
+    private final ActivarProductoUseCase activarProductoUseCase;
+    private final DesactivarProductoUseCase desactivarProductoUseCase;
 
     @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     @GetMapping("/listar")
@@ -32,6 +36,21 @@ public class ProductoController {
     public ProductoResponseDTO crearProducto(@RequestBody ProductoRequestDTO productoRequestDTO)
     {
         return crearProductoUseCase.crearProducto(productoRequestDTO);
+    }
+
+    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PostMapping("/changeStatus/{id}")
+    public ProductoResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
+    {
+
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
+
+        return switch (estado) {
+            case ACTIVO -> activarProductoUseCase.activarProductoPorId(id);
+            case INACTIVO -> desactivarProductoUseCase.desactivarProductoPorId(id);
+        };
     }
 
 }

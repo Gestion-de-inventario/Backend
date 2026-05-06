@@ -166,6 +166,15 @@ public class UseCaseConfig {
         return new CrearProductoService(productoRepositoryPort,productoMapper,categoriaRepositoryPort,etiquetaRepositoryPort);
 
     }
+    @Bean
+    ActivarProductoService activarProductoService(ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper){
+        return new ActivarProductoService(productoRepositoryPort,productoMapper);
+    }
+    @Bean
+    DesactivarProductoService desactivarProductoService (ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper)
+    {
+        return new DesactivarProductoService(productoRepositoryPort,productoMapper);
+    }
 }
 
 
