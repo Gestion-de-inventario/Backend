@@ -98,6 +98,11 @@ public class UseCaseConfig {
     public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
         return new ConsultarYRegistrarReniecService(beneficiarioRepositoryPort,consultarDatosPorDniUseCase);
     }
+
+    @Bean
+    public EditarBeneficiarioService editarBeneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
+        return new EditarBeneficiarioService(beneficiarioRepositoryPort);
+    }
 }
 
 

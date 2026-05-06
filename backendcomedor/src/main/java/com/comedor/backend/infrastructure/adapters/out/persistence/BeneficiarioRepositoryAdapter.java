@@ -43,5 +43,11 @@ public class BeneficiarioRepositoryAdapter implements BeneficiarioRepositoryPort
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Beneficiario> findById(Integer id) {
+        return jpaRepository.findById(id)
+                .map(persistenceMapper::convertToDomain);
+    }
+
 
 }
