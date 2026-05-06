@@ -28,6 +28,6 @@ public class CategoriaEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado status;
 
 }

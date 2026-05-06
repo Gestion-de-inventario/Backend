@@ -1,6 +1,5 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
-import com.comedor.backend.application.common.mapper.RolMapper;
 import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
 import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
 import com.comedor.backend.domain.model.Usuario;

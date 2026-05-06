@@ -46,7 +46,7 @@ public class BenficiarioController {
         return new ResponseEntity<>(beneficiarioResponseDTO, HttpStatus.CREATED);
 
     }
-
+    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     @GetMapping("/reniec/{dni}")
     public ResponseEntity<?> consultaPorDni(@PathVariable String dni) {
         try {
@@ -64,7 +64,7 @@ public class BenficiarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al consultar el DNI.");
         }
     }
-
+    @PreAuthorize("hasRole('PRESIDENTA')")
     @PostMapping("/reniec/{dni}")
     public ResponseEntity<?> consultarYRegistrar(@PathVariable String dni) {
         try {

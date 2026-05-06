@@ -1,13 +1,9 @@
 package com.comedor.backend.infrastructure.config;
 
-import com.comedor.backend.application.common.mapper.UsuarioMapper;
-import com.comedor.backend.application.ports.in.CrearUsuarioUseCase;
-import com.comedor.backend.application.ports.in.ListarTodosLosUsuariosUseCase;
-import com.comedor.backend.application.ports.in.ListarUsuariosActivosUseCase;
-import com.comedor.backend.application.ports.in.LoginUseCase;
+import com.comedor.backend.application.common.mapper.*;
+import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.application.services.*;
-import com.comedor.backend.application.common.mapper.AuthMapper;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -97,6 +93,73 @@ public class UseCaseConfig {
     @Bean
     public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
         return new ConsultarYRegistrarReniecService(beneficiarioRepositoryPort,consultarDatosPorDniUseCase);
+    }
+
+    @Bean
+    public CrearCategoriaService crearCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new CrearCategoriaService(
+                categoriaRepositoryPort,
+                categoriaMapper
+        );
+    }
+
+    @Bean
+    public ListarCategoriasPorEstadoService listarCategoriasPorEstadoService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper)
+    {
+        return new ListarCategoriasPorEstadoService(
+                categoriaRepositoryPort,
+                categoriaMapper
+        );
+    }
+
+    @Bean
+    public CrearEtiquetaService crearEtiquetaService(EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new CrearEtiquetaService(etiquetaRepositoryPort,etiquetaMapper);
+    }
+
+    @Bean
+    public ListarEtiquetasPorEstadoService listarEtiquetasPorEstadoService(EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new ListarEtiquetasPorEstadoService(etiquetaRepositoryPort,etiquetaMapper);
+    }
+
+    @Bean
+    DesactivarCategoriaService desactivarCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new DesactivarCategoriaService(
+                categoriaRepositoryPort,categoriaMapper
+        );
+    }
+    @Bean
+    DesactivarEtiquetaService desactivarEtiquetaService (EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper) {
+        return new DesactivarEtiquetaService(
+                etiquetaRepositoryPort,etiquetaMapper
+        );
+    }
+
+    @Bean
+    ActivarCategoriaService activarCategoriaService (CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
+        return new ActivarCategoriaService(
+                categoriaRepositoryPort,categoriaMapper
+        );
+    }
+    @Bean
+    ActivarEtiquetaService activarEtiquetaService (EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper)
+    {
+        return new ActivarEtiquetaService(
+                etiquetaRepositoryPort,etiquetaMapper
+        );
+    }
+
+    @Bean
+    ListarProductosPorEstadoService listarProductosPorEstadoService(ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper)
+    {
+        return new ListarProductosPorEstadoService(productoRepositoryPort,productoMapper);
+    }
+
+    @Bean
+    CrearProductoService crearProductoService(ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper,CategoriaRepositoryPort categoriaRepositoryPort,EtiquetaRepositoryPort etiquetaRepositoryPort) {
+        return new CrearProductoService(productoRepositoryPort,productoMapper,categoriaRepositoryPort,etiquetaRepositoryPort);
     }
 }
 
