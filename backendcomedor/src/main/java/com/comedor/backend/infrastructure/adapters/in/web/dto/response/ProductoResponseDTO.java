@@ -13,7 +13,7 @@ public class ProductoResponseDTO {
     private int categoryId;
     private String categoryName;
     private Estado categoryState;
-    private int etiquetaId;
+    private int EtiquetaId;
     private String EtiquetaName;
     private Estado EtiquetaState;
     private String unit;
