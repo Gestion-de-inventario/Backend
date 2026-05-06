@@ -75,12 +75,16 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
 
     @Override
     public Producto deactivateById(int id) {
-        return null;
+        ProductoEntity productoEntity = productoJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
+        productoEntity.setStatus(Estado.INACTIVO);
+        return productoEntityMapper.toDomain(productoJpaRepository.save(productoEntity));
     }
 
     @Override
     public Producto activateById(int id) {
-        return null;
+        ProductoEntity productoEntity = productoJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
+        productoEntity.setStatus(Estado.ACTIVO);
+        return productoEntityMapper.toDomain(productoJpaRepository.save(productoEntity));
     }
 
     @Override
