@@ -12,6 +12,7 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.Catego
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.EtiquetaEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.ProductoEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.ProductoJpaRepository;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.TransaccionJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
 
     private final ProductoJpaRepository productoJpaRepository;
     private final ProductoEntityMapper productoEntityMapper;
+    private final TransaccionJpaRepository transaccionJpaRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -91,5 +93,33 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
     public Producto getProductoById(int id) {
         ProductoEntity productoEntity = productoJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
         return productoEntityMapper.toDomain(productoEntity);
+    }
+
+    @Override
+    public Producto updateProducto(Producto producto) {
+        ProductoEntity entity = productoJpaRepository.findById(producto.getId())
+                .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado"));
+
+        entity.setName(producto.getName());
+        entity.setUnit(producto.getUnit());
+        entity.setReorderPoint(producto.getReorderPoint());
+
+        if (producto.getCategoria() != null) {
+            entity.setCategoria(
+                    entityManager.getReference(CategoriaEntity.class, producto.getCategoria().getId())
+            );
+        }
+
+        return productoEntityMapper.toDomain(productoJpaRepository.save(entity));
+    }
+
+    @Override
+    public boolean tieneTransaccionesVinculadas(int id) {
+        return transaccionJpaRepository.existsByProductId(id);
+    }
+
+    @Override
+    public boolean existByNameAndIdNot(String nombre, int id) {
+        return productoJpaRepository.existsByNameAndIdNot(nombre.toLowerCase(), id);
     }
 }

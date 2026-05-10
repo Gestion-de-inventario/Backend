@@ -4,11 +4,9 @@ import com.comedor.backend.domain.model.Beneficiario;
 import com.comedor.backend.domain.model.DatosPersonales;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequest;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DatosPersonalesResponseDTO;
-import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -51,7 +49,7 @@ public class BeneficiarioMapper {
         );
     }
 
-    public Beneficiario convertToDomainUpdate(EditarBeneficiarioRequest editarBeneficiarioRequest, int id) {
+    public Beneficiario convertToDomainUpdate(EditarBeneficiarioRequestDTO editarBeneficiarioRequest, int id) {
         return new Beneficiario(
                 id,
                 editarBeneficiarioRequest.getDni(),

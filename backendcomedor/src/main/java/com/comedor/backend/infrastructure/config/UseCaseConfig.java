@@ -99,7 +99,18 @@ public class UseCaseConfig {
     public EditarBeneficiarioService editarBeneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
         return new EditarBeneficiarioService(beneficiarioRepositoryPort);
     }
-  
+
+    @Bean
+    EditarProductoService editarProductoService(ProductoRepositoryPort productoRepositoryPort){
+        return new EditarProductoService(productoRepositoryPort);
+    }
+
+    @Bean
+    ListarBeneficiarioServicePorEstado listarBeneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, BeneficiarioMapper beneficiarioMapper) {
+        return new ListarBeneficiarioServicePorEstado(beneficiarioRepositoryPort, beneficiarioMapper);
+    }
+
+    @Bean
     public CrearCategoriaService crearCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
         return new CrearCategoriaService(
                 categoriaRepositoryPort,
@@ -175,6 +186,7 @@ public class UseCaseConfig {
     {
         return new DesactivarProductoService(productoRepositoryPort,productoMapper);
     }
+
 }
 
 
