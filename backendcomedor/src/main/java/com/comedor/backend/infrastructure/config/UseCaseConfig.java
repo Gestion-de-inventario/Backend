@@ -180,6 +180,41 @@ public class UseCaseConfig {
     CrearReporteMenuService crearReporteMenuService (ReporteMenuRepositoryPort repository, ReporteMenuMapper mapper){
         return new CrearReporteMenuService(repository,mapper);
     }
+
+    @Bean
+    RegistrarTransaccionService registrarTransaccionService(TransaccionRepositoryPort repository, TransaccionMapper mapper)
+    {
+        return new RegistrarTransaccionService(repository,mapper);
+    }
+
+    @Bean
+    ListarTransaccionesService listarTransaccionesService (TransaccionRepositoryPort repository, TransaccionMapper mapper)
+    {
+        return new ListarTransaccionesService(repository,mapper);
+    }
+
+    @Bean
+    AgregarRegistroProductoService agregarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase)
+    {
+        return new AgregarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,registrarTransaccionUseCase,currentUserService,actualizarStockUseCase,revisarStockUseCase);
+    }
+
+    @Bean
+    CurrentUserService currentUserService (UsuarioRepositoryPort usuarioRepositoryPort){
+        return new CurrentUserService(usuarioRepositoryPort);
+    }
+
+    @Bean
+    RevisarStockService revisarStockService (ProductoRepositoryPort productoRepositoryPort)
+    {
+        return new RevisarStockService(productoRepositoryPort);
+    }
+
+    @Bean
+    ActualizarStockService actualizarStockService(ProductoRepositoryPort productoRepositoryPort)
+    {
+        return new ActualizarStockService(productoRepositoryPort);
+    }
 }
 
 

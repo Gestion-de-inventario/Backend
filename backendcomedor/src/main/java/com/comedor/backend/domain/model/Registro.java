@@ -9,7 +9,7 @@ public class Registro {
     private Producto product;
     private BigDecimal amount;
     private FuenteProducto fuenteProducto;
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice = BigDecimal.ZERO;
 
     public int getId() {
         return id;

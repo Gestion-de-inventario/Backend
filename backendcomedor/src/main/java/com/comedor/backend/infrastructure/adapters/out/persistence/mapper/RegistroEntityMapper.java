@@ -4,7 +4,6 @@ import com.comedor.backend.domain.model.Registro;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.RegistroEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,7 +20,7 @@ public class RegistroEntityMapper {
     {
         Registro registro = new Registro();
         registro.setId(entity.getId());
-        registro.setProduct(productoEntityMapper.toDomain(entity.getProduct()));
+        if(entity.getProduct() != null)registro.setProduct(productoEntityMapper.toDomain(entity.getProduct()));
         registro.setAmount(entity.getAmount());
         registro.setFuenteProducto(entity.getFuenteProducto());
         registro.setUnitPrice(entity.getUnitPrice());
@@ -31,8 +30,6 @@ public class RegistroEntityMapper {
     public RegistroEntity toEntity(Registro registro)
     {
         RegistroEntity entity = new RegistroEntity();
-        entity.setId(registro.getId());
-        entity.setProduct(productoEntityMapper.toEntity(registro.getProduct()));
         entity.setAmount(registro.getAmount());
         entity.setFuenteProducto(registro.getFuenteProducto());
         entity.setUnitPrice(registro.getUnitPrice());

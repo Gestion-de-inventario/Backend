@@ -20,12 +20,12 @@ public class ReporteMenuRepositoryAdapter implements ReporteMenuRepositoryPort {
     private final ReporteMenuJpaRepository reporteMenuJpaRepository;
     private final ReporteMenuEntityMapper reporteMenuEntityMapper;
     @Override
-    public boolean existByDate(Date date) {
+    public boolean existByDate(LocalDate date) {
         return reporteMenuJpaRepository.existsByDate(date);
     }
 
     @Override
-    public ReporteMenu findByDate(Date date) {
+    public ReporteMenu findByDate(LocalDate date) {
         return reporteMenuEntityMapper.toDomain(reporteMenuJpaRepository.findByDate(date));
     }
 
@@ -46,7 +46,7 @@ public class ReporteMenuRepositoryAdapter implements ReporteMenuRepositoryPort {
     }
 
     @Override
-    public List<ReporteMenu> findByTimePeriod(Date start, Date end) {
+    public List<ReporteMenu> findByTimePeriod(LocalDate start, LocalDate end) {
         return List.of();
     }
 }

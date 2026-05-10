@@ -1,8 +1,6 @@
 package com.comedor.backend.application.common.mapper;
 
-import com.comedor.backend.application.ports.out.CategoriaRepositoryPort;
-import com.comedor.backend.application.ports.out.EtiquetaRepositoryPort;
-import com.comedor.backend.application.ports.out.ProductoRepositoryPort;
+
 import com.comedor.backend.domain.model.Categoria;
 import com.comedor.backend.domain.model.Etiqueta;
 import com.comedor.backend.domain.model.Producto;
