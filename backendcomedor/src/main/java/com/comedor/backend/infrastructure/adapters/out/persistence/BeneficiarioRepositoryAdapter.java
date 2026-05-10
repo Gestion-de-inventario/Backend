@@ -2,12 +2,14 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
 import com.comedor.backend.domain.model.Beneficiario;
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiarioEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiarioPersistenceMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiarioJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -16,6 +18,7 @@ public class BeneficiarioRepositoryAdapter implements BeneficiarioRepositoryPort
 
     private final BeneficiarioJpaRepository jpaRepository;
     private final BeneficiarioPersistenceMapper persistenceMapper;
+
 
     @Override
     public Beneficiario guardar(Beneficiario beneficiario) {
@@ -47,6 +50,21 @@ public class BeneficiarioRepositoryAdapter implements BeneficiarioRepositoryPort
     public Optional<Beneficiario> findById(Integer id) {
         return jpaRepository.findById(id)
                 .map(persistenceMapper::convertToDomain);
+    }
+
+    @Override
+    public List<Beneficiario> getBeneficiarioByStatus(Estado estado) {
+        if(estado == null)
+        {   return persistenceMapper.convertToListDomain(jpaRepository.findAll());
+        } else if (estado == Estado.ACTIVO)
+        {
+            return persistenceMapper.convertToListDomain(jpaRepository.getAllBeneficiariosActivos());
+        }
+        else if (estado == Estado.INACTIVO)
+        {
+            return persistenceMapper.convertToListDomain(jpaRepository.getAllBeneficiariosInactivos());
+        }
+        return null;
     }
 
 

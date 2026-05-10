@@ -16,4 +16,6 @@ public interface ProductoJpaRepository  extends JpaRepository<ProductoEntity, In
     List<ProductoEntity> getAllProductosActivos();
 
     boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, int id);
 }
