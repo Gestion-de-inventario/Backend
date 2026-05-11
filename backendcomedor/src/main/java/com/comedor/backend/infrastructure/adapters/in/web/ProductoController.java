@@ -1,14 +1,17 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 
-import com.comedor.backend.application.ports.in.ActivarProductoUseCase;
-import com.comedor.backend.application.ports.in.CrearProductoUseCase;
-import com.comedor.backend.application.ports.in.DesactivarProductoUseCase;
-import com.comedor.backend.application.ports.in.ListarProductosPorEstadoUseCase;
+import com.comedor.backend.application.ports.in.*;
+import com.comedor.backend.domain.exceptions.ProductoConTransaccionesException;
+import com.comedor.backend.domain.exceptions.ProductoNoEncontradoException;
+import com.comedor.backend.domain.exceptions.ProductoYaExisteException;
 import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarProductoRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,7 @@ public class ProductoController {
     private final ListarProductosPorEstadoUseCase listarProductosPorEstadoUseCase;
     private final ActivarProductoUseCase activarProductoUseCase;
     private final DesactivarProductoUseCase desactivarProductoUseCase;
+    private final EditarProductoUseCase editarProductoUseCase;
 
     @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     @GetMapping("/listar")
@@ -51,6 +55,22 @@ public class ProductoController {
             case ACTIVO -> activarProductoUseCase.activarProductoPorId(id);
             case INACTIVO -> desactivarProductoUseCase.desactivarProductoPorId(id);
         };
+    }
+
+    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> editarProducto(@PathVariable int id, @RequestBody EditarProductoRequestDTO request) {
+        try {
+            return ResponseEntity.ok(editarProductoUseCase.editar(id, request));
+        } catch (ProductoNoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (ProductoConTransaccionesException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (ProductoYaExisteException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el producto");
+        }
     }
 
 }

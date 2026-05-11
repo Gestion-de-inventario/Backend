@@ -35,7 +35,6 @@ public class ActualizarStockService implements ActualizarStockUseCase {
                             .subtract(cantidad)
             );
         }
-
-        //productoRepositoryPort.update(producto);
+        productoRepositoryPort.updateStock(producto);
     }
 }

@@ -1,14 +1,11 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.EditarBeneficiarioUseCase;
-import com.comedor.backend.application.ports.in.EditarUsuarioUseCase;
 import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
 import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.exceptions.DniYaRegistradoException;
 import com.comedor.backend.domain.model.Beneficiario;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequest;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequestDTO;
 
 public class EditarBeneficiarioService implements EditarBeneficiarioUseCase {
 
@@ -19,7 +16,7 @@ public class EditarBeneficiarioService implements EditarBeneficiarioUseCase {
     }
 
     @Override
-    public Beneficiario editar(int id, EditarBeneficiarioRequest editarBeneficiarioRequest) {
+    public Beneficiario editar(int id, EditarBeneficiarioRequestDTO editarBeneficiarioRequest) {
         Beneficiario beneficiario = beneficiarioRepositoryPort.findById(id)
                 .orElseThrow(() -> new BeneficiarioNoEncontradoException("Usuario No Entontrad" + id));
 

@@ -4,5 +4,5 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.entity.Transa
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransaccionJpaRepository extends JpaRepository<TransaccionesEntity, Integer> {
-
+    boolean existsByProductId(int productoId);
 }

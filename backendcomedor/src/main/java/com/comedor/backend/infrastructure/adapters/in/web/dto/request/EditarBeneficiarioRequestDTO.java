@@ -4,7 +4,7 @@ import com.comedor.backend.domain.model.enums.Estado;
 import lombok.Data;
 
 @Data
-public class EditarBeneficiarioRequest {
+public class EditarBeneficiarioRequestDTO {
     private String dni;
     private String name;
     private String lastName;
