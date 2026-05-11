@@ -11,4 +11,5 @@ public interface ReporteMenuRepositoryPort {
     ReporteMenu create(ReporteMenu reporteMenu);
     ReporteMenu update(ReporteMenu reporteMenu);
     List<ReporteMenu> findByTimePeriod(LocalDate start, LocalDate end);
+    ReporteMenu findById(int id);
 }

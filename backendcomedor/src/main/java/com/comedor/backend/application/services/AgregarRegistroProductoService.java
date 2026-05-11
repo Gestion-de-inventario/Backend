@@ -1,10 +1,7 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.RegistroProductoMapper;
-import com.comedor.backend.application.ports.in.ActualizarStockUseCase;
-import com.comedor.backend.application.ports.in.AgregarRegistroProductoUseCase;
-import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
-import com.comedor.backend.application.ports.in.RevisarStockUseCase;
+import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.RegistroProductoRepositoryPort;
 import com.comedor.backend.domain.exceptions.CantidadProductoInvalida;
 import com.comedor.backend.domain.exceptions.PrecioProductoInvalido;
@@ -25,13 +22,16 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
     private final CurrentUserService currentUserService;
     private final ActualizarStockUseCase actualizarStockUseCase;
     private final RevisarStockUseCase revisarStockUseCase;
-    public AgregarRegistroProductoService(RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase) {
+    private final RecalcularResumenReporteUseCase recalcularResumenReporteUseCase;
+
+    public AgregarRegistroProductoService(RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
         this.registroProductoRepositoryPort = registroProductoRepositoryPort;
         this.registroProductoMapper = registroProductoMapper;
         this.registrarTransaccionUseCase = registrarTransaccionUseCase;
         this.currentUserService = currentUserService;
         this.actualizarStockUseCase = actualizarStockUseCase;
         this.revisarStockUseCase = revisarStockUseCase;
+        this.recalcularResumenReporteUseCase = recalcularResumenReporteUseCase;
     }
 
     @Override
@@ -87,6 +87,8 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
                     dto.getAmount(),
                     TipoMovimiento.SALIDA
             );
+
+            recalcularResumenReporteUseCase.recalcular(reporteId);
 
             return registroProductoMapper.toDto(registroCreado);
     }

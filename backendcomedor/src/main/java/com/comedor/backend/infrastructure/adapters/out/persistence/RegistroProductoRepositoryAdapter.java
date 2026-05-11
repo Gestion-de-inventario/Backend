@@ -14,6 +14,8 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class RegistroProductoRepositoryAdapter implements RegistroProductoRepositoryPort {
@@ -74,7 +76,7 @@ public class RegistroProductoRepositoryAdapter implements RegistroProductoReposi
         return registroEntityMapper.toDomain(updated);
     }
     @Override
-    public Registro eliminarRegistroProducto(int reporteId,int registroId) {
+    public void eliminarRegistroProducto(int reporteId,int registroId) {
         RegistroEntity entity = registroProductoJpaRepository
                 .findById(registroId)
                 .orElseThrow(() ->
@@ -87,6 +89,23 @@ public class RegistroProductoRepositoryAdapter implements RegistroProductoReposi
         }
 
         registroProductoJpaRepository.delete(entity);
-        return registroEntityMapper.toDomain(entity);
+    }
+
+    @Override
+    public List<Registro> findByReporteId(int reporteId) {
+        List<RegistroEntity> entities =registroProductoJpaRepository.findByReporteId(reporteId);
+        return registroEntityMapper.toListDomain(entities);
+    }
+
+    @Override
+    public Registro findById(int id) {
+        return registroEntityMapper.toDomain(
+                registroProductoJpaRepository.findById(id)
+                        .orElseThrow(
+                                () -> new RegistroNoEncontradoException(
+                                        "Registro no encontrado"
+                                )
+                        )
+        );
     }
 }

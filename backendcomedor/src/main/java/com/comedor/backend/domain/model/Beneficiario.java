@@ -39,4 +39,7 @@ public class Beneficiario {
         this.status = Estado.ACTIVO;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

@@ -194,9 +194,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    AgregarRegistroProductoService agregarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase)
+    AgregarRegistroProductoService agregarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase,RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
     {
-        return new AgregarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,registrarTransaccionUseCase,currentUserService,actualizarStockUseCase,revisarStockUseCase);
+        return new AgregarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,registrarTransaccionUseCase,currentUserService,actualizarStockUseCase,revisarStockUseCase, recalcularResumenReporteUseCase);
     }
 
     @Bean
@@ -215,6 +215,48 @@ public class UseCaseConfig {
     {
         return new ActualizarStockService(productoRepositoryPort);
     }
+
+    @Bean
+    RecalcularResumenReporteService recalcularResumenReporteService(ReporteMenuRepositoryPort reporteMenuRepositoryPort, ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, RegistroProductoRepositoryPort registroProductoRepositoryPort)
+    {
+        return new RecalcularResumenReporteService(reporteMenuRepositoryPort,controlBeneficiarioRepositoryPort,registroProductoRepositoryPort);
+    }
+
+    @Bean
+    EditarRegistroBeneficiarioService editarRegistroBeneficiarioService(ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, ControlBeneficiarioMapper controlBeneficiarioMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    {
+        return new EditarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,controlBeneficiarioMapper,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    AgregarRegistroBeneficiarioService agregarRegistroBeneficiarioService(ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, ControlBeneficiarioMapper controlBeneficiarioMapper,RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    {
+        return new AgregarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,controlBeneficiarioMapper,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    EliminarRegistroBeneficiarioService eliminarRegistroBeneficiarioService ( ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
+        return new EliminarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    EditarRegistroProductoService editarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort,
+                                                                 RegistroProductoMapper registroProductoMapper,
+                                                                 ActualizarStockUseCase actualizarStockUseCase,
+                                                                 RegistrarTransaccionUseCase registrarTransaccionUseCase,
+                                                                 RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,
+                                                                 CurrentUserService currentUserService){
+        return new EditarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,actualizarStockUseCase,registrarTransaccionUseCase,recalcularResumenReporteUseCase,currentUserService);
+    }
+
+    @Bean
+    EliminarRegistroProductoService eliminarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort,
+                                                                     RegistrarTransaccionUseCase registrarTransaccionUseCase,
+                                                                     CurrentUserService currentUserService,
+                                                                     RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
+        return new EliminarRegistroProductoService(registroProductoRepositoryPort,registrarTransaccionUseCase,currentUserService,recalcularResumenReporteUseCase);
+    }
+
 }
 
 

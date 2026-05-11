@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.ReporteMenuRepositoryPort;
+import com.comedor.backend.domain.exceptions.ReporteMenuNoEncontradoException;
 import com.comedor.backend.domain.model.ReporteMenu;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ReporteMenuEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.ReporteMenuEntityMapper;
@@ -42,11 +43,35 @@ public class ReporteMenuRepositoryAdapter implements ReporteMenuRepositoryPort {
 
     @Override
     public ReporteMenu update(ReporteMenu reporteMenu) {
-        return null;
+        ReporteMenuEntity entity =
+                reporteMenuEntityMapper
+                        .toEntity(reporteMenu);
+
+        ReporteMenuEntity updated =
+                reporteMenuJpaRepository
+                        .save(entity);
+
+        return reporteMenuEntityMapper
+                .toDomain(updated);
     }
 
     @Override
     public List<ReporteMenu> findByTimePeriod(LocalDate start, LocalDate end) {
         return List.of();
+    }
+
+    @Override
+    public ReporteMenu findById(int id) {
+        ReporteMenuEntity entity =
+                reporteMenuJpaRepository
+                        .findById(id)
+                        .orElseThrow(() ->
+                                new ReporteMenuNoEncontradoException(
+                                        "No existe el reporte con id: " + id
+                                )
+                        );
+
+        return reporteMenuEntityMapper
+                .toDomain(entity);
     }
 }

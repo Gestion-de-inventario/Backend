@@ -35,8 +35,6 @@ public class ReporteMenuEntityMapper {
         reporteMenuEntity.setDate(reporteMenu.getDate());
         reporteMenuEntity.setCooks(reporteMenu.getCooks());
         reporteMenuEntity.setMenu(reporteMenu.getMenu());
-        reporteMenuEntity.setProductRecord(registroEntityMapper.toListEntity(reporteMenu.getProductRecord()));
-        reporteMenuEntity.setBeneficiariosRecord(controlBeneficiarioEntityMapper.toListEntity(reporteMenu.getBeneficiariosRecord()));
         reporteMenuEntity.setTotalEarned(reporteMenu.getTotalEarned());
         reporteMenuEntity.setTotalSpent(reporteMenu.getTotalSpent());
         return reporteMenuEntity;

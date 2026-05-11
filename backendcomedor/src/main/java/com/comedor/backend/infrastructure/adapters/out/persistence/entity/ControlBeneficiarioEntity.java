@@ -29,7 +29,7 @@ public class ControlBeneficiarioEntity {
     @Column(nullable = false)
     private boolean paid = false;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MetodoPago payMethod;
 
     @Column(name = "menus_amount", nullable = false)
