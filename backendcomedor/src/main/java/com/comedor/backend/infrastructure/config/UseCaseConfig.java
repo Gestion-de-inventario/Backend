@@ -187,6 +187,102 @@ public class UseCaseConfig {
         return new DesactivarProductoService(productoRepositoryPort,productoMapper);
     }
 
+    @Bean
+    CrearReporteMenuService crearReporteMenuService (ReporteMenuRepositoryPort repository, ReporteMenuMapper mapper){
+        return new CrearReporteMenuService(repository,mapper);
+    }
+
+    @Bean
+    RegistrarTransaccionService registrarTransaccionService(TransaccionRepositoryPort repository, TransaccionMapper mapper)
+    {
+        return new RegistrarTransaccionService(repository,mapper);
+    }
+
+    @Bean
+    ListarTransaccionesService listarTransaccionesService (TransaccionRepositoryPort repository, TransaccionMapper mapper)
+    {
+        return new ListarTransaccionesService(repository,mapper);
+    }
+
+    @Bean
+    AgregarRegistroProductoService agregarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase,RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    {
+        return new AgregarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,registrarTransaccionUseCase,currentUserService,actualizarStockUseCase,revisarStockUseCase, recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    CurrentUserService currentUserService (UsuarioRepositoryPort usuarioRepositoryPort){
+        return new CurrentUserService(usuarioRepositoryPort);
+    }
+
+    @Bean
+    RevisarStockService revisarStockService (ProductoRepositoryPort productoRepositoryPort)
+    {
+        return new RevisarStockService(productoRepositoryPort);
+    }
+
+    @Bean
+    ActualizarStockService actualizarStockService(ProductoRepositoryPort productoRepositoryPort)
+    {
+        return new ActualizarStockService(productoRepositoryPort);
+    }
+
+    @Bean
+    RecalcularResumenReporteService recalcularResumenReporteService(ReporteMenuRepositoryPort reporteMenuRepositoryPort, ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, RegistroProductoRepositoryPort registroProductoRepositoryPort)
+    {
+        return new RecalcularResumenReporteService(reporteMenuRepositoryPort,controlBeneficiarioRepositoryPort,registroProductoRepositoryPort);
+    }
+
+    @Bean
+    EditarRegistroBeneficiarioService editarRegistroBeneficiarioService(ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, ControlBeneficiarioMapper controlBeneficiarioMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    {
+        return new EditarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,controlBeneficiarioMapper,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    AgregarRegistroBeneficiarioService agregarRegistroBeneficiarioService(ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, ControlBeneficiarioMapper controlBeneficiarioMapper,RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    {
+        return new AgregarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,controlBeneficiarioMapper,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    EliminarRegistroBeneficiarioService eliminarRegistroBeneficiarioService ( ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
+        return new EliminarRegistroBeneficiarioService(controlBeneficiarioRepositoryPort,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    EditarRegistroProductoService editarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort,
+                                                                 RegistroProductoMapper registroProductoMapper,
+                                                                 ActualizarStockUseCase actualizarStockUseCase,
+                                                                 RegistrarTransaccionUseCase registrarTransaccionUseCase,
+                                                                 RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,
+                                                                 CurrentUserService currentUserService){
+        return new EditarRegistroProductoService(registroProductoRepositoryPort,registroProductoMapper,actualizarStockUseCase,registrarTransaccionUseCase,recalcularResumenReporteUseCase,currentUserService);
+    }
+
+    @Bean
+    EliminarRegistroProductoService eliminarRegistroProductoService (RegistroProductoRepositoryPort registroProductoRepositoryPort,
+                                                                     RegistrarTransaccionUseCase registrarTransaccionUseCase,
+                                                                     CurrentUserService currentUserService,
+                                                                     RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
+        return new EliminarRegistroProductoService(registroProductoRepositoryPort,registrarTransaccionUseCase,currentUserService,recalcularResumenReporteUseCase);
+    }
+
+    @Bean
+    ObtenerResumenReporteMenuService obtenerResumenReporteMenuService (ReporteMenuRepositoryPort reporteMenuRepositoryPort,
+                                                                       ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort,
+                                                                       ResumenReporteMenuMapper resumenReporteMenuMapper)
+    {
+        return new ObtenerResumenReporteMenuService(reporteMenuRepositoryPort,controlBeneficiarioRepositoryPort,resumenReporteMenuMapper);
+    }
+
+    @Bean
+    ObtenerReporteMenuPorFechaService obtenerReporteMenuPorFechaService (ReporteMenuRepositoryPort reporteMenuRepositoryPort, ReporteMenuMapper reporteMenuMapper, PersonaRepositoryPort personaRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase)
+    {
+        return new ObtenerReporteMenuPorFechaService(reporteMenuRepositoryPort,reporteMenuMapper,personaRepositoryPort,obtenerResumenReporteMenuUseCase);
+    }
+
+
 }
 
 

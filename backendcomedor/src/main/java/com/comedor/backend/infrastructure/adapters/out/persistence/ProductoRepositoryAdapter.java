@@ -114,6 +114,18 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
     }
 
     @Override
+    public Producto updateStock(Producto producto) {
+
+        ProductoEntity entity = productoJpaRepository.findById(producto.getId())
+                .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado"));
+
+        entity.setStock(producto.getStock());
+
+        ProductoEntity saved = productoJpaRepository.save(entity);
+
+        return productoEntityMapper.toDomain(saved);
+    }
+    @Override
     public boolean tieneTransaccionesVinculadas(int id) {
         return transaccionJpaRepository.existsByProductId(id);
     }

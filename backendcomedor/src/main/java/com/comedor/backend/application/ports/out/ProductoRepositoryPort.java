@@ -14,6 +14,7 @@ public interface ProductoRepositoryPort {
     Producto getProductoById(int id);
 
     Producto updateProducto(Producto producto);
+    Producto updateStock(Producto producto);
     boolean tieneTransaccionesVinculadas(int id);
     boolean existByNameAndIdNot(String nombre, int id);
 }

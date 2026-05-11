@@ -26,4 +26,6 @@ public interface PersonaJpaRepository extends JpaRepository<PersonaEntity, Integ
             "FROM PersonaEntity p WHERE p.user.id = :id")
     Optional<UsuarioBasicoDTO> findUsuarioBasicoDtoById(@Param("id") Integer id);
 
+    List<PersonaEntity> findAllById(Iterable<Integer> ids);
+
 }

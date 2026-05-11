@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,10 +20,8 @@ public class ReporteMenuEntity {
     @Column(name = "reporte_menu_id")
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private LocalDate date;
-
-
 
     @ElementCollection
     @Column(name = "user_id")
@@ -32,14 +31,14 @@ public class ReporteMenuEntity {
     private String menu;
 
     @OneToMany(mappedBy = "reporte")
-    private List<RegistroEntity> productRecord;
+    private List<RegistroEntity> productRecord = new ArrayList<>();
 
     @OneToMany(mappedBy = "reporte")
-    private List<ControlBeneficiarioEntity> beneficiariosRecord;
+    private List<ControlBeneficiarioEntity> beneficiariosRecord = new ArrayList<>();
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal totalEarned;
+    @Column(nullable = false,precision = 10, scale = 2)
+    private BigDecimal totalEarned = BigDecimal.ZERO;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal totalSpent;
+    @Column(nullable = false,precision = 10, scale = 2)
+    private BigDecimal totalSpent = BigDecimal.ZERO;
 }

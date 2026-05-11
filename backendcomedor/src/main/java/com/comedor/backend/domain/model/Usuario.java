@@ -38,6 +38,10 @@ public class Usuario {
         return status;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

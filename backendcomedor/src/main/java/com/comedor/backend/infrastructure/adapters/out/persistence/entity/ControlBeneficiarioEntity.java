@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
+import com.comedor.backend.domain.model.enums.MetodoPago;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,16 +24,29 @@ public class ControlBeneficiarioEntity {
     private BeneficiarioEntity beneficiario;
 
     @Column(nullable = false)
-    private boolean received;
+    private boolean received = false;
 
-    @Column(name = "menus_amount")
+    @Column(nullable = false)
+    private boolean paid = false;
+
+    @Enumerated(EnumType.STRING)
+    private MetodoPago payMethod;
+
+    @Column(name = "menus_amount", nullable = false)
     private int menusAmount;
 
-    @Column(name = "menu_price", precision = 10, scale = 2)
+    @Column(name = "menu_price",nullable = false ,precision = 10, scale = 2)
     private BigDecimal menuPrice;
 
     @ManyToOne
     @JoinColumn(name = "reporte_menu_id")
     private ReporteMenuEntity reporte;
 
+    public boolean getIsReceived() {
+        return received;
+    }
+
+    public boolean getIsPaid() {
+        return paid;
+    }
 }

@@ -7,7 +7,7 @@ import com.comedor.backend.domain.exceptions.CategoriaExistenteException;
 import com.comedor.backend.domain.model.Categoria;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoriaRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoriaResponseDTO;
-import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoriaEntity;
+
 
 public class CrearCategoriaService implements CrearCategoriaUseCase {
     private final CategoriaRepositoryPort categoriaRepositoryPort;
