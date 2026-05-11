@@ -7,6 +7,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroB
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class ControlBeneficiarioMapper {
@@ -79,5 +80,10 @@ public class ControlBeneficiarioMapper {
         );
 
         return dto;
+    }
+
+    public List<RegistroBeneficiarioResponseDTO> toListDto(List<ControlBeneficiario> control)
+    {
+        return control.stream().map(this::toDto).toList();
     }
 }

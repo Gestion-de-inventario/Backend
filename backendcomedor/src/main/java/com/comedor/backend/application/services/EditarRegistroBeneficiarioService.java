@@ -7,7 +7,7 @@ import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPo
 import com.comedor.backend.domain.model.ControlBeneficiario;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class EditarRegistroBeneficiarioService implements EditarRegistroBeneficiarioUseCase {

@@ -8,7 +8,7 @@ import com.comedor.backend.domain.model.Registro;
 import com.comedor.backend.domain.model.enums.FuenteProducto;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 

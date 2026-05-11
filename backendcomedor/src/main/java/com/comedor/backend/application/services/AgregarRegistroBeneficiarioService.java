@@ -10,7 +10,7 @@ import com.comedor.backend.domain.exceptions.PrecioMenuInvalido;
 import com.comedor.backend.domain.model.ControlBeneficiario;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 

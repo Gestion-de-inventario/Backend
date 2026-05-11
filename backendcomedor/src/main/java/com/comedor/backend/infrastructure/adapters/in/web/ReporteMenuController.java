@@ -2,17 +2,17 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.services.CrearReporteMenuService;
-import com.comedor.backend.application.services.EditarRegistroBeneficiarioService;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroProductoResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/reporte-menu")
@@ -25,11 +25,19 @@ public class ReporteMenuController {
     private final EliminarRegistroBeneficiarioUseCase eliminarRegistroBeneficiarioUseCase;
     private final EditarRegistroProductoUseCase editarRegistroProductoUseCase;
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
+    private final ObtenerReporteMenuPorFechaUseCase obtenerReporteMenuPorFechaUseCase;
+    private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
 
     @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     @PostMapping("/create")
     public ReporteMenuResponseDTO createReporteMenu(@RequestBody ReporteMenuRequestDTO reporteMenuRequestDTO) {
         return crearReporteMenuService.crearReporteMenu(reporteMenuRequestDTO);
+    }
+
+    @GetMapping("/fecha/{fecha}")
+    public DetalleReporteMenuResponseDTO obtenerPorFecha(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha){
+        return obtenerReporteMenuPorFechaUseCase.obtenerPorFecha(fecha);
     }
 
     @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
@@ -88,6 +96,12 @@ public class ReporteMenuController {
 
         eliminarRegistroBeneficiarioUseCase.eliminarRegistroBeneficiario(reporteId,controlId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/summary")
+    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    public ResumenReporteMenuResponseDTO obtenerResumen(@PathVariable int id) {
+        return obtenerResumenReporteMenuUseCase.obtenerResumen(id);
     }
 
 }

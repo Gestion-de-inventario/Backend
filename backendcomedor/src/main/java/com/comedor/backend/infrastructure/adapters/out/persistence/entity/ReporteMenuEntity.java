@@ -20,7 +20,7 @@ public class ReporteMenuEntity {
     @Column(name = "reporte_menu_id")
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private LocalDate date;
 
     @ElementCollection

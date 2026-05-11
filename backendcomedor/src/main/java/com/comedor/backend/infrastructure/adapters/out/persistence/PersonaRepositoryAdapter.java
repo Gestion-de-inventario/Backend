@@ -4,6 +4,7 @@ import com.comedor.backend.application.common.mapper.PersonaMapper;
 import com.comedor.backend.application.ports.out.PersonaRepositoryPort;
 import com.comedor.backend.domain.model.Persona;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioBasicoDTO;
+import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PersonaEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.PersonaEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.PersonaJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,18 @@ public class PersonaRepositoryAdapter implements PersonaRepositoryPort {
     @Override
     public boolean existsByNameAndLastNameAndIdNot(String name, String lastName, Integer user_id) {
         return personaJpaRepository.existsByNameAndLastNameAndIdNot(name, lastName, user_id);
+    }
+
+    @Override
+    public List<Persona> findAllByIds(
+            List<Integer> ids
+    ) {
+
+        List<PersonaEntity> entities =
+                personaJpaRepository.findAllById(ids);
+
+        return personaEntityMapper.toListDomain(
+                entities
+        );
     }
 }

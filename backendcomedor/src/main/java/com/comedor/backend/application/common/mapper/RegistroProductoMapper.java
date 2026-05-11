@@ -6,6 +6,8 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroPr
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroProductoResponseDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class RegistroProductoMapper {
 
@@ -37,5 +39,10 @@ public class RegistroProductoMapper {
         responseDTO.setAmount(registro.getAmount());
         responseDTO.setSpentAmount(registro.getAmount().multiply(registro.getUnitPrice()));
         return responseDTO;
+    }
+
+    public List<RegistroProductoResponseDTO> toListDto (List<Registro> registros)
+    {
+       return registros.stream().map(this::toDto).toList();
     }
 }

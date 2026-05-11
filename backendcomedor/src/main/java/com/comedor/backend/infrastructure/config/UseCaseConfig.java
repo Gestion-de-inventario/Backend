@@ -257,6 +257,20 @@ public class UseCaseConfig {
         return new EliminarRegistroProductoService(registroProductoRepositoryPort,registrarTransaccionUseCase,currentUserService,recalcularResumenReporteUseCase);
     }
 
+    @Bean
+    ObtenerResumenReporteMenuService obtenerResumenReporteMenuService (ReporteMenuRepositoryPort reporteMenuRepositoryPort,
+                                                                       ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort,
+                                                                       ResumenReporteMenuMapper resumenReporteMenuMapper)
+    {
+        return new ObtenerResumenReporteMenuService(reporteMenuRepositoryPort,controlBeneficiarioRepositoryPort,resumenReporteMenuMapper);
+    }
+
+    @Bean
+    ObtenerReporteMenuPorFechaService obtenerReporteMenuPorFechaService (ReporteMenuRepositoryPort reporteMenuRepositoryPort, ReporteMenuMapper reporteMenuMapper, PersonaRepositoryPort personaRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase)
+    {
+        return new ObtenerReporteMenuPorFechaService(reporteMenuRepositoryPort,reporteMenuMapper,personaRepositoryPort,obtenerResumenReporteMenuUseCase);
+    }
+
 }
 
 

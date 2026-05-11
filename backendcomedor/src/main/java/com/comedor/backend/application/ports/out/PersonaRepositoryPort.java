@@ -13,4 +13,5 @@ public interface PersonaRepositoryPort {
     boolean existsByDniAndIdNot(String dni,int id);
     Optional<UsuarioBasicoDTO> findUsuarioBasicoDtoById(Integer id);
     boolean existsByNameAndLastNameAndIdNot(String name, String lastName, Integer user_id);
+    List<Persona> findAllByIds(List<Integer> ids);
 }
