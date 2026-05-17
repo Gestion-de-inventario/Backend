@@ -1,31 +1,31 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.ControlBeneficiarioMapper;
+import com.comedor.backend.application.common.mapper.BeneficiaryControlMapper;
 import com.comedor.backend.application.ports.in.EditarRegistroBeneficiarioUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
-import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPort;
-import com.comedor.backend.domain.model.ControlBeneficiario;
+import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class EditarRegistroBeneficiarioService implements EditarRegistroBeneficiarioUseCase {
-    private final ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort;
-    private final ControlBeneficiarioMapper controlBeneficiarioMapper;
+    private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
+    private final BeneficiaryControlMapper beneficiaryControlMapper;
     private final RecalcularResumenReporteUseCase
             recalcularResumenReporteUseCase;
-    public EditarRegistroBeneficiarioService(ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, ControlBeneficiarioMapper controlBeneficiarioMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
-        this.controlBeneficiarioRepositoryPort = controlBeneficiarioRepositoryPort;
-        this.controlBeneficiarioMapper = controlBeneficiarioMapper;
+    public EditarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
+        this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
+        this.beneficiaryControlMapper = beneficiaryControlMapper;
         this.recalcularResumenReporteUseCase = recalcularResumenReporteUseCase;
     }
 
     @Override
     public RegistroBeneficiarioResponseDTO editarRegistroBeneficiario(int reporteId,int controlId, ControlBeneficiarioRequestDTO dto) {
 
-        ControlBeneficiario actual =
-                controlBeneficiarioRepositoryPort
+        BeneficiaryControl actual =
+                beneficiaryControlRepositoryPort
                         .findById(controlId);
 
 
@@ -54,8 +54,8 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
             actual.setMenuPrice(dto.getMenuPrice());
         }
 
-        ControlBeneficiario actualizado =
-                controlBeneficiarioRepositoryPort
+        BeneficiaryControl actualizado =
+                beneficiaryControlRepositoryPort
                         .actualizarBeneficiario(
                                 reporteId,
                                 controlId,
@@ -64,7 +64,7 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
 
         recalcularResumenReporteUseCase.recalcular(reporteId);
 
-        return controlBeneficiarioMapper
+        return beneficiaryControlMapper
                 .toDto(actualizado);
     }
 

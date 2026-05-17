@@ -13,9 +13,9 @@ public class ProductoResponseDTO {
     private int categoryId;
     private String categoryName;
     private Estado categoryState;
-    private int EtiquetaId;
-    private String EtiquetaName;
-    private Estado EtiquetaState;
+    private int TagId;
+    private String TagName;
+    private Estado TagState;
     private String unit;
     private BigDecimal stock;
     private BigDecimal reorderPoint;

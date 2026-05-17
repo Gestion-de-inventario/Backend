@@ -1,35 +1,35 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ConsultarDatosPorDniUseCase;
-import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
+import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.application.ports.out.ReniecPort;
-import com.comedor.backend.domain.model.Beneficiario;
-import com.comedor.backend.domain.model.DatosPersonales;
+import com.comedor.backend.domain.model.Beneficiary;
+import com.comedor.backend.domain.model.PersonalDataReniec;
 
 import java.util.Optional;
 
 public class ConsultarDatosPorDniService implements ConsultarDatosPorDniUseCase {
 
-    private final BeneficiarioRepositoryPort beneficiarioRepositoryPort;
+    private final BeneficiaryRepositoryPort beneficiaryRepositoryPort;
     private final ReniecPort reniecPort;
 
-    public ConsultarDatosPorDniService(BeneficiarioRepositoryPort beneficiarioRepositoryPort, ReniecPort reniecPort){
-        this.beneficiarioRepositoryPort = beneficiarioRepositoryPort;
+    public ConsultarDatosPorDniService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ReniecPort reniecPort){
+        this.beneficiaryRepositoryPort = beneficiaryRepositoryPort;
         this.reniecPort = reniecPort;
 
     }
 
     @Override
-    public DatosPersonales consultar(String dni) {
-        Optional<Beneficiario> beneficiarioLocal = beneficiarioRepositoryPort.buscarPorDni(dni);
+    public PersonalDataReniec consultar(String dni) {
+        Optional<Beneficiary> beneficiarioLocal = beneficiaryRepositoryPort.buscarPorDni(dni);
 
         if(beneficiarioLocal.isPresent()){
-            Beneficiario b = beneficiarioLocal.get();
+            Beneficiary b = beneficiarioLocal.get();
 
-            return new DatosPersonales(b.getDni(),b.getName(),b.getLastname());
+            return new PersonalDataReniec(b.getDni(),b.getName(),b.getLastname());
         }
 
-        Optional<DatosPersonales> datosReniec = reniecPort.consultarPorDni(dni);
+        Optional<PersonalDataReniec> datosReniec = reniecPort.consultarPorDni(dni);
 
         if(datosReniec.isPresent()){
             return datosReniec.get();

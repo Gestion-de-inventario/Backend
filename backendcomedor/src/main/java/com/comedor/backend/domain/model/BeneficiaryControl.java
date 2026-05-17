@@ -1,0 +1,71 @@
+package com.comedor.backend.domain.model;
+
+import com.comedor.backend.domain.model.enums.MetodoPago;
+
+import java.math.BigDecimal;
+
+public class BeneficiaryControl {
+    private int id;
+    private Beneficiary beneficiary;
+    private boolean received = false;
+    private boolean paid = false;
+    private MetodoPago payMethod;
+    private int menusAmount;
+    private BigDecimal menuPrice;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setBeneficiario(Beneficiary beneficiary) {
+        this.beneficiary = beneficiary;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public void setPayMethod(MetodoPago payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public void setMenusAmount(int menusAmount) {
+        this.menusAmount = menusAmount;
+    }
+
+    public void setMenuPrice(BigDecimal menuPrice) {
+        this.menuPrice = menuPrice;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Beneficiary getBeneficiario() {
+        return beneficiary;
+    }
+
+    public boolean getReceived() {
+        return received;
+    }
+
+    public boolean getPaid() {
+        return paid;
+    }
+
+    public MetodoPago getPayMethod() {
+        return payMethod;
+    }
+
+    public int getMenusAmount() {
+        return menusAmount;
+    }
+
+    public BigDecimal getMenuPrice() {
+        return menuPrice;
+    }
+}

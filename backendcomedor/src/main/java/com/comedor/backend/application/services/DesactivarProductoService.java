@@ -1,22 +1,22 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.ProductoMapper;
+import com.comedor.backend.application.common.mapper.ProductMapper;
 import com.comedor.backend.application.ports.in.DesactivarProductoUseCase;
-import com.comedor.backend.application.ports.out.ProductoRepositoryPort;
+import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
 
 public class DesactivarProductoService implements DesactivarProductoUseCase {
-    private final ProductoRepositoryPort productoRepositoryPort;
-    private final ProductoMapper productoMapper;
+    private final ProductRepositoryPort productRepositoryPort;
+    private final ProductMapper productMapper;
 
 
-    public DesactivarProductoService(ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper) {
-        this.productoRepositoryPort = productoRepositoryPort;
-        this.productoMapper = productoMapper;
+    public DesactivarProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper) {
+        this.productRepositoryPort = productRepositoryPort;
+        this.productMapper = productMapper;
     }
 
     @Override
     public ProductoResponseDTO desactivarProductoPorId(int id) {
-        return productoMapper.productoResponseDTO(productoRepositoryPort.deactivateById(id));
+        return productMapper.productoResponseDTO(productRepositoryPort.deactivateById(id));
     }
 }

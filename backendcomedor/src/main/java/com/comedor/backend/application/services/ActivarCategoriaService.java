@@ -1,22 +1,22 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.CategoriaMapper;
+import com.comedor.backend.application.common.mapper.CategoryMapper;
 import com.comedor.backend.application.ports.in.ActivarCategoriaUseCase;
-import com.comedor.backend.application.ports.out.CategoriaRepositoryPort;
+import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoriaResponseDTO;
 
 public class ActivarCategoriaService implements ActivarCategoriaUseCase {
-    private final CategoriaRepositoryPort categoriaRepositoryPort;
-    private final CategoriaMapper categoriaMapper;
+    private final CategoryRepositoryPort categoryRepositoryPort;
+    private final CategoryMapper categoryMapper;
 
-    public ActivarCategoriaService(CategoriaRepositoryPort categoriaRepositoryPort, CategoriaMapper categoriaMapper) {
-        this.categoriaRepositoryPort = categoriaRepositoryPort;
-        this.categoriaMapper = categoriaMapper;
+    public ActivarCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper) {
+        this.categoryRepositoryPort = categoryRepositoryPort;
+        this.categoryMapper = categoryMapper;
     }
 
 
     @Override
     public CategoriaResponseDTO activarCategoriaPorId(int id) {
-        return categoriaMapper.toCategoriaResponseDTO(categoriaRepositoryPort.activateById(id));
+        return categoryMapper.toCategoriaResponseDTO(categoryRepositoryPort.activateById(id));
     }
 }

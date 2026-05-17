@@ -1,11 +1,11 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.RegistroProductoMapper;
+import com.comedor.backend.application.common.mapper.ProductRecordMapper;
 import com.comedor.backend.application.ports.in.*;
-import com.comedor.backend.application.ports.out.RegistroProductoRepositoryPort;
+import com.comedor.backend.application.ports.out.ProductRecordRepositoryPort;
 import com.comedor.backend.domain.exceptions.CantidadProductoInvalida;
 import com.comedor.backend.domain.exceptions.PrecioProductoInvalido;
-import com.comedor.backend.domain.model.Registro;
+import com.comedor.backend.domain.model.Record;
 import com.comedor.backend.domain.model.enums.FuenteProducto;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
@@ -16,17 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 public class AgregarRegistroProductoService implements AgregarRegistroProductoUseCase {
-    private final RegistroProductoRepositoryPort registroProductoRepositoryPort;
-    private final RegistroProductoMapper registroProductoMapper;
+    private final ProductRecordRepositoryPort productRecordRepositoryPort;
+    private final ProductRecordMapper productRecordMapper;
     private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
     private final CurrentUserService currentUserService;
     private final ActualizarStockUseCase actualizarStockUseCase;
     private final RevisarStockUseCase revisarStockUseCase;
     private final RecalcularResumenReporteUseCase recalcularResumenReporteUseCase;
 
-    public AgregarRegistroProductoService(RegistroProductoRepositoryPort registroProductoRepositoryPort, RegistroProductoMapper registroProductoMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
-        this.registroProductoRepositoryPort = registroProductoRepositoryPort;
-        this.registroProductoMapper = registroProductoMapper;
+    public AgregarRegistroProductoService(ProductRecordRepositoryPort productRecordRepositoryPort, ProductRecordMapper productRecordMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
+        this.productRecordRepositoryPort = productRecordRepositoryPort;
+        this.productRecordMapper = productRecordMapper;
         this.registrarTransaccionUseCase = registrarTransaccionUseCase;
         this.currentUserService = currentUserService;
         this.actualizarStockUseCase = actualizarStockUseCase;
@@ -41,19 +41,19 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
 
             validarDatos(dto);
 
-            Registro registroDomain =
-                    registroProductoMapper.toDomain(dto);
+            Record recordDomain =
+                    productRecordMapper.toDomain(dto);
 
-            Registro registroCreado =
-                    registroProductoRepositoryPort
+            Record recordCreated =
+                    productRecordRepositoryPort
                             .agregarRegistroProducto(
                                     reporteId,
-                                    registroDomain
+                                    recordDomain
                             );
 
             Integer usuarioId = currentUserService.getCurrentUser().getId();
 
-            if (registroCreado.getFuenteProducto() == FuenteProducto.COMPRA) {
+            if (recordCreated.getProductSource() == FuenteProducto.COMPRA) {
 
                 registrarMovimiento(
                         usuarioId,
@@ -90,7 +90,7 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
 
             recalcularResumenReporteUseCase.recalcular(reporteId);
 
-            return registroProductoMapper.toDto(registroCreado);
+            return productRecordMapper.toDto(recordCreated);
     }
 
     private void registrarMovimiento(

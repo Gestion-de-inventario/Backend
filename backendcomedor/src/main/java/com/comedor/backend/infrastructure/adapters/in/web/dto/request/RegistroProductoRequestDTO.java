@@ -8,6 +8,6 @@ import java.math.BigDecimal;
 public class RegistroProductoRequestDTO {
     private int productoId;
     private BigDecimal amount;
-    private FuenteProducto fuenteProducto;
+    private FuenteProducto productSource;
     private BigDecimal unitPrice;
 }

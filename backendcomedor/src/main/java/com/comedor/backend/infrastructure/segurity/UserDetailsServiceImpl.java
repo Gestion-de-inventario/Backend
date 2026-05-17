@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.segurity;
 
-import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
-import com.comedor.backend.domain.model.Usuario;
+import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,18 +15,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UsuarioRepositoryPort usuarioRepository;
+    private final UserRepositoryPort usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Usuario user = usuarioRepository.findByUsername(username)
+        User user = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_"+user.getRol().getNombre()))
+                List.of(new SimpleGrantedAuthority("ROLE_"+user.getRol().getName()))
         );
     }
 }
