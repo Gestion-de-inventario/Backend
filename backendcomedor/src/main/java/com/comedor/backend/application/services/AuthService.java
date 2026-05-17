@@ -2,10 +2,10 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.AuthMapper;
 import com.comedor.backend.application.ports.in.LoginUseCase;
-import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
+import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
 import com.comedor.backend.domain.exceptions.UsuarioDeshabilitadoException;
-import com.comedor.backend.domain.model.Usuario;
+import com.comedor.backend.domain.model.User;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
@@ -14,12 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthService implements LoginUseCase {
 
-    private final UsuarioRepositoryPort usuarioRepository;
+    private final UserRepositoryPort usuarioRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthMapper authMapper;
 
-    public AuthService(UsuarioRepositoryPort usuarioRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthMapper authMapper) {
+    public AuthService(UserRepositoryPort usuarioRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthMapper authMapper) {
         this.usuarioRepository = usuarioRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -29,7 +29,7 @@ public class AuthService implements LoginUseCase {
     @Override
     public AuthResponseDTO login(AuthRequestDTO request) {
 
-        Usuario user = usuarioRepository.findByUsername(request.getUsername())
+        User user = usuarioRepository.findByUsername(request.getUsername())
                 .orElseThrow(CredencialesInvalidasException::new);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {

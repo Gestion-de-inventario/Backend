@@ -1,12 +1,12 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
-import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPort;
-import com.comedor.backend.application.ports.out.RegistroProductoRepositoryPort;
-import com.comedor.backend.application.ports.out.ReporteMenuRepositoryPort;
-import com.comedor.backend.domain.model.ControlBeneficiario;
-import com.comedor.backend.domain.model.Registro;
-import com.comedor.backend.domain.model.ReporteMenu;
+import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.application.ports.out.ProductRecordRepositoryPort;
+import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
+import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.Record;
+import com.comedor.backend.domain.model.MenuReport;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,38 +14,38 @@ import java.util.List;
 public class RecalcularResumenReporteService
         implements RecalcularResumenReporteUseCase {
 
-    private final ReporteMenuRepositoryPort
-            reporteMenuRepositoryPort;
+    private final MenuReportRepositoryPort
+            menuReportRepositoryPort;
 
-    private final ControlBeneficiarioRepositoryPort
-            controlBeneficiarioRepositoryPort;
+    private final BeneficiaryControlRepositoryPort
+            beneficiaryControlRepositoryPort;
 
-    private final RegistroProductoRepositoryPort
-            registroProductoRepositoryPort;
+    private final ProductRecordRepositoryPort
+            productRecordRepositoryPort;
 
-    public RecalcularResumenReporteService(ReporteMenuRepositoryPort reporteMenuRepositoryPort, ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort, RegistroProductoRepositoryPort registroProductoRepositoryPort) {
-        this.reporteMenuRepositoryPort = reporteMenuRepositoryPort;
-        this.controlBeneficiarioRepositoryPort = controlBeneficiarioRepositoryPort;
-        this.registroProductoRepositoryPort = registroProductoRepositoryPort;
+    public RecalcularResumenReporteService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, ProductRecordRepositoryPort productRecordRepositoryPort) {
+        this.menuReportRepositoryPort = menuReportRepositoryPort;
+        this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
+        this.productRecordRepositoryPort = productRecordRepositoryPort;
     }
 
 
     @Override
     public void recalcular(int reporteId) {
-        ReporteMenu reporte =
-                reporteMenuRepositoryPort
+        MenuReport reporte =
+                menuReportRepositoryPort
                         .findById(reporteId);
 
-        List<Registro> registros =
-                registroProductoRepositoryPort
+        List<Record> records =
+                productRecordRepositoryPort
                         .findByReporteId(reporteId);
 
-        List<ControlBeneficiario> beneficiarios =
-                controlBeneficiarioRepositoryPort
+        List<BeneficiaryControl> beneficiarios =
+                beneficiaryControlRepositoryPort
                         .findByReporteId(reporteId);
 
         BigDecimal totalSpent =
-                registros.stream()
+                records.stream()
                         .map(r ->
                                 r.getUnitPrice()
                                         .multiply(r.getAmount())
@@ -57,7 +57,7 @@ public class RecalcularResumenReporteService
 
         BigDecimal totalEarned =
                 beneficiarios.stream()
-                        .filter(ControlBeneficiario::getPaid)
+                        .filter(BeneficiaryControl::getPaid)
                         .map(c ->
                                 c.getMenuPrice().multiply(
                                         BigDecimal.valueOf(
@@ -74,6 +74,6 @@ public class RecalcularResumenReporteService
 
         reporte.setTotalEarned(totalEarned);
 
-        reporteMenuRepositoryPort.update(reporte);
+        menuReportRepositoryPort.update(reporte);
     }
 }

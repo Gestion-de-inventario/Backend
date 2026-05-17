@@ -1,7 +1,7 @@
 package com.comedor.backend.application.ports.in;
 
-import com.comedor.backend.domain.model.DatosPersonales;
+import com.comedor.backend.domain.model.PersonalDataReniec;
 
 public interface ConsultarDatosPorDniUseCase {
-    DatosPersonales consultar(String dni);
+    PersonalDataReniec consultar(String dni);
 }

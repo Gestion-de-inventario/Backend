@@ -1,11 +1,11 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.ResumenReporteMenuMapper;
+import com.comedor.backend.application.common.mapper.SummaryMenuReportMapper;
 import com.comedor.backend.application.ports.in.ObtenerResumenReporteMenuUseCase;
-import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPort;
-import com.comedor.backend.application.ports.out.ReporteMenuRepositoryPort;
-import com.comedor.backend.domain.model.ControlBeneficiario;
-import com.comedor.backend.domain.model.ReporteMenu;
+import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
+import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.domain.model.enums.MetodoPago;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,33 +16,33 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ObtenerResumenReporteMenuService implements ObtenerResumenReporteMenuUseCase {
-    private final ReporteMenuRepositoryPort reporteMenuRepositoryPort;
-    private final ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort;
-    private final ResumenReporteMenuMapper resumenReporteMenuMapper;
+    private final MenuReportRepositoryPort menuReportRepositoryPort;
+    private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
+    private final SummaryMenuReportMapper summaryMenuReportMapper;
     public ObtenerResumenReporteMenuService(
-            ReporteMenuRepositoryPort reporteMenuRepositoryPort,
-            ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort,
-            ResumenReporteMenuMapper resumenReporteMenuMapper
+            MenuReportRepositoryPort menuReportRepositoryPort,
+            BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
+            SummaryMenuReportMapper summaryMenuReportMapper
     ) {
-        this.reporteMenuRepositoryPort = reporteMenuRepositoryPort;
-        this.controlBeneficiarioRepositoryPort = controlBeneficiarioRepositoryPort;
-        this.resumenReporteMenuMapper = resumenReporteMenuMapper;
+        this.menuReportRepositoryPort = menuReportRepositoryPort;
+        this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
+        this.summaryMenuReportMapper = summaryMenuReportMapper;
     }
     @Transactional(readOnly = true)
     @Override
     public ResumenReporteMenuResponseDTO obtenerResumen(int id) {
 
-        ReporteMenu reporte =
-                reporteMenuRepositoryPort.findById(id);
+        MenuReport reporte =
+                menuReportRepositoryPort.findById(id);
 
-        List<ControlBeneficiario> beneficiarios =
-                controlBeneficiarioRepositoryPort
+        List<BeneficiaryControl> beneficiarios =
+                beneficiaryControlRepositoryPort
                         .findByReporteId(id);
 
         MetodoPago metodoMasUsado =
                 beneficiarios.stream()
-                        .filter(ControlBeneficiario::getPaid)
-                        .map(ControlBeneficiario::getPayMethod)
+                        .filter(BeneficiaryControl::getPaid)
+                        .map(BeneficiaryControl::getPayMethod)
                         .filter(Objects::nonNull)
                         .collect(Collectors.groupingBy(
                                 metodo -> metodo,
@@ -54,7 +54,7 @@ public class ObtenerResumenReporteMenuService implements ObtenerResumenReporteMe
                         .map(Map.Entry::getKey)
                         .orElse(null);
 
-        return resumenReporteMenuMapper.toDto(
+        return summaryMenuReportMapper.toDto(
                 reporte,
                 beneficiarios.size(),
                 metodoMasUsado

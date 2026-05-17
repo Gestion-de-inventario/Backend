@@ -1,24 +1,24 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.RegistrarBeneficiarioUseCase;
-import com.comedor.backend.application.ports.out.BeneficiarioRepositoryPort;
-import com.comedor.backend.domain.model.Beneficiario;
+import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
+import com.comedor.backend.domain.model.Beneficiary;
 
 public class RegistrarBeneficiarioService implements RegistrarBeneficiarioUseCase {
 
-    private final BeneficiarioRepositoryPort beneficiarioRepositoryPort;
+    private final BeneficiaryRepositoryPort beneficiaryRepositoryPort;
 
-    public RegistrarBeneficiarioService(BeneficiarioRepositoryPort beneficiarioRepositoryPort) {
-        this.beneficiarioRepositoryPort = beneficiarioRepositoryPort;
+    public RegistrarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort) {
+        this.beneficiaryRepositoryPort = beneficiaryRepositoryPort;
     }
 
     @Override
-    public Beneficiario registrarBeneficiario(Beneficiario beneficiario)  {
+    public Beneficiary registrarBeneficiario(Beneficiary beneficiary)  {
 
-        if (beneficiarioRepositoryPort.existePorDni(beneficiario.getDni())) {
-            throw new IllegalArgumentException("Ya existe un beneficiario registrado con el DNI " + beneficiario.getDni());
+        if (beneficiaryRepositoryPort.existePorDni(beneficiary.getDni())) {
+            throw new IllegalArgumentException("Ya existe un beneficiario registrado con el DNI " + beneficiary.getDni());
         }
-        return beneficiarioRepositoryPort.guardar(beneficiario);
+        return beneficiaryRepositoryPort.guardar(beneficiary);
     }
 
 }

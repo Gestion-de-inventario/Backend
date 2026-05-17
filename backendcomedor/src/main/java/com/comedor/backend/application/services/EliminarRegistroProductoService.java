@@ -3,8 +3,8 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.ports.in.EliminarRegistroProductoUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
-import com.comedor.backend.application.ports.out.RegistroProductoRepositoryPort;
-import com.comedor.backend.domain.model.Registro;
+import com.comedor.backend.application.ports.out.ProductRecordRepositoryPort;
+import com.comedor.backend.domain.model.Record;
 import com.comedor.backend.domain.model.enums.FuenteProducto;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 public class EliminarRegistroProductoService implements EliminarRegistroProductoUseCase {
-    private final RegistroProductoRepositoryPort
-            registroProductoRepositoryPort;
+    private final ProductRecordRepositoryPort
+            productRecordRepositoryPort;
 
     private final RegistrarTransaccionUseCase
             registrarTransaccionUseCase;
@@ -26,13 +26,13 @@ public class EliminarRegistroProductoService implements EliminarRegistroProducto
             recalcularResumenReporteUseCase;
 
     public EliminarRegistroProductoService(
-            RegistroProductoRepositoryPort registroProductoRepositoryPort,
+            ProductRecordRepositoryPort productRecordRepositoryPort,
             RegistrarTransaccionUseCase registrarTransaccionUseCase,
             CurrentUserService currentUserService,
             RecalcularResumenReporteUseCase recalcularResumenReporteUseCase
     ) {
-        this.registroProductoRepositoryPort =
-                registroProductoRepositoryPort;
+        this.productRecordRepositoryPort =
+                productRecordRepositoryPort;
 
         this.registrarTransaccionUseCase =
                 registrarTransaccionUseCase;
@@ -52,8 +52,8 @@ public class EliminarRegistroProductoService implements EliminarRegistroProducto
     ) {
 
         // 1. OBTENER REGISTRO ACTUAL
-        Registro registro =
-                registroProductoRepositoryPort
+        Record record =
+                productRecordRepositoryPort
                         .findById(registroId);
 
         // VALIDAR QUE PERTENECE AL REPORTE
@@ -74,8 +74,8 @@ public class EliminarRegistroProductoService implements EliminarRegistroProducto
 
         registrarMovimiento(
                 usuarioId,
-                registro.getProduct().getId(),
-                registro.getAmount(),
+                record.getProduct().getId(),
+                record.getAmount(),
                 TipoMovimiento.ENTRADA
         );
 
@@ -93,19 +93,19 @@ public class EliminarRegistroProductoService implements EliminarRegistroProducto
          aunque realmente se anulan.
         */
 
-        if (registro.getFuenteProducto()
+        if (record.getProductSource()
                 == FuenteProducto.COMPRA) {
 
             registrarMovimiento(
                     usuarioId,
-                    registro.getProduct().getId(),
-                    registro.getAmount(),
+                    record.getProduct().getId(),
+                    record.getAmount(),
                     TipoMovimiento.SALIDA
             );
         }
 
         // ELIMINAR REGISTRO
-        registroProductoRepositoryPort
+        productRecordRepositoryPort
                 .eliminarRegistroProducto(
                         reporteId,
                         registroId

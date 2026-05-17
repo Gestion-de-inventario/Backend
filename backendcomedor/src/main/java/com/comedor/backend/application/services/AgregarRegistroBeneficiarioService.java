@@ -1,13 +1,13 @@
 package com.comedor.backend.application.services;
 
 
-import com.comedor.backend.application.common.mapper.ControlBeneficiarioMapper;
+import com.comedor.backend.application.common.mapper.BeneficiaryControlMapper;
 import com.comedor.backend.application.ports.in.AgregarRegistroBeneficiarioUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
-import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPort;
+import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
 import com.comedor.backend.domain.exceptions.CantidadMenuInvalidad;
 import com.comedor.backend.domain.exceptions.PrecioMenuInvalido;
-import com.comedor.backend.domain.model.ControlBeneficiario;
+import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,22 +17,22 @@ import java.math.BigDecimal;
 
 public class AgregarRegistroBeneficiarioService implements AgregarRegistroBeneficiarioUseCase {
 
-    private final ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort;
+    private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
 
-    private final ControlBeneficiarioMapper controlBeneficiarioMapper;
+    private final BeneficiaryControlMapper beneficiaryControlMapper;
 
     private final RecalcularResumenReporteUseCase recalcularResumenReporteUseCase;
 
     public AgregarRegistroBeneficiarioService(
-            ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort,
-            ControlBeneficiarioMapper controlBeneficiarioMapper,
+            BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
+            BeneficiaryControlMapper beneficiaryControlMapper,
             RecalcularResumenReporteUseCase recalcularResumenReporteUseCase
     ) {
-        this.controlBeneficiarioRepositoryPort =
-                controlBeneficiarioRepositoryPort;
+        this.beneficiaryControlRepositoryPort =
+                beneficiaryControlRepositoryPort;
 
-        this.controlBeneficiarioMapper =
-                controlBeneficiarioMapper;
+        this.beneficiaryControlMapper =
+                beneficiaryControlMapper;
 
         this.recalcularResumenReporteUseCase =
                 recalcularResumenReporteUseCase;
@@ -48,12 +48,12 @@ public class AgregarRegistroBeneficiarioService implements AgregarRegistroBenefi
 
         validar(dto);
 
-        ControlBeneficiario control =
-                controlBeneficiarioMapper
+        BeneficiaryControl control =
+                beneficiaryControlMapper
                         .toDomain(dto);
 
-        ControlBeneficiario creado =
-                controlBeneficiarioRepositoryPort
+        BeneficiaryControl creado =
+                beneficiaryControlRepositoryPort
                         .agregarBeneficiario(
                                 reporteId,
                                 control
@@ -62,7 +62,7 @@ public class AgregarRegistroBeneficiarioService implements AgregarRegistroBenefi
         recalcularResumenReporteUseCase
                 .recalcular(reporteId);
 
-        return controlBeneficiarioMapper
+        return beneficiaryControlMapper
                 .toDto(creado);
     }
 

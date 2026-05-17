@@ -1,12 +1,12 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.RegistroProductoMapper;
+import com.comedor.backend.application.common.mapper.ProductRecordMapper;
 import com.comedor.backend.application.ports.in.ActualizarStockUseCase;
 import com.comedor.backend.application.ports.in.EditarRegistroProductoUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
-import com.comedor.backend.application.ports.out.RegistroProductoRepositoryPort;
-import com.comedor.backend.domain.model.Registro;
+import com.comedor.backend.application.ports.out.ProductRecordRepositoryPort;
+import com.comedor.backend.domain.model.Record;
 import com.comedor.backend.domain.model.enums.FuenteProducto;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 public class EditarRegistroProductoService implements EditarRegistroProductoUseCase {
-    private final RegistroProductoRepositoryPort
-            registroProductoRepositoryPort;
+    private final ProductRecordRepositoryPort
+            productRecordRepositoryPort;
 
-    private final RegistroProductoMapper
-            registroProductoMapper;
+    private final ProductRecordMapper
+            productRecordMapper;
 
     private final ActualizarStockUseCase
             actualizarStockUseCase;
@@ -36,18 +36,18 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
             currentUserService;
 
     public EditarRegistroProductoService(
-            RegistroProductoRepositoryPort registroProductoRepositoryPort,
-            RegistroProductoMapper registroProductoMapper,
+            ProductRecordRepositoryPort productRecordRepositoryPort,
+            ProductRecordMapper productRecordMapper,
             ActualizarStockUseCase actualizarStockUseCase,
             RegistrarTransaccionUseCase registrarTransaccionUseCase,
             RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,
             CurrentUserService currentUserService
     ) {
-        this.registroProductoRepositoryPort =
-                registroProductoRepositoryPort;
+        this.productRecordRepositoryPort =
+                productRecordRepositoryPort;
 
-        this.registroProductoMapper =
-                registroProductoMapper;
+        this.productRecordMapper =
+                productRecordMapper;
 
         this.actualizarStockUseCase =
                 actualizarStockUseCase;
@@ -70,8 +70,8 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
     ) {
 
         // OBTENER REGISTRO ACTUAL
-        Registro actual =
-                registroProductoRepositoryPort
+        Record actual =
+                productRecordRepositoryPort
                         .findById(registroId);
 
         Integer usuarioId =
@@ -84,12 +84,12 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
                 usuarioId
         );
 
-        Registro nuevo =
-                registroProductoMapper
+        Record nuevo =
+                productRecordMapper
                         .toDomain(dto);
 
-        Registro actualizado =
-                registroProductoRepositoryPort
+        Record actualizado =
+                productRecordRepositoryPort
                         .actualizarRegistroProducto(
                                 reporteId,
                                 registroId,
@@ -105,13 +105,13 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
         recalcularResumenReporteUseCase
                 .recalcular(reporteId);
 
-        return registroProductoMapper
+        return productRecordMapper
                 .toDto(actualizado);
     }
 
 
     private void revertirMovimientoAnterior(
-            Registro actual,
+            Record actual,
             Integer usuarioId
     ) {
 
@@ -132,37 +132,37 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
 
 
     private void aplicarNuevoMovimiento(
-            Registro registro,
+            Record record,
             Integer usuarioId
     ) {
 
-        if(registro.getFuenteProducto()
+        if(record.getProductSource()
                 == FuenteProducto.COMPRA){
 
             actualizarStockUseCase.actualizarStock(
-                    registro.getProduct().getId(),
-                    registro.getAmount(),
+                    record.getProduct().getId(),
+                    record.getAmount(),
                     TipoMovimiento.ENTRADA
             );
 
             registrarMovimiento(
                     usuarioId,
-                    registro.getProduct().getId(),
-                    registro.getAmount(),
+                    record.getProduct().getId(),
+                    record.getAmount(),
                     TipoMovimiento.ENTRADA
             );
         }
 
         actualizarStockUseCase.actualizarStock(
-                registro.getProduct().getId(),
-                registro.getAmount(),
+                record.getProduct().getId(),
+                record.getAmount(),
                 TipoMovimiento.SALIDA
         );
 
         registrarMovimiento(
                 usuarioId,
-                registro.getProduct().getId(),
-                registro.getAmount(),
+                record.getProduct().getId(),
+                record.getAmount(),
                 TipoMovimiento.SALIDA
         );
     }

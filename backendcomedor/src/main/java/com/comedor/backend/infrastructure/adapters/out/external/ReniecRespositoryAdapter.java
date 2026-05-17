@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.external;
 
 import com.comedor.backend.application.ports.out.ReniecPort;
-import com.comedor.backend.domain.model.DatosPersonales;
+import com.comedor.backend.domain.model.PersonalDataReniec;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReniecResponseExternalDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -23,7 +23,7 @@ public class ReniecRespositoryAdapter implements ReniecPort {
     private String token;
 
     @Override
-    public Optional<DatosPersonales> consultarPorDni(String dni) {
+    public Optional<PersonalDataReniec> consultarPorDni(String dni) {
 
         String url = "https://api.decolecta.com/v1/reniec/dni?numero=" + dni;
 
@@ -47,7 +47,7 @@ public class ReniecRespositoryAdapter implements ReniecPort {
 
                 String apellidosCompletos = response.getFirst_last_name() + " " + response.getSecond_last_name();
 
-                return Optional.of(new DatosPersonales(
+                return Optional.of(new PersonalDataReniec(
                    response.getDocument_number(),
                    response.getFirst_name(),
                    apellidosCompletos

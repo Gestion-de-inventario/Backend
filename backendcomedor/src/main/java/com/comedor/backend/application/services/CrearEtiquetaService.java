@@ -1,31 +1,31 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.EtiquetaMapper;
+import com.comedor.backend.application.common.mapper.TagMapper;
 import com.comedor.backend.application.ports.in.CrearEtiquetaUseCase;
-import com.comedor.backend.application.ports.out.EtiquetaRepositoryPort;
+import com.comedor.backend.application.ports.out.TagRepositoryPort;
 import com.comedor.backend.domain.exceptions.EtiquetaExistenteException;
-import com.comedor.backend.domain.model.Etiqueta;
+import com.comedor.backend.domain.model.Tag;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EtiquetaRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.EtiquetaResponseDTO;
 
 public class CrearEtiquetaService implements CrearEtiquetaUseCase {
-    private final EtiquetaRepositoryPort etiquetaRepositoryPort;
-    private final EtiquetaMapper etiquetaMapper;
+    private final TagRepositoryPort tagRepositoryPort;
+    private final TagMapper tagMapper;
 
-    public CrearEtiquetaService(EtiquetaRepositoryPort etiquetaRepositoryPort, EtiquetaMapper etiquetaMapper) {
-        this.etiquetaRepositoryPort = etiquetaRepositoryPort;
-        this.etiquetaMapper = etiquetaMapper;
+    public CrearEtiquetaService(TagRepositoryPort tagRepositoryPort, TagMapper tagMapper) {
+        this.tagRepositoryPort = tagRepositoryPort;
+        this.tagMapper = tagMapper;
     }
 
     @Override
     public EtiquetaResponseDTO crearEtiqueta(EtiquetaRequestDTO etiquetaRequestDTO) {
-        if(etiquetaRepositoryPort.existByName(etiquetaRequestDTO.getName().toUpperCase()))
+        if(tagRepositoryPort.existByName(etiquetaRequestDTO.getName().toUpperCase()))
         {
             throw new EtiquetaExistenteException("Ya existe la etiqueta "+etiquetaRequestDTO.getName());
         }
        ;
-        Etiqueta etiqueta =etiquetaMapper.toDomain(etiquetaRequestDTO);
+        Tag tag = tagMapper.toDomain(etiquetaRequestDTO);
 
-        return etiquetaMapper.toEtiquetaResponseDTO(etiquetaRepositoryPort.createEtiqueta(etiqueta));
+        return tagMapper.toEtiquetaResponseDTO(tagRepositoryPort.createEtiqueta(tag));
     }
 }

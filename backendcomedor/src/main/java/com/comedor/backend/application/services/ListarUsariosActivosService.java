@@ -1,23 +1,23 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.UsuarioMapper;
+import com.comedor.backend.application.common.mapper.UserMapper;
 import com.comedor.backend.application.ports.in.ListarUsuariosActivosUseCase;
-import com.comedor.backend.application.ports.out.UsuarioRepositoryPort;
+import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 
 import java.util.List;
 
 public class ListarUsariosActivosService implements ListarUsuariosActivosUseCase {
-    private final UsuarioRepositoryPort usuarioRepositoryPort;
-    private final UsuarioMapper usuarioMapper;
+    private final UserRepositoryPort userRepositoryPort;
+    private final UserMapper userMapper;
 
-    public ListarUsariosActivosService(UsuarioRepositoryPort usuarioRepositoryPort, UsuarioMapper usuarioMapper) {
-        this.usuarioRepositoryPort = usuarioRepositoryPort;
-        this.usuarioMapper = usuarioMapper;
+    public ListarUsariosActivosService(UserRepositoryPort userRepositoryPort, UserMapper userMapper) {
+        this.userRepositoryPort = userRepositoryPort;
+        this.userMapper = userMapper;
     }
 
     @Override
     public List<UsuarioResponseDTO> ListarUsuariosActivos() {
-        return usuarioMapper.toListUsuarioResponseDto(usuarioRepositoryPort.getAllUsuariosActivos());
+        return userMapper.toListUsuarioResponseDto(userRepositoryPort.getAllUsuariosActivos());
     }
 }

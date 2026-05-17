@@ -2,22 +2,22 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.EliminarRegistroBeneficiarioUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
-import com.comedor.backend.application.ports.out.ControlBeneficiarioRepositoryPort;
+import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
 import org.springframework.transaction.annotation.Transactional;
 
 public class EliminarRegistroBeneficiarioService implements EliminarRegistroBeneficiarioUseCase {
-    private final ControlBeneficiarioRepositoryPort
-            controlBeneficiarioRepositoryPort;
+    private final BeneficiaryControlRepositoryPort
+            beneficiaryControlRepositoryPort;
 
     private final RecalcularResumenReporteUseCase
             recalcularResumenReporteUseCase;
 
     public EliminarRegistroBeneficiarioService(
-            ControlBeneficiarioRepositoryPort controlBeneficiarioRepositoryPort,
+            BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
             RecalcularResumenReporteUseCase recalcularResumenReporteUseCase
     ) {
-        this.controlBeneficiarioRepositoryPort =
-                controlBeneficiarioRepositoryPort;
+        this.beneficiaryControlRepositoryPort =
+                beneficiaryControlRepositoryPort;
 
         this.recalcularResumenReporteUseCase =
                 recalcularResumenReporteUseCase;
@@ -29,7 +29,7 @@ public class EliminarRegistroBeneficiarioService implements EliminarRegistroBene
             int controlId
     ) {
 
-        controlBeneficiarioRepositoryPort
+        beneficiaryControlRepositoryPort
                 .eliminarBeneficiario(reporteId,controlId);
 
         recalcularResumenReporteUseCase

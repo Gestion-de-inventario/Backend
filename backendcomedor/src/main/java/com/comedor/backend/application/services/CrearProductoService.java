@@ -1,34 +1,34 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.ProductoMapper;
+import com.comedor.backend.application.common.mapper.ProductMapper;
 import com.comedor.backend.application.ports.in.CrearProductoUseCase;
-import com.comedor.backend.application.ports.out.CategoriaRepositoryPort;
-import com.comedor.backend.application.ports.out.EtiquetaRepositoryPort;
-import com.comedor.backend.application.ports.out.ProductoRepositoryPort;
+import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
+import com.comedor.backend.application.ports.out.TagRepositoryPort;
+import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.exceptions.ProductoExistenteException;
-import com.comedor.backend.domain.model.Categoria;
-import com.comedor.backend.domain.model.Etiqueta;
-import com.comedor.backend.domain.model.Producto;
+import com.comedor.backend.domain.model.Category;
+import com.comedor.backend.domain.model.Tag;
+import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
 
 public class CrearProductoService implements CrearProductoUseCase {
 
-    private final ProductoRepositoryPort productoRepositoryPort;
-    private final ProductoMapper productoMapper;
-    private final CategoriaRepositoryPort categoriaRepositoryPort;
-    private final EtiquetaRepositoryPort etiquetaRepositoryPort;
+    private final ProductRepositoryPort productRepositoryPort;
+    private final ProductMapper productMapper;
+    private final CategoryRepositoryPort categoryRepositoryPort;
+    private final TagRepositoryPort tagRepositoryPort;
 
-    public CrearProductoService(ProductoRepositoryPort productoRepositoryPort, ProductoMapper productoMapper, CategoriaRepositoryPort categoriaRepositoryPort, EtiquetaRepositoryPort etiquetaRepositoryPort) {
-        this.productoRepositoryPort = productoRepositoryPort;
-        this.productoMapper = productoMapper;
-        this.categoriaRepositoryPort = categoriaRepositoryPort;
-        this.etiquetaRepositoryPort = etiquetaRepositoryPort;
+    public CrearProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort) {
+        this.productRepositoryPort = productRepositoryPort;
+        this.productMapper = productMapper;
+        this.categoryRepositoryPort = categoryRepositoryPort;
+        this.tagRepositoryPort = tagRepositoryPort;
     }
 
     @Override
     public ProductoResponseDTO crearProducto(ProductoRequestDTO productoRequestDTO) {
-        if(productoRepositoryPort.existByName(productoRequestDTO.getName().toUpperCase()))
+        if(productRepositoryPort.existByName(productoRequestDTO.getName().toUpperCase()))
         {
             throw new ProductoExistenteException("Ya existe un producto con ese nombre :"+productoRequestDTO.getName());
         }
@@ -36,16 +36,16 @@ public class CrearProductoService implements CrearProductoUseCase {
             throw new IllegalArgumentException("La categoría es obligatoria");
         }
 
-        Categoria categoria = categoriaRepositoryPort.getCategoriaById(productoRequestDTO.getCategoryId());
+        Category category = categoryRepositoryPort.getCategoryById(productoRequestDTO.getCategoryId());
 
-        Etiqueta etiqueta = null;
-        if (productoRequestDTO.getEtiquetaId() != null) {
-            etiqueta = etiquetaRepositoryPort.getEtiquetaById(productoRequestDTO.getEtiquetaId());
+        Tag tag = null;
+        if (productoRequestDTO.getTagId() != null) {
+            tag = tagRepositoryPort.getTagById(productoRequestDTO.getTagId());
         }
 
-        Producto producto = productoMapper.toDomain(productoRequestDTO);
-        producto.setCategoria(categoria);
-        producto.setEtiqueta(etiqueta);
-        return  productoMapper.productoResponseDTO(productoRepositoryPort.createProducto(producto));
+        Product product = productMapper.toDomain(productoRequestDTO);
+        product.setCategory(category);
+        product.setTag(tag);
+        return  productMapper.productoResponseDTO(productRepositoryPort.createProducto(product));
     }
 }

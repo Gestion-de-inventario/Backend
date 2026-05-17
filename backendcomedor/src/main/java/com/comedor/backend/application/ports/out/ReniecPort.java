@@ -1,9 +1,9 @@
 package com.comedor.backend.application.ports.out;
 
-import com.comedor.backend.domain.model.DatosPersonales;
+import com.comedor.backend.domain.model.PersonalDataReniec;
 
 import java.util.Optional;
 
 public interface ReniecPort {
-    Optional<DatosPersonales> consultarPorDni(String dni);
+    Optional<PersonalDataReniec> consultarPorDni(String dni);
 }
