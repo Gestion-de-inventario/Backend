@@ -17,6 +17,4 @@ public class BeneficiarioRequestDTO {
 
     @NotBlank(message = "Los apellidos son obligatorios")
     private String lastname;
-
-    private Estado estado;
 }

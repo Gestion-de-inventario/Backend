@@ -282,6 +282,37 @@ public class UseCaseConfig {
         return new ObtenerReporteMenuPorFechaService(menuReportRepositoryPort, menuReportMapper, personRepositoryPort,obtenerResumenReporteMenuUseCase);
     }
 
+    @Bean
+    ActivarUsuarioService activarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper)
+    {
+        return new ActivarUsuarioService(userRepositoryPort,userMapper);
+    }
+
+    @Bean
+    CreateRoleService createRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper){
+        return new CreateRoleService(roleRepository,permissionRepository,roleDTOMapper);
+    }
+
+    @Bean
+    EditRoleService editRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper){
+        return new EditRoleService(roleRepository,permissionRepository,roleDTOMapper);
+    }
+
+    @Bean
+    ListRolesByStatusService listRolesByStatusService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper){
+        return new ListRolesByStatusService(roleRepository,roleDTOMapper);
+    }
+
+    @Bean
+    ListRoleByIdService listRoleByIdService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper){
+        return new ListRoleByIdService(roleRepository,roleDTOMapper);
+    }
+
+    @Bean
+    ListAllPermissionsService listAllPermissionsService(PermissionRepositoryPort permissionRepository, PermissionMapper permissionMapper){
+        return new ListAllPermissionsService(permissionRepository,permissionMapper);
+    }
+
 
 }
 

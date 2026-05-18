@@ -19,30 +19,38 @@ public class UserController {
     private final CrearUsuarioUseCase crearUsuarioUseCase;
     private final EditarUsuarioUseCase editarUsuarioUseCase;
     private final DesactivarUsuarioUseCase desactivarUsuarioUseCase;
+    private final ActivarUsuarioUseCase activarUsuarioUseCase;
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('USER_LIST_ALL')")
     @GetMapping("/all")
     public List<UsuarioResponseDTO> listAllUsers() {
         return listarTodosLosUsuariosUseCase.ListarTodoLosUsuarios();
     }
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+
+    @PreAuthorize("hasAuthority('USER_LIST_ACTIVE')")
     @GetMapping("/actived")
     public List<UsuarioResponseDTO> listActivatedUsers() {
         return listarUsuariosActivosUseCase.ListarUsuariosActivos();
     }
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('USER_CREATE')")
     @PostMapping("/register")
     public UsuarioResponseDTO createUser(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         return crearUsuarioUseCase.crearUsuario(usuarioRequestDTO);
     }
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
     @PostMapping("/edit/{id}")
     public UsuarioResponseDTO editUser(@PathVariable Integer id,@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         return editarUsuarioUseCase.EditarUsuario(id,usuarioRequestDTO);
     }
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('USER_DEACTIVATE')")
     @PostMapping("deactivate/{id}")
     public UsuarioResponseDTO deactivateUser(@PathVariable Integer id) {
         return desactivarUsuarioUseCase.desactivarUsuario(id);
+    }
+
+    @PreAuthorize("hasAuthority('USER_ACTIVATE')")
+    @PostMapping("activate/{id}")
+    public UsuarioResponseDTO activateUser(@PathVariable Integer id) {
+        return activarUsuarioUseCase.activateUser(id);
     }
 }

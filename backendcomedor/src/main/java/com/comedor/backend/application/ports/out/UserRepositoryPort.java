@@ -20,4 +20,6 @@ public interface UserRepositoryPort {
     List<User> getAllUsuarios();
 
     User deactivateById(Integer id);
+
+    User activateById(Integer id);
 }

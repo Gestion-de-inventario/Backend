@@ -28,21 +28,21 @@ public class ProductController {
     private final DesactivarProductoUseCase desactivarProductoUseCase;
     private final EditarProductoUseCase editarProductoUseCase;
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('PRODUCT_LIST_BY_STATUS')")
     @GetMapping("/list")
     public List<ProductoResponseDTO> listarProductos(@RequestParam(required = false) Estado estado)
     {
         return listarProductosPorEstadoUseCase.listarProductosPorEstado(estado);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('PRODUCT_CREATE')")
     @PostMapping("/create")
     public ProductoResponseDTO crearProducto(@RequestBody ProductoRequestDTO productoRequestDTO)
     {
         return crearProductoUseCase.crearProducto(productoRequestDTO);
     }
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('PRODUCT_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
     public ProductoResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
     {
@@ -57,7 +57,7 @@ public class ProductController {
         };
     }
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('PRODUCT_EDIT')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> editarProducto(@PathVariable int id, @RequestBody EditarProductoRequestDTO request) {
         try {

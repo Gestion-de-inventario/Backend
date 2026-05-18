@@ -88,4 +88,11 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         user.setStatus(Estado.INACTIVO);
         return userEntityMapper.toDomain(userJpaRepository.save(user));
     }
+
+    @Override
+    public User activateById(Integer id) {
+        UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no existe"));
+        user.setStatus(Estado.ACTIVO);
+        return userEntityMapper.toDomain(userJpaRepository.save(user));
+    }
 }

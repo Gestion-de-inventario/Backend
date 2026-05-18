@@ -25,10 +25,18 @@ public class AuthMapper {
         dto.setToken(token);
 
         if (user != null) {
+            dto.setId(user.getId());
             dto.setName(user.getPersona().getName());
             dto.setLastname(user.getPersona().getLastname());
-            dto.setId(user.getId());
             dto.setRole(user.getRol().getName());
+            dto.setPermissions(
+                    user.getRol()
+                            .getPermissions()
+                            .stream()
+                            .map(permission ->
+                                    permission.getCode().name())
+                            .toList()
+            );
         }
 
         return dto;

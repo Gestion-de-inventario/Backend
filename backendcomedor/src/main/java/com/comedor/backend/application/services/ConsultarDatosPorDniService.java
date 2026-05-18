@@ -3,6 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.ports.in.ConsultarDatosPorDniUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.application.ports.out.ReniecPort;
+import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.PersonalDataReniec;
 
@@ -36,5 +37,12 @@ public class ConsultarDatosPorDniService implements ConsultarDatosPorDniUseCase 
         }
 
         throw new IllegalArgumentException("El DNI ingresado no existe en los registros");
+    }
+
+    @Override
+    public Beneficiary consultarBeneficiary(String dni) {
+        Optional<Beneficiary> beneficiary= beneficiaryRepositoryPort.buscarPorDni(dni);
+
+        return beneficiary.orElseThrow(() -> new BeneficiarioNoEncontradoException("Beneficiario no encontrado"));
     }
 }

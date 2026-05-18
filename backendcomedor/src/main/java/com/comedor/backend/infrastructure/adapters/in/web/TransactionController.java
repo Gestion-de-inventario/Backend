@@ -16,7 +16,7 @@ import java.util.List;
 public class TransactionController {
     private final ListarTransaccionesUseCase listarTransaccionesUseCase;
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('TRANSACTION_LIST_ALL')")
     @GetMapping
     public List<TransaccionResponseDTO> listAllTransactions() {
         return listarTransaccionesUseCase.listarTransaccionesUseCase();
