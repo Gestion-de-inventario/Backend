@@ -324,6 +324,11 @@ public class UseCaseConfig {
     ListarModificacionesService listarModificacionesService(ModificationsRepositoryPort modificationsRepositoryPort, ModificationsMapper modificationsMapper) {
         return new ListarModificacionesService(modificationsRepositoryPort, modificationsMapper);
     }
+
+    @Bean
+    ObtenerAlertasStockService obtenerAlertasStockService(ProductRepositoryPort productRepositoryPort) {
+        return new ObtenerAlertasStockService(productRepositoryPort);
+    }
 }
 
 

@@ -17,4 +17,9 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Integ
     boolean existsByName(String name);
 
     boolean existsByNameAndIdNot(String name, int id);
+
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE p.stock <= p.reorderPoint " +
+            "AND p.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+    List<ProductEntity> getProductosBajoStockMinimo();
 }
