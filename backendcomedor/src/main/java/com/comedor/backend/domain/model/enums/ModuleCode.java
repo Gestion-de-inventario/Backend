@@ -9,5 +9,6 @@ public enum ModuleCode {
     TRANSACTION,
     USER,
     ROLE,
-    PERMISSION
+    PERMISSION,
+    MODIFICATION
 }

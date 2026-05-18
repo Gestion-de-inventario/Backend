@@ -7,6 +7,6 @@ import lombok.Data;
 public class EditarBeneficiarioRequestDTO {
     private String dni;
     private String name;
-    private String lastName;
+    private String lastname;
     private Estado status;
 }

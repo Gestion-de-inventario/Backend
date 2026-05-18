@@ -61,22 +61,24 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public EditarUsuarioService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder)
+    public EditarUsuarioService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
         return new EditarUsuarioService(
                 userMapper,
                 userRepositoryPort,
                 personRepositoryPort,
-                passwordEncoder
+                passwordEncoder,
+                registrarModificacionUseCase
         );
     }
 
     @Bean
-    public DesactivarUsuarioService desactivarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper)
+    public DesactivarUsuarioService desactivarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
         return new DesactivarUsuarioService(
                 userRepositoryPort,
-                userMapper
+                userMapper,
+                registrarModificacionUseCase
         );
     }
 
@@ -96,13 +98,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public EditarBeneficiarioService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort) {
-        return new EditarBeneficiarioService(beneficiaryRepositoryPort);
+    public EditarBeneficiarioService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
+        return new EditarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
     }
 
     @Bean
-    EditarProductoService editarProductoService(ProductRepositoryPort productRepositoryPort){
-        return new EditarProductoService(productRepositoryPort);
+    EditarProductoService editarProductoService(ProductRepositoryPort productRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase){
+        return new EditarProductoService(productRepositoryPort, registrarModificacionUseCase);
     }
 
     @Bean
@@ -140,29 +142,29 @@ public class UseCaseConfig {
     }
 
     @Bean
-    DesactivarCategoriaService desactivarCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper) {
+    DesactivarCategoriaService desactivarCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new DesactivarCategoriaService(
-                categoryRepositoryPort, categoryMapper
+                categoryRepositoryPort, categoryMapper, registrarModificacionUseCase
         );
     }
     @Bean
-    DesactivarEtiquetaService desactivarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper) {
+    DesactivarEtiquetaService desactivarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new DesactivarEtiquetaService(
-                tagRepositoryPort, tagMapper
+                tagRepositoryPort, tagMapper, registrarModificacionUseCase
         );
     }
 
     @Bean
-    ActivarCategoriaService activarCategoriaService (CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper) {
+    ActivarCategoriaService activarCategoriaService (CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new ActivarCategoriaService(
-                categoryRepositoryPort, categoryMapper
+                categoryRepositoryPort, categoryMapper, registrarModificacionUseCase
         );
     }
     @Bean
-    ActivarEtiquetaService activarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper)
+    ActivarEtiquetaService activarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
         return new ActivarEtiquetaService(
-                tagRepositoryPort, tagMapper
+                tagRepositoryPort, tagMapper, registrarModificacionUseCase
         );
     }
 
@@ -178,13 +180,13 @@ public class UseCaseConfig {
 
     }
     @Bean
-    ActivarProductoService activarProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper){
-        return new ActivarProductoService(productRepositoryPort, productMapper);
+    ActivarProductoService activarProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
+        return new ActivarProductoService(productRepositoryPort, productMapper, registrarModificacionUseCase);
     }
     @Bean
-    DesactivarProductoService desactivarProductoService (ProductRepositoryPort productRepositoryPort, ProductMapper productMapper)
+    DesactivarProductoService desactivarProductoService (ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
-        return new DesactivarProductoService(productRepositoryPort, productMapper);
+        return new DesactivarProductoService(productRepositoryPort, productMapper, registrarModificacionUseCase);
     }
 
     @Bean
@@ -283,9 +285,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ActivarUsuarioService activarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper)
+    ActivarUsuarioService activarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
-        return new ActivarUsuarioService(userRepositoryPort,userMapper);
+        return new ActivarUsuarioService(userRepositoryPort, userMapper, registrarModificacionUseCase);
     }
 
     @Bean
@@ -294,8 +296,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditRoleService editRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper){
-        return new EditRoleService(roleRepository,permissionRepository,roleDTOMapper);
+    EditRoleService editRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
+        return new EditRoleService(roleRepository,permissionRepository,roleDTOMapper, registrarModificacionUseCase);
     }
 
     @Bean
@@ -313,7 +315,15 @@ public class UseCaseConfig {
         return new ListAllPermissionsService(permissionRepository,permissionMapper);
     }
 
+    @Bean
+    RegistrarModificacionService registrarModificacionService(ModificationsRepositoryPort modificationsRepositoryPort, UserRepositoryPort userRepositoryPort) {
+        return new RegistrarModificacionService(modificationsRepositoryPort, userRepositoryPort);
+    }
 
+    @Bean
+    ListarModificacionesService listarModificacionesService(ModificationsRepositoryPort modificationsRepositoryPort, ModificationsMapper modificationsMapper) {
+        return new ListarModificacionesService(modificationsRepositoryPort, modificationsMapper);
+    }
 }
 
 
