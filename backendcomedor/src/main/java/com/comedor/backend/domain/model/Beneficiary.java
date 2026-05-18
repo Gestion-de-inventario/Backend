@@ -42,4 +42,20 @@ public class Beneficiary {
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setStatus(Estado status) {
+        this.status = status;
+    }
 }

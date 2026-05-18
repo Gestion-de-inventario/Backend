@@ -54,7 +54,7 @@ public class BeneficiaryMapper {
                 id,
                 editarBeneficiarioRequest.getDni(),
                 editarBeneficiarioRequest.getName(),
-                editarBeneficiarioRequest.getLastName(),
+                editarBeneficiarioRequest.getLastname(),
                 editarBeneficiarioRequest.getStatus());
     }
 
