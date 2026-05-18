@@ -131,4 +131,11 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public boolean existByNameAndIdNot(String nombre, int id) {
         return productJpaRepository.existsByNameAndIdNot(nombre.toLowerCase(), id);
     }
+
+    @Override
+    public List<Product> getProductosBajoStockMinimo() {
+        return productEntityMapper.toListDomain(
+                productJpaRepository.getProductosBajoStockMinimo()
+        );
+    }
 }

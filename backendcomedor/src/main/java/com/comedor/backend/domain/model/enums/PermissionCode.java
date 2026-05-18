@@ -38,6 +38,7 @@ public enum PermissionCode {
     PRODUCT_CREATE,
     PRODUCT_CHANGE_STATUS,
     PRODUCT_EDIT,
+    PRODUCT_ALERT_STOCK_VIEW,
 
     // =========================
     // TAG
