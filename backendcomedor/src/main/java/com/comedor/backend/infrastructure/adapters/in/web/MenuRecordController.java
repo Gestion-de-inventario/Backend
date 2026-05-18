@@ -28,25 +28,25 @@ public class MenuRecordController {
     private final ObtenerReporteMenuPorFechaUseCase obtenerReporteMenuPorFechaUseCase;
     private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_CREATE_REPORT')")
     @PostMapping("/create")
     public ReporteMenuResponseDTO createReporteMenu(@RequestBody ReporteMenuRequestDTO reporteMenuRequestDTO) {
         return crearReporteMenuService.crearReporteMenu(reporteMenuRequestDTO);
     }
-
+    @PreAuthorize("hasAuthority('MENU_REPORT_GET_BY_DATE')")
     @GetMapping("/date/{fecha}")
     public DetalleReporteMenuResponseDTO obtenerPorFecha(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha){
         return obtenerReporteMenuPorFechaUseCase.obtenerPorFecha(fecha);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_ADD_PRODUCT')")
     @PostMapping("/{id}/records")
     public RegistroProductoResponseDTO agregarRegistroProducto(@PathVariable int id, @RequestBody RegistroProductoRequestDTO registroProductoRequestDTO) {
         return agregarRegistroProductoUseCase.agregarRegistroProducto(id, registroProductoRequestDTO);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_EDIT_PRODUCT')")
     @PatchMapping("/{reporteId}/records/{registroId}")
     public RegistroProductoResponseDTO editarRegistroProducto(
             @PathVariable int reporteId,
@@ -56,7 +56,7 @@ public class MenuRecordController {
         return editarRegistroProductoUseCase.editarRegistroProducto(reporteId, registroId, dto);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_REMOVE_PRODUCT')")
     @DeleteMapping("/{reporteId}/records/{registroId}")
     public ResponseEntity<Void> eliminarRegistroProducto(
             @PathVariable int reporteId,
@@ -68,7 +68,7 @@ public class MenuRecordController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_ADD_BENEFICIARY')")
     @PostMapping("/{id}/beneficiaries")
     public RegistroBeneficiarioResponseDTO agregarBeneficiario(
             @PathVariable int id,
@@ -77,7 +77,7 @@ public class MenuRecordController {
         return agregarRegistroBeneficiarioUseCase.agregarRegistroBeneficiario(id,dto);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_EDIT_BENEFICIARY')")
     @PatchMapping("/{reporteId}/beneficiaries/{controlId}")
     public RegistroBeneficiarioResponseDTO editarBeneficiario(
             @PathVariable int reporteId,
@@ -87,7 +87,7 @@ public class MenuRecordController {
         return editarRegistroBeneficiarioUseCase.editarRegistroBeneficiario(reporteId,controlId,dto);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('MENU_REPORT_REMOVE_BENEFICIARY')")
     @DeleteMapping("/{reporteId}/beneficiaries/{controlId}")
     public ResponseEntity<Void> eliminarBeneficiario(
             @PathVariable int reporteId,
@@ -97,9 +97,8 @@ public class MenuRecordController {
         eliminarRegistroBeneficiarioUseCase.eliminarRegistroBeneficiario(reporteId,controlId);
         return ResponseEntity.noContent().build();
     }
-
+    @PreAuthorize("hasAuthority('MENU_REPORT_GET_SUMMARY')")
     @GetMapping("/{id}/summary")
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
     public ResumenReporteMenuResponseDTO obtenerResumen(@PathVariable int id) {
         return obtenerResumenReporteMenuUseCase.obtenerResumen(id);
     }

@@ -22,21 +22,21 @@ public class CategoryController {
     private final ActivarCategoriaUseCase activarCategoriaUseCase;
     private final DesactivarCategoriaUseCase desactivarCategoriaUseCase;
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('CATEGORY_LIST_BY_STATUS')")
     @GetMapping("/list")
     public List<CategoriaResponseDTO> listarCategorias(@RequestParam(required = false) Estado estado)
     {
         return listarCategoriasPorEstadoUseCase.listarCategorias(estado);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('CATEGORY_CREATE')")
     @PostMapping("/create")
     public CategoriaResponseDTO crearCategoria(@RequestBody CategoriaRequestDTO categoriaRequestDTO)
     {
         return crearCategoriaUseCase.crearCategoria(categoriaRequestDTO);
     }
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('CATEGORY_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
     public CategoriaResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
     {

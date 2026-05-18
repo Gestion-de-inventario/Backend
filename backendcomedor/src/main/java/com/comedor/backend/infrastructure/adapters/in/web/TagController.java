@@ -22,21 +22,21 @@ public class TagController {
     private final ActivarEtiquetaUseCase activarEtiquetaUseCase;
     private final DesactivarEtiquetaUseCase desactivarEtiquetaUseCase;
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('TAG_LIST_BY_STATUS')")
     @GetMapping("/list")
     public List<EtiquetaResponseDTO> listarEtiquetas(@RequestParam(required = false) Estado estado)
     {
         return listarEtiquetasPorEstadoUseCase.listarEtiquetas(estado);
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('TAG_CREATE')")
     @PostMapping("/create")
     public EtiquetaResponseDTO crearEtiqueta(@RequestBody EtiquetaRequestDTO etiquetaRequestDTO)
     {
         return crearEtiquetaUseCase.crearEtiqueta(etiquetaRequestDTO);
     }
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('TAG_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
     public EtiquetaResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
     {

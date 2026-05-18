@@ -38,7 +38,7 @@ public class BeneficiaryController {
     private final EditarBeneficiarioUseCase editarBeneficiarioUseCase;
     private final ListarBeneficiariosPorEstadoUseCase listarBeneficiariosPorEstadoUseCase;
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('BENEFICIARY_CREATE')")
     @PostMapping("/create")
     public ResponseEntity<BeneficiarioResponseDTO> registrar(@Valid @RequestBody BeneficiarioRequestDTO beneficiarioRequestDTO) {
 
@@ -51,7 +51,7 @@ public class BeneficiaryController {
         return new ResponseEntity<>(beneficiarioResponseDTO, HttpStatus.CREATED);
 
     }
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('BENEFICIARY_SEARCH_BY_DNI')")
     @GetMapping("/reniec/{dni}")
     public ResponseEntity<?> consultaPorDni(@PathVariable String dni) {
         try {
@@ -69,7 +69,27 @@ public class BeneficiaryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al consultar el DNI.");
         }
     }
-    @PreAuthorize("hasRole('PRESIDENTA')")
+
+    @PreAuthorize("hasAuthority('BENEFICIARY_SEARCH_BY_DNI')")
+    @GetMapping("/{dni}")
+    public ResponseEntity<?> searchBeneficiary(@PathVariable String dni) {
+        try {
+            Beneficiary beneficiary = consultarDatosPorDniUseCase.consultarBeneficiary(dni);
+
+            BeneficiarioResponseDTO beneficiaryResponseDTO = beneficiaryMapper.convertToDTO(beneficiary);
+
+            return ResponseEntity.ok(beneficiaryResponseDTO);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al consultar el DNI.");
+        }
+    }
+
+    @PreAuthorize("hasAuthority('BENEFICIARY_CREATE_BY_DNI')")
     @PostMapping("/reniec/{dni}")
     public ResponseEntity<?> consultarYRegistrar(@PathVariable String dni) {
         try {
@@ -84,7 +104,7 @@ public class BeneficiaryController {
         }
     }
 
-    @PreAuthorize("hasRole('PRESIDENTA')")
+    @PreAuthorize("hasAuthority('BENEFICIARY_EDIT')")
     @PutMapping("edit/{id}")
     public ResponseEntity<?> editar(@PathVariable int id, @Valid @RequestBody EditarBeneficiarioRequestDTO editarBeneficiarioRequest) {
         try {
@@ -101,7 +121,7 @@ public class BeneficiaryController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('PRESIDENTA', 'SOCIA')")
+    @PreAuthorize("hasAuthority('BENEFICIARY_LIST_BY_STATUS')")
     @GetMapping("/list")
     public List<BeneficiarioResponseDTO> listarBeneficiaros(@RequestParam(required = false) Estado estado)
     {
