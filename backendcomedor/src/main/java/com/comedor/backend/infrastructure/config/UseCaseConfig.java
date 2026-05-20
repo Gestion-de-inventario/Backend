@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.comedor.backend.application.services.RegistrarBeneficiarioService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class UseCaseConfig {
@@ -24,6 +25,7 @@ public class UseCaseConfig {
                 jwtUtil,
                 passwordEncoder,
                 authMapper
+
         );
     }
 
@@ -329,6 +331,21 @@ public class UseCaseConfig {
     ObtenerAlertasStockService obtenerAlertasStockService(ProductRepositoryPort productRepositoryPort) {
         return new ObtenerAlertasStockService(productRepositoryPort);
     }
+
+    @Bean
+    CreateRefreshTokenService createRefreshTokenService(RefreshTokenRepositoryPort repository){
+        return new CreateRefreshTokenService(repository);
+    }
+    @Bean
+    RefreshTokenService refreshTokenService(RefreshTokenRepositoryPort refreshTokenRepository, UserRepositoryPort userRepository, JwtUtil jwtUtil, AuthMapper authMapper){
+        return new RefreshTokenService(refreshTokenRepository,userRepository,jwtUtil,authMapper);
+    }
+
+    @Bean
+    LogoutService logoutService(RefreshTokenRepositoryPort refreshTokenRepositoryPort) {
+        return new LogoutService(refreshTokenRepositoryPort);
+    }
+
 }
 
 
