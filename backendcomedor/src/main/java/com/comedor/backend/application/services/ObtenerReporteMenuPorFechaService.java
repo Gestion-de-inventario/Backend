@@ -37,6 +37,8 @@ public class ObtenerReporteMenuPorFechaService implements ObtenerReporteMenuPorF
 
         MenuReport reporte = menuReportRepositoryPort.findByDate(fecha);
 
+        String menu = reporte.getMenu();
+
         List<Person> cocineras = personRepositoryPort.findAllByIds(reporte.getCooks());
 
         List<Record> productRecord = reporte.getProductRecord();
@@ -48,6 +50,7 @@ public class ObtenerReporteMenuPorFechaService implements ObtenerReporteMenuPorF
 
         return menuReportMapper.toDetalleDto(
                 reporte,
+                menu,
                 cocineras,
                 productRecord,
                 registroBeneficiarios,

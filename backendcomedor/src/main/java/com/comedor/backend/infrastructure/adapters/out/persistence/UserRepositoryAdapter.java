@@ -38,7 +38,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     @Override
     public User save(User user) {
         UserEntity entity = userEntityMapper.toEntity(user);
+        entity.setRole(roleEntityMapper.toEntity(user.getRol()));
         entity.getPersona().setUser(entity);
+
         return userEntityMapper.toDomain(userJpaRepository.save(entity));
     }
 

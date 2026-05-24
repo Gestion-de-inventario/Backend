@@ -49,13 +49,18 @@ public class RoleMapper {
         dto.setName(role.getName());
 
         dto.setStatus(role.getStatus());
-
+        dto.setRole_id(role.getId());
         dto.setPermissions(
-                role.getPermissions()
+
+                role.getPermissions() != null
+
+                        ? role.getPermissions()
                         .stream()
                         .map(permission ->
                                 permission.getCode().name())
                         .toList()
+
+                        : List.of()
         );
 
         return dto;

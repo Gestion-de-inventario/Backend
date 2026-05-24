@@ -16,10 +16,10 @@ public class Person {
     public Person() {}
 
     public String getName (){
-        return name;
+        return name.toUpperCase();
     }
     public String getLastname (){
-        return lastname;
+        return lastname.toUpperCase();
     }
 
     public int getId() {
@@ -35,11 +35,11 @@ public class Person {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public void setLastname(String lastname) {
-        this.lastname = lastname;
+        this.lastname = lastname.toUpperCase();
     }
 
     public void setDni(String dni) {

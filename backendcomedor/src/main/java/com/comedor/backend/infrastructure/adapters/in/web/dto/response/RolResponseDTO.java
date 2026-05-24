@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 public class RolResponseDTO {
+    int role_id;
     String name;
     Estado status;
     private List<String> permissions;
-
 }

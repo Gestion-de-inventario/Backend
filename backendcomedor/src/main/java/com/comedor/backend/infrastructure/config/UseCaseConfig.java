@@ -63,14 +63,15 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public EditarUsuarioService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionUseCase registrarModificacionUseCase)
+    public EditarUsuarioService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionUseCase registrarModificacionUseCase,RoleRepositoryPort roleRepositoryPort)
     {
         return new EditarUsuarioService(
                 userMapper,
                 userRepositoryPort,
                 personRepositoryPort,
                 passwordEncoder,
-                registrarModificacionUseCase
+                registrarModificacionUseCase,
+                roleRepositoryPort
         );
     }
 
