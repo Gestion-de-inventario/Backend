@@ -52,6 +52,7 @@ public class MenuReportMapper {
     }
 
     public DetalleReporteMenuResponseDTO toDetalleDto(MenuReport reporte,
+                                                      String menu,
                                                       List<Person> cocineras,
                                                       List<Record> records,
                                                       List<BeneficiaryControl> beneficiarios,
@@ -69,6 +70,8 @@ public class MenuReportMapper {
                         .getDayOfWeek()
                         .toString()
         );
+
+        dto.setMenu(menu);
 
         dto.setCocineras(personMapper.toListPersonaResponseDTO(cocineras));
 

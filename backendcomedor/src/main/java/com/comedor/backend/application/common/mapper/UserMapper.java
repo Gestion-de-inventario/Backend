@@ -18,8 +18,8 @@ public class UserMapper {
         User user = new User();
         user.setUsername(dto.getDni());
         Person person = new Person();
-        person.setName(dto.getName());
-        person.setLastname(dto.getLastname());
+        person.setName(dto.getName().toUpperCase());
+        person.setLastname(dto.getLastname().toUpperCase());
         person.setDni(dto.getDni());
 
         person.setUser(user);
@@ -38,6 +38,7 @@ public class UserMapper {
 
         if (u.getRol() != null) {
             dto.setRole(u.getRol().getName());
+            dto.setRole_id(u.getRol().getId());
         }
 
         if (u.getPersona() != null) {

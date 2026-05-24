@@ -8,4 +8,5 @@ public class UsuarioRequestDTO {
     private String lastname;
     private String dni;
     private String password;
+    private Integer role_id;
 }

@@ -9,6 +9,7 @@ public class DetalleReporteMenuResponseDTO {
     private int id;
     private LocalDate date;
     private String day;
+    private String menu;
     private List<PersonaResponseDTO> cocineras;
     private List<RegistroProductoResponseDTO> registro;
     private List <RegistroBeneficiarioResponseDTO> beneficiarios;

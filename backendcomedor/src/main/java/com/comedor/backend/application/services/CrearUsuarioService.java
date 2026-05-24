@@ -37,13 +37,13 @@ public class CrearUsuarioService implements CrearUsuarioUseCase {
             throw new UsuarioExistenteException("DNI ya registrado");
         }
 
-        if (personRepositoryPort.existsByNameAndLastName(dto.getName(), dto.getLastname())) {
+        if (personRepositoryPort.existsByNameAndLastName(dto.getName().toUpperCase(), dto.getLastname().toUpperCase())) {
             throw new UsuarioExistenteException("Nombre y apellido ya existe");
         }
 
         User user = userMapper.toDomain(dto);
 
-        Role role = roleRepositoryPort.findById(2)
+        Role role = roleRepositoryPort.findById(dto.getRole_id())
                 .orElseThrow(() -> new RuntimeException("Rol no existe"));
 
         user.setRole(role);

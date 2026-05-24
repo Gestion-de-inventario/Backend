@@ -7,6 +7,7 @@ import lombok.Data;
 public class UsuarioResponseDTO {
     private Integer user_id;
     private String role;
+    private Integer role_id;
     private Estado status;
     private String name;
     private String lastname;
