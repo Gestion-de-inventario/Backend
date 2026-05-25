@@ -39,20 +39,32 @@ public class EditRoleService implements EditRoleUseCase {
                 .findById(id)
                 .orElseThrow(RolNoEncontradoException::new);
 
-        if (roleRepository.existsByNameIgnoreCaseAndIdNot(dto.getName(), id)) {
+        if (!existingRole.getName().equalsIgnoreCase(dto.getName()) &&
+                roleRepository.existsByNameIgnoreCaseAndIdNot(dto.getName(), id)) {
             throw new RoleAlreadyExistsException("Ya existe un rol con ese nombre");
         }
 
-        // Auditoría del nombre
         if (!existingRole.getName().equalsIgnoreCase(dto.getName())) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
                     "Role", "name", existingRole.getName(), dto.getName()
             ));
         }
 
-        Set<Permission> newPermissions = permissionRepository.findByCodes(dto.getPermissions());
+        if (!existingRole.getStatus().equals(dto.getStatus())) {
+            registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
+                    "Role", "status", existingRole.getStatus().toString(), dto.getStatus().toString()
+            ));
+        }
 
-        Role updatedRole = roleDTOMapper.toUpdatedDomain(existingRole, dto, newPermissions);
+        Set<Permission> finalPermissions;
+
+        if (dto.getPermissions() == null || dto.getPermissions().isEmpty()) {
+            finalPermissions = existingRole.getPermissions();
+        } else {
+            finalPermissions = permissionRepository.findByCodes(dto.getPermissions());
+        }
+
+        Role updatedRole = roleDTOMapper.toUpdatedDomain(existingRole, dto, finalPermissions);
         Role savedRole = roleRepository.update(updatedRole);
 
         return roleDTOMapper.toResponse(savedRole);
