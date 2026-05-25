@@ -4,6 +4,10 @@ import com.comedor.backend.application.common.mapper.TransactionMapper;
 import com.comedor.backend.application.ports.in.ListarTransaccionesUseCase;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -18,7 +22,16 @@ public class ListarTransaccionesService implements ListarTransaccionesUseCase {
 
 
     @Override
-    public List<TransaccionResponseDTO> listarTransaccionesUseCase() {
-        return mapper.toListDto(repository.showTransacciones());
+    public Page<TransaccionResponseDTO> list(int page, int size) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("id").descending()
+        );
+
+        return repository
+                .showTransacciones(pageable)
+                .map(mapper::toDTO);
     }
 }

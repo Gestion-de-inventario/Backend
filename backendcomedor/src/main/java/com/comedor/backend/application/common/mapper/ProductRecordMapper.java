@@ -14,11 +14,9 @@ public class ProductRecordMapper {
     public Record toDomain(RegistroProductoRequestDTO requestDTO)
     {
         Record record = new Record();
-
         Product product = new Product();
         product.setId(requestDTO.getProductoId());
         record.setProduct(product);
-
         record.setAmount(requestDTO.getAmount());
         record.setProductSource(requestDTO.getProductSource());
         record.setUnitPrice(requestDTO.getUnitPrice());

@@ -19,7 +19,6 @@ public class TransactionMapper {
 
         Product product = new Product();
         product.setId(dto.getProductId());
-        transaccion.setCurrentStock(product.getStock());
         transaccion.setProduct(product);
 
         User user = new User();

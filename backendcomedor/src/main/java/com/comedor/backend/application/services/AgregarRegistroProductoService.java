@@ -44,6 +44,8 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
             Record recordDomain =
                     productRecordMapper.toDomain(dto);
 
+            System.out.println("Record en el service : "+recordDomain.toString());
+
             Record recordCreated =
                     productRecordRepositoryPort
                             .agregarRegistroProducto(

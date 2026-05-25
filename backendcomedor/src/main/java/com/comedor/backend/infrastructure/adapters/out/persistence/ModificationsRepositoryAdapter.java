@@ -8,6 +8,8 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.Modifi
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.ModificationsJpaRepository;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,10 +42,10 @@ public class ModificationsRepositoryAdapter implements ModificationsRepositoryPo
     }
 
     @Override
-    public List<Modifications> listar() {
-        return modificationsJpaRepository.findAll()
-                .stream()
-                .map(modificationsEntityMapper::toDomain)
-                .collect(Collectors.toList());
+    public Page<Modifications> list(Pageable pageable) {
+        return modificationsJpaRepository
+                .findAll(pageable)
+                .map(modificationsEntityMapper::toDomain);
     }
+
 }

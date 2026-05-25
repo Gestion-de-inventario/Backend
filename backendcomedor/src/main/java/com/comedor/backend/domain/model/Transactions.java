@@ -78,4 +78,18 @@ public class Transactions {
     public BigDecimal getFinalStock() {
         return finalStock;
     }
+
+    @Override
+    public String toString() {
+        return "Transactions{" +
+                "id=" + id +
+                ", product=" + product +
+                ", user=" + user +
+                ", dateTime=" + dateTime +
+                ", type=" + type +
+                ", amount=" + amount +
+                ", currentStock=" + currentStock +
+                ", finalStock=" + finalStock +
+                '}';
+    }
 }

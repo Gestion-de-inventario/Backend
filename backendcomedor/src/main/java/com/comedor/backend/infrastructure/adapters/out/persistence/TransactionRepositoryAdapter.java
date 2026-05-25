@@ -10,6 +10,8 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.repository.Tr
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,8 +32,11 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public List<Transactions> showTransacciones() {
-        return transactionEntityMapper.toListDomain(transactionJpaRepository.findAll());
+    public Page<Transactions> showTransacciones(Pageable pageable) {
+
+        return transactionJpaRepository
+                .findAll(pageable)
+                .map(transactionEntityMapper::toDomain);
     }
 
     @Override
