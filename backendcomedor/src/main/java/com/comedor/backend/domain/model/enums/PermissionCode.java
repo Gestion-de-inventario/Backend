@@ -74,6 +74,7 @@ public enum PermissionCode {
     ROLE_EDIT,
     ROLE_LIST_BY_STATUS,
     ROLE_GET_BY_ID,
+    ROLE_ASSIGN_PERMISSIONS,
 
     // =========================
     // PERMISSION

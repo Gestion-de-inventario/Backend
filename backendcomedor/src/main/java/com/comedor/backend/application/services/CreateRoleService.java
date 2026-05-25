@@ -30,7 +30,7 @@ public class CreateRoleService  implements CreateRoleUseCase {
     public RolResponseDTO createRole(
             CreateRoleRequestDTO dto) {
 
-        if (roleRepository.existsByName(dto.getName())) {
+        if (roleRepository.existsByName(dto.getName().toUpperCase())) {
             throw new RoleAlreadyExistsException(
                     "El rol ya existe"
             );
