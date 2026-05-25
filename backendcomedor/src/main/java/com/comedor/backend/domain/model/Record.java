@@ -43,11 +43,22 @@ public class Record {
         this.amount = amount;
     }
 
-    public void setProductSource(FuenteProducto fuenteProducto) {
+    public void setProductSource(FuenteProducto productSource) {
         this.productSource = productSource;
     }
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Record{" +
+                "id=" + id +
+                ", product=" + product +
+                ", amount=" + amount +
+                ", productSource=" + productSource +
+                ", unitPrice=" + unitPrice +
+                '}';
     }
 }

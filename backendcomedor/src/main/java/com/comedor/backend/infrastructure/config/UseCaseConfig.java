@@ -198,9 +198,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    RegistrarTransaccionService registrarTransaccionService(TransactionRepositoryPort repository, TransactionMapper mapper)
+    RegistrarTransaccionService registrarTransaccionService(TransactionRepositoryPort repository,ProductRepositoryPort productRepository ,TransactionMapper mapper)
     {
-        return new RegistrarTransaccionService(repository,mapper);
+        return new RegistrarTransaccionService(repository,productRepository,mapper);
     }
 
     @Bean
