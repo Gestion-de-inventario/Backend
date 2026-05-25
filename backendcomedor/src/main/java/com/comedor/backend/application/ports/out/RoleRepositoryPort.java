@@ -21,4 +21,6 @@ public interface RoleRepositoryPort {
     Role update(Role role);
 
     boolean existsByName(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Integer id);
 }

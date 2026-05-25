@@ -30,7 +30,7 @@ public class Role {
 
 
     public String getName() {
-        return name;
+        return name.toUpperCase();
     }
 
     public Estado getStatus() {

@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 
         Map<String, String> response = new HashMap<>();
         response.put("error", "DATO_DUPLICADO");
-        response.put("message", "El usuario ya existe");
+        response.put("message", "Ya existe un registro duplicado");
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)

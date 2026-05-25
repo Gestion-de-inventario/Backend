@@ -34,7 +34,7 @@ public class RoleMapper {
 
         return new Role(
                 0,
-                dto.getName(),
+                dto.getName().toUpperCase(),
                 Estado.ACTIVO,
                 permissions != null
                         ? permissions

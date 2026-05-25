@@ -47,10 +47,16 @@ public class RoleRepositoryAdapter implements RoleRepositoryPort {
 
     @Override
     public List<Role> findByStatus(Estado status) {
+        if(status.toString().equals("TODOS"))
+        {
+            return roleJpaRepository.findAll().stream()
+                    .map(roleEntityMapper::toDomain)
+                    .toList();
+        }else {
         return roleJpaRepository.findByStatus(status)
                 .stream()
                 .map(roleEntityMapper::toDomain)
-                .toList();
+                .toList();}
     }
 
     @Override
@@ -81,5 +87,10 @@ public class RoleRepositoryAdapter implements RoleRepositoryPort {
         return roleJpaRepository.existsByName(
                 name.toUpperCase()
         );
+    }
+
+    @Override
+    public boolean existsByNameIgnoreCaseAndIdNot(String name, Integer id) {
+        return roleJpaRepository.existsByNameIgnoreCaseAndIdNot(name.toUpperCase(),id);
     }
 }

@@ -13,4 +13,6 @@ public interface RoleJpaRepository extends JpaRepository<RoleEntity, Integer> {
 
     boolean existsByName(String name);
 
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Integer id);
+
 }
