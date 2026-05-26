@@ -1,9 +1,13 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
+import com.comedor.backend.application.common.mapper.AuthMapper;
 import com.comedor.backend.application.ports.in.CreateRefreshTokenUseCase;
 import com.comedor.backend.application.ports.in.LoginUseCase;
 import com.comedor.backend.application.ports.in.LogoutUseCase;
 import com.comedor.backend.application.ports.in.RefreshTokenUseCase;
+import com.comedor.backend.application.ports.out.RefreshTokenRepositoryPort;
+import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +31,8 @@ public class AuthController {
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final CreateRefreshTokenUseCase createRefreshTokenUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final UserRepositoryPort userRepository;
+    private final AuthMapper authMapper;
     @Transactional
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(
@@ -39,6 +47,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(Duration.ofDays(7))
                 .build();
@@ -69,6 +78,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", "")
                 .httpOnly(true)
                 .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(0)
                 .build();
@@ -76,5 +86,20 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponseDTO> me(Authentication authentication) {
+
+        String username = authentication.getName();
+
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        AuthResponseDTO response =
+                authMapper.toAuthResponseDTO(user, null);
+
+        return ResponseEntity.ok(response);
     }
 }
