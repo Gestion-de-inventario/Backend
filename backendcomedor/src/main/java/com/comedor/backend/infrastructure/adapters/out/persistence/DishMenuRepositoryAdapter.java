@@ -11,8 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class DishMenuRepositoryAdapter
-        implements DishMenuRepositoryPort {
+public class DishMenuRepositoryAdapter implements DishMenuRepositoryPort {
 
     private final DishMenuJpaRepository dishMenuJpaRepository;
 
@@ -20,11 +19,17 @@ public class DishMenuRepositoryAdapter
 
     @Override
     public List<DishMenu> findAll() {
-
         return dishMenuJpaRepository
                 .findAll()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public DishMenu findById(Integer id) {
+        return dishMenuJpaRepository.findById(id)
+                .map(mapper::toDomain)
+                .orElseThrow(() -> new RuntimeException("Plato no encontrado con id: " + id));
     }
 }

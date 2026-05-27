@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DishMenuRepositoryPort {
     List<DishMenu> findAll();
+    DishMenu findById(Integer id);
 }

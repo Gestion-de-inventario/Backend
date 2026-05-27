@@ -7,7 +7,7 @@ import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.Person;
-import com.comedor.backend.domain.model.Record;
+import com.comedor.backend.domain.model.StockMovement; // <-- Importación actualizada (antes Record)
 import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
@@ -22,7 +22,11 @@ public class ObtenerReporteMenuPorFechaService implements ObtenerReporteMenuPorF
     private final MenuReportMapper menuReportMapper;
     private final PersonRepositoryPort personRepositoryPort;
     private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
-    public ObtenerReporteMenuPorFechaService(MenuReportRepositoryPort menuReportRepositoryPort, MenuReportMapper menuReportMapper, PersonRepositoryPort personRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase) {
+
+    public ObtenerReporteMenuPorFechaService(MenuReportRepositoryPort menuReportRepositoryPort,
+                                             MenuReportMapper menuReportMapper,
+                                             PersonRepositoryPort personRepositoryPort,
+                                             ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.menuReportMapper = menuReportMapper;
         this.personRepositoryPort = personRepositoryPort;
@@ -31,28 +35,32 @@ public class ObtenerReporteMenuPorFechaService implements ObtenerReporteMenuPorF
 
     @Override
     @Transactional(readOnly = true)
-    public DetalleReporteMenuResponseDTO obtenerPorFecha(
-            LocalDate fecha
-    ) {
+    public DetalleReporteMenuResponseDTO obtenerPorFecha(LocalDate fecha) {
 
         MenuReport reporte = menuReportRepositoryPort.findByDate(fecha);
 
-        String menu = reporte.getMenu();
+        if (reporte == null) {
+            return null;
+        }
+
+        // 1. Ahora se obtiene el nombre desde la entidad DishMenu
+        String menu = reporte.getDishMenu() != null ? reporte.getDishMenu().getName() : "";
 
         List<Person> cocineras = personRepositoryPort.findAllByIds(reporte.getCooks());
 
-        List<Record> productRecord = reporte.getProductRecord();
+        // 2. Se reemplaza List<Record> por List<StockMovement>
+        List<StockMovement> stockMovements = reporte.getStockMovements();
 
-        List<BeneficiaryControl> registroBeneficiarios = reporte.getBeneficiariosRecord();
+        // 3. Se actualiza al nuevo nombre de la lista de beneficiarios
+        List<BeneficiaryControl> registroBeneficiarios = reporte.getBeneficiaryControls();
 
         ResumenReporteMenuResponseDTO resumenReporteMenu = obtenerResumenReporteMenuUseCase.obtenerResumen(reporte.getId());
-
 
         return menuReportMapper.toDetalleDto(
                 reporte,
                 menu,
                 cocineras,
-                productRecord,
+                stockMovements, // <-- Pasamos la nueva variable aquí
                 registroBeneficiarios,
                 resumenReporteMenu);
     }

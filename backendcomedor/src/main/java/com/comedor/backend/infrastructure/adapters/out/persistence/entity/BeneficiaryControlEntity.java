@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "beneficiary_control")
 @Data
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BeneficiaryControlEntity {

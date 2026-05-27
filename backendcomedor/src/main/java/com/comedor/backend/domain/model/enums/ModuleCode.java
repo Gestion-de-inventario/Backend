@@ -10,5 +10,6 @@ public enum ModuleCode {
     USER,
     ROLE,
     PERMISSION,
-    MODIFICATION
+    MODIFICATION,
+    DISH_MENU
 }

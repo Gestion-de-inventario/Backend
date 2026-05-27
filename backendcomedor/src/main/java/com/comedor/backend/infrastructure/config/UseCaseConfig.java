@@ -192,8 +192,11 @@ public class UseCaseConfig {
     }
 
     @Bean
-    CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository, MenuReportMapper mapper){
-        return new CrearReporteMenuService(repository,mapper);
+    CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository,
+                                                     DishMenuRepositoryPort dishMenuRepository,
+                                                     MenuReportMapper mapper,
+                                                     PurchaseDetailRepositoryPort purchaseDetailRepositoryPort){
+        return new CrearReporteMenuService(repository,dishMenuRepository,mapper, purchaseDetailRepositoryPort);
     }
 
     @Bean

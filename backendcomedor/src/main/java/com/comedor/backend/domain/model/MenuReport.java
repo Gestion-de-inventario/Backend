@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuReport {
-    private int id;
+    private Integer id;
     private LocalDate date;
     private List<Integer> cooks;
     private DishMenu dishMenu;

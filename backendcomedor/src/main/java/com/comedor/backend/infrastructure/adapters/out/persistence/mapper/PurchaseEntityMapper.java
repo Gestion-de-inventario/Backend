@@ -84,7 +84,7 @@ public class PurchaseEntityMapper {
                 .toList();
     }
 
-    private PurchaseDetail toDetailDomain(
+    public PurchaseDetail toDetailDomain(
             PurchaseDetailEntity entity
     ) {
 
@@ -121,7 +121,7 @@ public class PurchaseEntityMapper {
                 .toList();
     }
 
-    private PurchaseDetailEntity toDetailEntity(
+    public  PurchaseDetailEntity toDetailEntity(
             PurchaseDetail domain
     ) {
 
