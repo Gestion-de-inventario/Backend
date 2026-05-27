@@ -15,4 +15,8 @@ public interface BeneficiaryRepositoryPort {
     Optional<Beneficiary> findById(Integer id);
 
     List<Beneficiary> getBeneficiarioByStatus(Estado estado);
+
+    Beneficiary activar(Integer id);
+
+    Beneficiary desactivar(Integer id);
 }

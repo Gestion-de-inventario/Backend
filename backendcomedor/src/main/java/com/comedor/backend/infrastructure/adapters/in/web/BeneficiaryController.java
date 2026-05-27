@@ -38,6 +38,9 @@ public class BeneficiaryController {
     private final EditarBeneficiarioUseCase editarBeneficiarioUseCase;
     private final ListarBeneficiariosPorEstadoUseCase listarBeneficiariosPorEstadoUseCase;
 
+    private final ActivarBeneficiarioUseCase activarBeneficiarioUseCase;
+    private final DesactivarBeneficiarioUseCase desactivarBeneficiarioUseCase;
+
     @PreAuthorize("hasAuthority('BENEFICIARY_CREATE')")
     @PostMapping("/create")
     public ResponseEntity<BeneficiarioResponseDTO> registrar(@Valid @RequestBody BeneficiarioRequestDTO beneficiarioRequestDTO) {
@@ -126,6 +129,22 @@ public class BeneficiaryController {
     public List<BeneficiarioResponseDTO> listarBeneficiaros(@RequestParam(required = false) Estado estado)
     {
         return listarBeneficiariosPorEstadoUseCase.listarBeneficiarioPorEstado(estado);
+    }
+
+    @PreAuthorize("hasAuthority('BENEFICIARY_CHANGE_STATUS')")
+    @PostMapping("/changeStatus/{id}")
+    public ResponseEntity<?> cambiarEstado(@PathVariable int id, @RequestParam Estado estado) {
+        try {
+            Beneficiary beneficiary = switch (estado) {
+                case ACTIVO -> activarBeneficiarioUseCase.activar(id);
+                case INACTIVO -> desactivarBeneficiarioUseCase.desactivar(id);
+            };
+            return ResponseEntity.ok(beneficiaryMapper.convertToDTO(beneficiary));
+        } catch (BeneficiarioNoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cambiar estado");
+        }
     }
 
 }
