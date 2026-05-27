@@ -365,6 +365,19 @@ public class UseCaseConfig {
     RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new RoleChangeStatusService(roleRepository,roleDTOMapper,registrarModificacionUseCase);
     }
+    @Bean
+    CreatePurchaseService createPurchaseService (PurchaseRepositoryPort purchaseRepository,
+                                                 ProductRepositoryPort productRepository,
+                                                 PurchaseMapper purchaseMapper){
+        return new CreatePurchaseService(purchaseRepository,productRepository,purchaseMapper);
+    }
+
+    @Bean
+    ListDishMenusService listDishMenusService (DishMenuRepositoryPort repository,
+                                               DishMenuMapper mapper)
+    {
+        return new ListDishMenusService(repository,mapper);
+    }
 
 }
 

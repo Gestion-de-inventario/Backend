@@ -35,7 +35,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase{
         reporte.setCooks(reporteMenuRequestDTO.getCooks());
         reporte.setMenu(reporteMenuRequestDTO.getMenu());
 
-        reporte.setBeneficiariosRecord(new ArrayList<>());
+        reporte.setBeneficiaryControls(new ArrayList<>());
         reporte.setProductRecord(new ArrayList<>());
 
         reporte.setTotalEarned(BigDecimal.ZERO);

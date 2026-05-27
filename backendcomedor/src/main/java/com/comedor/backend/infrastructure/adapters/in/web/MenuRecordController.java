@@ -18,12 +18,14 @@ import java.time.LocalDate;
 @RequestMapping("/menu_report")
 @RequiredArgsConstructor
 public class MenuRecordController {
-    private final CrearReporteMenuService crearReporteMenuService;
+
     private final AgregarRegistroProductoUseCase agregarRegistroProductoUseCase;
-    private final AgregarRegistroBeneficiarioUseCase agregarRegistroBeneficiarioUseCase;
-    private final EliminarRegistroProductoUseCase eliminarRegistroProductoUseCase;
-    private final EliminarRegistroBeneficiarioUseCase eliminarRegistroBeneficiarioUseCase;
     private final EditarRegistroProductoUseCase editarRegistroProductoUseCase;
+    private final EliminarRegistroProductoUseCase eliminarRegistroProductoUseCase;
+
+    private final CrearReporteMenuService crearReporteMenuService;
+    private final AgregarRegistroBeneficiarioUseCase agregarRegistroBeneficiarioUseCase;
+    private final EliminarRegistroBeneficiarioUseCase eliminarRegistroBeneficiarioUseCase;
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
     private final ObtenerReporteMenuPorFechaUseCase obtenerReporteMenuPorFechaUseCase;
     private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
@@ -40,33 +42,6 @@ public class MenuRecordController {
         return obtenerReporteMenuPorFechaUseCase.obtenerPorFecha(fecha);
     }
 
-    @PreAuthorize("hasAuthority('MENU_REPORT_ADD_PRODUCT')")
-    @PostMapping("/{id}/records")
-    public RegistroProductoResponseDTO agregarRegistroProducto(@PathVariable int id, @RequestBody RegistroProductoRequestDTO registroProductoRequestDTO) {
-        return agregarRegistroProductoUseCase.agregarRegistroProducto(id, registroProductoRequestDTO);
-    }
-
-    @PreAuthorize("hasAuthority('MENU_REPORT_EDIT_PRODUCT')")
-    @PatchMapping("/{reporteId}/records/{registroId}")
-    public RegistroProductoResponseDTO editarRegistroProducto(
-            @PathVariable int reporteId,
-            @PathVariable int registroId,
-            @RequestBody RegistroProductoRequestDTO dto
-    ) {
-        return editarRegistroProductoUseCase.editarRegistroProducto(reporteId, registroId, dto);
-    }
-
-    @PreAuthorize("hasAuthority('MENU_REPORT_REMOVE_PRODUCT')")
-    @DeleteMapping("/{reporteId}/records/{registroId}")
-    public ResponseEntity<Void> eliminarRegistroProducto(
-            @PathVariable int reporteId,
-            @PathVariable int registroId
-    ) {
-
-        eliminarRegistroProductoUseCase.eliminarRegistroProducto(reporteId, registroId);
-
-        return ResponseEntity.noContent().build();
-    }
 
     @PreAuthorize("hasAuthority('MENU_REPORT_ADD_BENEFICIARY')")
     @PostMapping("/{id}/beneficiaries")
