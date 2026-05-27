@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
+import com.comedor.backend.domain.model.enums.EstadoReporteMenu;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,27 +19,42 @@ public class MenuReportEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menu_report_id")
-    private int id;
+    private Integer id;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private LocalDate date;
 
     @ElementCollection
-    @Column(name = "user_id")
-    private List<Integer> cooks;
+    @CollectionTable(
+            name = "menu_report_cooks",
+            joinColumns = @JoinColumn(name = "menu_report_id")
+    )
+    @Column(name = "cook_id")
+    private List<Integer> cooks = new ArrayList<>();
 
-    @Column(nullable = false, length = 100)
-    private String menu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dish_menu_id", nullable = false)
+    private DishMenuEntity dishMenu;
 
-    @OneToMany(mappedBy = "report")
-    private List<RecordEntity> productRecord = new ArrayList<>();
+    @Column(nullable = false)
+    private Integer quantityPrepared = 0;
 
-    @OneToMany(mappedBy = "report")
-    private List<BeneficiaryControlEntity> beneficiariosRecord = new ArrayList<>();
+    @Column(nullable = false)
+    private Integer quantityRemaining = 0;
 
-    @Column(nullable = false,precision = 10, scale = 2)
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
+    private List<BeneficiaryControlEntity> beneficiaryControls = new ArrayList<>();
+
+    @OneToMany(mappedBy = "menuReport", cascade = CascadeType.ALL)
+    private List<StockMovementEntity> stockMovements = new ArrayList<>();
+
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalEarned = BigDecimal.ZERO;
 
-    @Column(nullable = false,precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalSpent = BigDecimal.ZERO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoReporteMenu status;
 }

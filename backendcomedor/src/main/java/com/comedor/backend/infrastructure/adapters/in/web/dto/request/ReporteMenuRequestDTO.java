@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class ReporteMenuRequestDTO {
-    private String menu;
+    private Integer dishMenuId;
+    private Integer quantityPrepared;
     private List<Integer> cooks;
 }

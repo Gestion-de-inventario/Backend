@@ -81,6 +81,16 @@ public enum PermissionCode {
     // =========================
     // PERMISSION
     // =========================
-    PERMISSION_LIST_ALL
+    PERMISSION_LIST_ALL,
+
+    // =========================
+    // PURCHASE
+    // =========================
+    PURCHASE_CREATE,
+
+    // =========================
+    // DISH_MENU
+    // =========================
+    DISH_MENU_LIST_ALL
 
 }

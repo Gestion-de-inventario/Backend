@@ -21,6 +21,7 @@ public class TagEntityMapper {
     {
         if (tag == null) return null;
         TagEntity tagEntity = new TagEntity();
+        tagEntity.setId(tag.getId());
         tagEntity.setName(tag.getName());
         tagEntity.setStatus(tag.getStatus());
         return tagEntity;

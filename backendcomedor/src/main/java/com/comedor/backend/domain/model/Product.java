@@ -15,7 +15,7 @@ public class Product {
     private BigDecimal reorderPoint;
 
     public void setName(String name) {
-        this.name = name.toUpperCase();
+        this.name = name != null ? name.toUpperCase() : null;
     }
 
     public void setCategory(Category category) {
@@ -31,7 +31,7 @@ public class Product {
     }
 
     public void setUnit(String unit) {
-        this.unit = unit.toUpperCase();
+        this.unit = unit != null ? unit.toUpperCase() : null;
     }
 
     public void setStatus(Estado status) {
@@ -45,6 +45,7 @@ public class Product {
     public void setReorderPoint(BigDecimal reorderPoint) {
         this.reorderPoint = reorderPoint;
     }
+
     public int getId() {
         return id;
     }

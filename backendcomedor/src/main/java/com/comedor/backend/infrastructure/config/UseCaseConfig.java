@@ -192,8 +192,11 @@ public class UseCaseConfig {
     }
 
     @Bean
-    CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository, MenuReportMapper mapper){
-        return new CrearReporteMenuService(repository,mapper);
+    CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository,
+                                                     DishMenuRepositoryPort dishMenuRepository,
+                                                     MenuReportMapper mapper,
+                                                     PurchaseDetailRepositoryPort purchaseDetailRepositoryPort){
+        return new CrearReporteMenuService(repository,dishMenuRepository,mapper, purchaseDetailRepositoryPort);
     }
 
     @Bean
@@ -364,6 +367,19 @@ public class UseCaseConfig {
     @Bean
     RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new RoleChangeStatusService(roleRepository,roleDTOMapper,registrarModificacionUseCase);
+    }
+    @Bean
+    CreatePurchaseService createPurchaseService (PurchaseRepositoryPort purchaseRepository,
+                                                 ProductRepositoryPort productRepository,
+                                                 PurchaseMapper purchaseMapper){
+        return new CreatePurchaseService(purchaseRepository,productRepository,purchaseMapper);
+    }
+
+    @Bean
+    ListDishMenusService listDishMenusService (DishMenuRepositoryPort repository,
+                                               DishMenuMapper mapper)
+    {
+        return new ListDishMenusService(repository,mapper);
     }
 
 }
