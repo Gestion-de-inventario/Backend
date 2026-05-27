@@ -15,14 +15,14 @@ import java.util.Set;
 @Component
 public class RoleMapper {
 
-    public Role toUpdatedDomain(Role existingRole,
-                                EditRoleRequestDTO dto,
+
+    public Role toAssignPermissionsDomain(Role existingRole,
                                 Set<Permission> permissions) {
 
         return new Role(
                 existingRole.getId(),
-                dto.getName(),
-                dto.getStatus(),
+                existingRole.getName(),
+                existingRole.getStatus(),
                 permissions != null
                         ? permissions
                         : new HashSet<>()
