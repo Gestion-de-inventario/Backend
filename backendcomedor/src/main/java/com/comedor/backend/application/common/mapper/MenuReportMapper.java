@@ -43,10 +43,31 @@ public class MenuReportMapper {
     }
 
     public ReporteMenuResponseDTO toDto(MenuReport menuReport) {
+        if (menuReport == null) return null;
+
         ReporteMenuResponseDTO responseDTO = new ReporteMenuResponseDTO();
-        responseDTO.setDate(menuReport.getDate());
+
         responseDTO.setId(menuReport.getId());
-        responseDTO.setDay(menuReport.getDate().getDayOfWeek().toString());
+        responseDTO.setDate(menuReport.getDate());
+
+        if (menuReport.getDate() != null) {
+            responseDTO.setDay(menuReport.getDate().getDayOfWeek().toString());
+        }
+
+        // Agregamos el nombre del plato
+        if (menuReport.getDishMenu() != null) {
+            responseDTO.setDishName(menuReport.getDishMenu().getName());
+        }
+
+        // Agregamos las cantidades
+        responseDTO.setQuantityPrepared(menuReport.getQuantityPrepared());
+        responseDTO.setQuantityRemaining(menuReport.getQuantityRemaining());
+
+        // Agregamos el estado
+        if (menuReport.getStatus() != null) {
+            responseDTO.setStatus(menuReport.getStatus());
+        }
+
         return responseDTO;
     }
 

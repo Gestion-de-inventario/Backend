@@ -34,6 +34,7 @@ public class ProductEntityMapper {
         if(product == null)
             return null;
         ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(product.getId());
         productEntity.setName(product.getName());
         productEntity.setCategory(categoryEntityMapper.toEntity(product.getCategory()));
         productEntity.setTag(tagEntityMapper.toEntity(product.getTag()));

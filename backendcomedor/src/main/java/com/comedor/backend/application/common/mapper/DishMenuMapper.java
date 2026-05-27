@@ -11,8 +11,7 @@ public class DishMenuMapper {
 
     public DishMenuResponseDTO toResponse(DishMenu domain) {
 
-        DishMenuResponseDTO dto =
-                new DishMenuResponseDTO();
+        DishMenuResponseDTO dto = new DishMenuResponseDTO();
 
         dto.setId(domain.getId());
 
@@ -20,8 +19,7 @@ public class DishMenuMapper {
 
         dto.setStatus(domain.getStatus().name());
 
-        dto.setSupplies(
-                domain.getSupplies()
+        dto.setSupplies(domain.getSupplies()
                         .stream()
                         .map(this::toSupplyResponse)
                         .toList()
@@ -30,28 +28,17 @@ public class DishMenuMapper {
         return dto;
     }
 
-    private DishSupplyResponseDTO toSupplyResponse(
-            DishSupply domain
-    ) {
+    private DishSupplyResponseDTO toSupplyResponse(DishSupply domain) {
 
-        DishSupplyResponseDTO dto =
-                new DishSupplyResponseDTO();
+        DishSupplyResponseDTO dto = new DishSupplyResponseDTO();
 
-        dto.setProductId(
-                domain.getProduct().getId()
-        );
+        dto.setProductId(domain.getProduct().getId());
 
-        dto.setProductName(
-                domain.getProduct().getName()
-        );
+        dto.setProductName(domain.getProduct().getName());
 
-        dto.setQuantityNeeded(
-                domain.getQuantityNeeded()
-        );
+        dto.setQuantityNeeded(domain.getQuantityNeeded());
 
-        dto.setUnit(
-                domain.getProduct().getUnit()
-        );
+        dto.setUnit(domain.getProduct().getUnit());
 
         return dto;
     }

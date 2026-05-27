@@ -13,6 +13,7 @@ public class CategoryEntityMapper {
     {
         if (categoryEntity == null) return null;
         Category category = new Category();
+
         category.setId(categoryEntity.getId());
         category.setName(categoryEntity.getName());
         category.setStatus(categoryEntity.getStatus());
@@ -23,6 +24,7 @@ public class CategoryEntityMapper {
     {
         if (category == null) return null;
         CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(category.getId());
         categoryEntity.setName(category.getName());
         categoryEntity.setStatus(category.getStatus());
         return categoryEntity;

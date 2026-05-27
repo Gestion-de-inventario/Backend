@@ -75,7 +75,10 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
             }
 
             if (cantidadTotalNecesaria.compareTo(BigDecimal.ZERO) > 0) {
-                throw new RuntimeException("Stock insuficiente para: " + supply.getProduct().getName());
+                String nombreProducto = (supply.getProduct().getName() != null)
+                        ? supply.getProduct().getName()
+                        : "ID Producto: " + supply.getProduct().getId();
+                throw new RuntimeException("Stock insuficiente para: " + nombreProducto);
             }
         }
 

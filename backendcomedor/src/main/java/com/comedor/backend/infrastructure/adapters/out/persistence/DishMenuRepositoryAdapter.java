@@ -25,10 +25,10 @@ public class DishMenuRepositoryAdapter implements DishMenuRepositoryPort {
                 .map(mapper::toDomain)
                 .toList();
     }
-
+    
     @Override
     public DishMenu findById(Integer id) {
-        return dishMenuJpaRepository.findById(id)
+        return dishMenuJpaRepository.findByIdWithSupplies(id) // Usamos el Join Fetch
                 .map(mapper::toDomain)
                 .orElseThrow(() -> new RuntimeException("Plato no encontrado con id: " + id));
     }
