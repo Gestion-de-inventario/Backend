@@ -347,6 +347,16 @@ public class UseCaseConfig {
         return new LogoutService(refreshTokenRepositoryPort);
     }
 
+    @Bean
+    ActivarBeneficiarioService activarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
+        return new ActivarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    }
+
+    @Bean
+    DesactivarBeneficiarioService desactivarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
+        return new DesactivarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    }
+
 }
 
 

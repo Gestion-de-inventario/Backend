@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
+import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
@@ -67,5 +68,20 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
         return null;
     }
 
+    @Override
+    public Beneficiary activar(Integer id) {
+        BeneficiaryEntity entity = jpaRepository.findById(id)
+                .orElseThrow(() -> new BeneficiarioNoEncontradoException("Beneficiario no encontrado: " + id));
+        entity.setStatus(Estado.ACTIVO);
+        return persistenceMapper.convertToDomain(jpaRepository.save(entity));
+    }
+
+    @Override
+    public Beneficiary desactivar(Integer id) {
+        BeneficiaryEntity entity = jpaRepository.findById(id)
+                .orElseThrow(() -> new BeneficiarioNoEncontradoException("Beneficiario no encontrado: " + id));
+        entity.setStatus(Estado.INACTIVO);
+        return persistenceMapper.convertToDomain(jpaRepository.save(entity));
+    }
 
 }

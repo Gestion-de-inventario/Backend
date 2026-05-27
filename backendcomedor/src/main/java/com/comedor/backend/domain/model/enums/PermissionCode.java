@@ -10,6 +10,7 @@ public enum PermissionCode {
     BENEFICIARY_CREATE_BY_DNI,
     BENEFICIARY_EDIT,
     BENEFICIARY_LIST_BY_STATUS,
+    BENEFICIARY_CHANGE_STATUS,
 
     // =========================
     // CATEGORY
