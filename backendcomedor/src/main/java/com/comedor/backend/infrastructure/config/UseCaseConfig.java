@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.comedor.backend.application.services.RegistrarBeneficiarioService;
-import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class UseCaseConfig {
@@ -299,8 +298,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditRoleService editRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
-        return new EditRoleService(roleRepository,permissionRepository,roleDTOMapper, registrarModificacionUseCase);
+    EditRoleService editRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
+        return new EditRoleService(roleRepository,roleDTOMapper, registrarModificacionUseCase);
     }
 
     @Bean
@@ -355,6 +354,16 @@ public class UseCaseConfig {
     @Bean
     DesactivarBeneficiarioService desactivarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
         return new DesactivarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    }
+
+    @Bean
+    AssignPermissionesService assignPermissionesService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper)
+    {
+        return new AssignPermissionesService(roleRepository,permissionRepository,roleDTOMapper);
+    }
+    @Bean
+    RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+        return new RoleChangeStatusService(roleRepository,roleDTOMapper,registrarModificacionUseCase);
     }
 
 }

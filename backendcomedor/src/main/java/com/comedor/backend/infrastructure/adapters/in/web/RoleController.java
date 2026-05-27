@@ -1,12 +1,11 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.CreateRoleUseCase;
-import com.comedor.backend.application.ports.in.EditRoleUseCase;
-import com.comedor.backend.application.ports.in.ListRoleByIdUseCase;
-import com.comedor.backend.application.ports.in.ListRoleByStatusUseCase;
+import com.comedor.backend.application.ports.in.*;
+import com.comedor.backend.domain.model.enums.CambioEstado;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditRoleRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.PermissionsAsigmentRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,10 @@ public class RoleController {
 
     private final ListRoleByIdUseCase listRoleByIdUseCase;
 
+    private final AssignPermissionsUseCase assignPermissionsUseCase;
+
+    private final RoleChangeStatusUseCase roleChangeStatusUseCase;
+
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_CREATE')")
     public ResponseEntity<RolResponseDTO> createRole(
@@ -38,14 +41,37 @@ public class RoleController {
                 .body(createRoleUseCase.createRole(dto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("edit/{id}")
     @PreAuthorize("hasAuthority('ROLE_EDIT')")
     public ResponseEntity<RolResponseDTO> editRole(
             @PathVariable int id,
-            @RequestBody EditRoleRequestDTO dto) {
+            @RequestBody EditRoleRequestDTO dto
+            ) {
 
         return ResponseEntity.ok(
                 editRoleUseCase.editRole(id, dto)
+        );
+    }
+
+    @PutMapping("changeStatus/{id}")
+    @PreAuthorize("hasAuthority('ROLE_CHANGE_STATUS')")
+    public ResponseEntity<RolResponseDTO> changeStatus(
+            @PathVariable int id,
+            @RequestParam() CambioEstado status) {
+
+        return ResponseEntity.ok(
+                roleChangeStatusUseCase.changeStatusById(id, status)
+        );
+    }
+
+    @PutMapping("assignPermissions/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ASSIGN_PERMISSIONS')")
+    public ResponseEntity<RolResponseDTO> assignPermissions(
+            @PathVariable int id,
+            @RequestBody PermissionsAsigmentRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                assignPermissionsUseCase.assignPermissions(id, dto)
         );
     }
 

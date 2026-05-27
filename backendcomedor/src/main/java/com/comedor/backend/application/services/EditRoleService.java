@@ -18,16 +18,14 @@ import java.util.Set;
 public class EditRoleService implements EditRoleUseCase {
     private final RoleRepositoryPort roleRepository;
 
-    private final PermissionRepositoryPort permissionRepository;
 
     private final RoleMapper roleDTOMapper;
 
     private final RegistrarModificacionUseCase registrarModificacionUseCase;
 
 
-    public EditRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+    public EditRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
         this.roleRepository = roleRepository;
-        this.permissionRepository = permissionRepository;
         this.roleDTOMapper = roleDTOMapper;
         this.registrarModificacionUseCase = registrarModificacionUseCase;
     }
@@ -50,23 +48,8 @@ public class EditRoleService implements EditRoleUseCase {
             ));
         }
 
-        if (!existingRole.getStatus().equals(dto.getStatus())) {
-            registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
-                    "Role", "status", existingRole.getStatus().toString(), dto.getStatus().toString()
-            ));
-        }
+        existingRole.setName(dto.getName());
 
-        Set<Permission> finalPermissions;
-
-        if (dto.getPermissions() == null || dto.getPermissions().isEmpty()) {
-            finalPermissions = existingRole.getPermissions();
-        } else {
-            finalPermissions = permissionRepository.findByCodes(dto.getPermissions());
-        }
-
-        Role updatedRole = roleDTOMapper.toUpdatedDomain(existingRole, dto, finalPermissions);
-        Role savedRole = roleRepository.update(updatedRole);
-
-        return roleDTOMapper.toResponse(savedRole);
+        return roleDTOMapper.toResponse(existingRole);
     }
 }
