@@ -104,7 +104,11 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
                     "El registro no pertenece al reporte"
             );
         }
+
         beneficiaryControlJpaRepository.deleteById(controlId);
+
+        beneficiaryControlJpaRepository.flush();
+
     }
 
     @Override

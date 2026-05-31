@@ -49,6 +49,8 @@ public class BeneficiaryControlMapper {
         RegistroBeneficiarioResponseDTO dto =
                 new RegistroBeneficiarioResponseDTO();
 
+        dto.setId(control.getId());
+
         dto.setName(
                 control.getBeneficiario().getName()
         );
