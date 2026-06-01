@@ -138,4 +138,7 @@ public class MenuReport {
     public void setStatus(EstadoReporteMenu status) {
         this.status = status;
     }
+    public void removeBeneficiaryControl(int controlId) {
+        this.beneficiaryControls.removeIf(c -> c.getId() == controlId);
+    }
 }

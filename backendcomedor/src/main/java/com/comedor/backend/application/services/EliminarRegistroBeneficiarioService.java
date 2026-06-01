@@ -27,6 +27,7 @@ public class EliminarRegistroBeneficiarioService implements EliminarRegistroBene
                 recalcularResumenReporteUseCase;
         this.menuReportRepositoryPort = menuReportRepositoryPort;
     }
+
     @Transactional
     @Override
     public void eliminarRegistroBeneficiario(
@@ -43,11 +44,9 @@ public class EliminarRegistroBeneficiarioService implements EliminarRegistroBene
                 report.getQuantityRemaining()
                         + actual.getMenusAmount()
         );
+        report.removeBeneficiaryControl(controlId);
 
         menuReportRepositoryPort.update(report);
-
-        beneficiaryControlRepositoryPort
-                .eliminarBeneficiario(reporteId,controlId);
 
         recalcularResumenReporteUseCase
                 .recalcular(reporteId);

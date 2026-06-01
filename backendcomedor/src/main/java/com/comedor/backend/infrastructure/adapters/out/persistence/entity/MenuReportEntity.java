@@ -42,7 +42,7 @@ public class MenuReportEntity {
     @Column(nullable = false)
     private Integer quantityRemaining = 0;
 
-    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BeneficiaryControlEntity> beneficiaryControls = new ArrayList<>();
 
     @OneToMany(mappedBy = "menuReport", cascade = CascadeType.ALL)

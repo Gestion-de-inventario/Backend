@@ -78,6 +78,7 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
             }
 
             actual.setMenusAmount(newAmount);
+            menuReportRepositoryPort.update(report);
         }
 
         if(dto.getMenuPrice() != null)
