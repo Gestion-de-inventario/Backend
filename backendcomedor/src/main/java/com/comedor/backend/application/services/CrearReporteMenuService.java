@@ -97,7 +97,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                     requerido,
                     TipoMovimiento.SALIDA
             );
-            productRepository.updateProducto(product);
+            productRepository.updateStock(product);
         }
 
         List<StockMovement> movimientos = new ArrayList<>();
