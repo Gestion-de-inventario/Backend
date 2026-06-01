@@ -12,14 +12,16 @@ public class StockMovementResponseDTO {
 
     private Integer id;
     private String productName;
+    private String productUnit;
     private BigDecimal quantityUsed;
     private BigDecimal unitCost;
     private BigDecimal totalCost;
     private LocalDateTime movementDate;
 
-    public StockMovementResponseDTO(Integer id, String productName, BigDecimal quantityUsed, BigDecimal unitCost, BigDecimal totalCost, LocalDateTime movementDate) {
+    public StockMovementResponseDTO(Integer id, String productName,String productUnit, BigDecimal quantityUsed, BigDecimal unitCost, BigDecimal totalCost, LocalDateTime movementDate) {
         this.id = id;
         this.productName = productName;
+        this.productUnit = productUnit;
         this.quantityUsed = quantityUsed;
         this.unitCost = unitCost;
         this.totalCost = totalCost;
@@ -54,6 +56,10 @@ public class StockMovementResponseDTO {
         return movementDate;
     }
 
+    public String getProductUnit() {
+        return productUnit;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -76,5 +82,9 @@ public class StockMovementResponseDTO {
 
     public void setMovementDate(LocalDateTime movementDate) {
         this.movementDate = movementDate;
+    }
+
+    public void setProductUnit(String productUnit) {
+        this.productUnit = productUnit;
     }
 }

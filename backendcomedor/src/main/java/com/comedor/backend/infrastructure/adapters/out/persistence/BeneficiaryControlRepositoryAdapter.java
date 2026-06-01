@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.domain.exceptions.BeneficiarioYaRegistradoException;
 import com.comedor.backend.domain.exceptions.ControlBeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
@@ -29,6 +30,18 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
             int reporteId,
             BeneficiaryControl control
     ) {
+        boolean exists =
+                beneficiaryControlJpaRepository
+                        .existsByReportIdAndBeneficiaryId(
+                                reporteId,
+                                control.getBeneficiario().getId()
+                        );
+
+        if (exists) {
+            throw new BeneficiarioYaRegistradoException(
+                    "Este beneficiario ya fue registrado en el reporte"
+            );
+        }
 
         BeneficiaryControlEntity entity =
                 beneficiaryControlEntityMapper

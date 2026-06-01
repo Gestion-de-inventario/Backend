@@ -1,7 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.in.web.exceptions;
 
 import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
+import com.comedor.backend.domain.exceptions.StockInsuficienteException;
 import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockInsuficienteResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,20 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(response);
     }
+
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<StockInsuficienteResponseDTO> handleStockInsuficiente(
+            StockInsuficienteException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        new StockInsuficienteResponseDTO(
+                                ex.getFaltantes()
+                        )
+                );
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CustomErrorResponse> handleBusinessExceptions(RuntimeException ex,
                                                                         HttpServletRequest request) {
