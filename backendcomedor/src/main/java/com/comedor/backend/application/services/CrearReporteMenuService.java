@@ -71,7 +71,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                 BigDecimal faltante =
                         requerido.subtract(product.getStock());
 
-                productosFaltantes.add(new ProductoFaltanteResponseDTO(product.getId(),product.getName(),faltante));
+                productosFaltantes.add(new ProductoFaltanteResponseDTO(product.getId(),product.getName(),product.getUnit(),faltante));
             }
         }
 
