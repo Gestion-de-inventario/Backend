@@ -390,6 +390,17 @@ public class UseCaseConfig {
         return new ListDishMenusService(repository,mapper);
     }
 
+    @Bean
+    ListPurchaseService listPurchaseService(PurchaseRepositoryPort repository, PurchaseMapper mapper)
+    {
+        return new ListPurchaseService(repository,mapper);
+    }
+    @Bean
+    ConfirmPurchaseUseCase confirmPurchaseUseCase(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService)
+    {
+        return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper,registrarTransaccionUseCase,currentUserService);
+    }
+
 }
 
 

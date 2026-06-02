@@ -51,7 +51,7 @@ public class UserController {
     public UsuarioResponseDTO editUser(@PathVariable Integer id, @RequestBody EditarUsuarioRequestDTO editarUsuarioRequestDTO) {
         return editarUsuarioUseCase.EditarUsuario(id,editarUsuarioRequestDTO);
     }
-
+    @PreAuthorize("hasAuthority('USER_EDIT')")
     @PutMapping("/change-password/{id}")
     public ResponseEntity<Void> changePassword(@PathVariable Integer id, @RequestBody CambiarPasswordRequestDTO dto) {
         cambiarPasswordUseCase.cambiarPassword(id, dto);

@@ -11,5 +11,6 @@ public enum ModuleCode {
     ROLE,
     PERMISSION,
     MODIFICATION,
-    DISH_MENU
+    DISH_MENU,
+    PURCHASE
 }

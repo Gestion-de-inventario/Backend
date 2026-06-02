@@ -87,6 +87,8 @@ public enum PermissionCode {
     // PURCHASE
     // =========================
     PURCHASE_CREATE,
+    PURCHASE_LIST_ALL,
+    PURCHASE_CHANGE_STATUS,
 
     // =========================
     // DISH_MENU

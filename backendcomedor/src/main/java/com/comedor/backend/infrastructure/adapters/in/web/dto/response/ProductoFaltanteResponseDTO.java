@@ -12,5 +12,7 @@ public class ProductoFaltanteResponseDTO {
 
     private String productName;
 
+    private String productUnit;
+
     private BigDecimal quantityNeeded;
 }
