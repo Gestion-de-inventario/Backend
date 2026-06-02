@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface BeneficiaryControlJpaRepository extends JpaRepository<BeneficiaryControlEntity, Integer> {
     List<BeneficiaryControlEntity> findByReportId(int reporteId);
+    boolean existsByReportIdAndBeneficiaryId(int reportId, int beneficiaryId);
 }

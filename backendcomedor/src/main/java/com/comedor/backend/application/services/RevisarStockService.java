@@ -18,13 +18,5 @@ public class RevisarStockService implements RevisarStockUseCase {
     public void validarStockDisponible(int productoId,BigDecimal cantidad)
     {
         Product product = productRepositoryPort.getProductoById(productoId);
-
-        if(product.getStock().compareTo(cantidad) < 0)
-        {
-            throw new StockInsuficienteException(
-                    "Stock insuficiente para el producto: "
-                            + product.getName()
-            );
-        }
     }
 }

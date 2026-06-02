@@ -26,6 +26,7 @@ public class StockMovementMapper {
         // Mapeamos el nombre del producto si existe para que el frontend lo pueda mostrar
         if (domain.getProduct() != null) {
             dto.setProductName(domain.getProduct().getName());
+            dto.setProductUnit(domain.getProduct().getUnit());
         }
 
         dto.setQuantityUsed(domain.getQuantityUsed());

@@ -193,10 +193,10 @@ public class UseCaseConfig {
 
     @Bean
     CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository,
-                                                     DishMenuRepositoryPort dishMenuRepository,
+                                                     DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
                                                      MenuReportMapper mapper,
-                                                     PurchaseDetailRepositoryPort purchaseDetailRepositoryPort){
-        return new CrearReporteMenuService(repository,dishMenuRepository,mapper, purchaseDetailRepositoryPort);
+                                                     PurchaseDetailRepositoryPort purchaseDetailRepositoryPort, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
+        return new CrearReporteMenuService(repository,dishMenuRepository,productRepository,mapper, purchaseDetailRepositoryPort,registrarTransaccionUseCase,currentUserService);
     }
 
     @Bean
@@ -241,20 +241,20 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditarRegistroBeneficiarioService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    EditarRegistroBeneficiarioService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,MenuReportRepositoryPort menuReportRepositoryPort)
     {
-        return new EditarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,recalcularResumenReporteUseCase);
+        return new EditarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,recalcularResumenReporteUseCase,menuReportRepositoryPort);
     }
 
     @Bean
-    AgregarRegistroBeneficiarioService agregarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    AgregarRegistroBeneficiarioService agregarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,MenuReportRepositoryPort menuReportRepositoryPort)
     {
-        return new AgregarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,recalcularResumenReporteUseCase);
+        return new AgregarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,recalcularResumenReporteUseCase,menuReportRepositoryPort);
     }
 
     @Bean
-    EliminarRegistroBeneficiarioService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
-        return new EliminarRegistroBeneficiarioService(beneficiaryControlRepositoryPort,recalcularResumenReporteUseCase);
+    EliminarRegistroBeneficiarioService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,MenuReportRepositoryPort menuReportRepositoryPort){
+        return new EliminarRegistroBeneficiarioService(beneficiaryControlRepositoryPort,recalcularResumenReporteUseCase,menuReportRepositoryPort);
     }
 
     @Bean
