@@ -23,6 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
+        String passwordFromDb = user.getPassword();
+        if (passwordFromDb != null) {
+            passwordFromDb = passwordFromDb.trim();
+        } else {
+            passwordFromDb = "";
+        }
+
         Collection<? extends GrantedAuthority> authorities =
                 user.getRol()
                         .getPermissions()
@@ -36,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
+                passwordFromDb,
                 authorities
         );
     }
