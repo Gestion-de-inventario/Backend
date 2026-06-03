@@ -6,9 +6,16 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+
 public interface PurchaseRepositoryPort {
     Purchase save(Purchase purchase);
-    Page<Purchase> showPurchase(Pageable pageable);
+    Page<Purchase> showPurchase(
+            LocalDate startDate,
+            LocalDate endDate,
+            EstadoOrden status,
+            Pageable pageable
+    );
     Purchase findById(Integer id);
     Purchase updateStatus(Integer purchaseId,EstadoOrden status);
 }

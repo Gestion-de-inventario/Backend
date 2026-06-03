@@ -3,11 +3,14 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.ListPurchaseUseCase;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
+import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.time.LocalDate;
 
 public class ListPurchaseService implements ListPurchaseUseCase {
     private final PurchaseRepositoryPort repository;
@@ -20,7 +23,11 @@ public class ListPurchaseService implements ListPurchaseUseCase {
 
 
     @Override
-    public Page<PurchaseResponseDTO> list(int page, int size) {
+    public Page<PurchaseResponseDTO> list(int page,
+                                          int size,
+                                          LocalDate startDate,
+                                          LocalDate endDate,
+                                          EstadoOrden status) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,
@@ -31,7 +38,12 @@ public class ListPurchaseService implements ListPurchaseUseCase {
         );
 
         return repository
-                .showPurchase(pageable)
+                .showPurchase(
+                        startDate,
+                        endDate,
+                        status,
+                        pageable
+                )
                 .map(mapper::toResponse);
     }
 }
