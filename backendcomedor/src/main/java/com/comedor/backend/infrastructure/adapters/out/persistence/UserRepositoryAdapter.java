@@ -55,6 +55,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         entity.setStatus(user.getStatus());
         entity.setRole(roleEntityMapper.toEntity(user.getRol()));
 
+        entity.setPasswordChanged(user.isPasswordChanged());
 
         if (user.getPersona() != null) {
 

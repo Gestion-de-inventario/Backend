@@ -42,10 +42,11 @@ public class CambiarPasswordService implements CambiarPasswordUseCase {
         ));
 
         String hashGenerado = passwordEncoder.encode(dto.getNewPassword());
-
-        System.out.println("Hash nuevo: " + hashGenerado);
-
         user.setPassword(hashGenerado);
+
+
+        user.setPasswordChanged(true);
+
 
         userRepositoryPort.update(user);
     }

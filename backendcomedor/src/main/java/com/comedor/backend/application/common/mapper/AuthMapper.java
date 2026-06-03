@@ -37,6 +37,7 @@ public class AuthMapper {
                                     permission.getCode().name())
                             .toList()
             );
+            dto.setPasswordChanged(user.isPasswordChanged());
         }
 
         return dto;

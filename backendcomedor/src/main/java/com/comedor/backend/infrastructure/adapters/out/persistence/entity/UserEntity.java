@@ -34,4 +34,7 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PersonEntity persona;
+
+    @Column(name = "password_changed", nullable = false, columnDefinition = "boolean default false")
+    private boolean passwordChanged = false;
 }
