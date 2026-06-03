@@ -9,14 +9,16 @@ public class User {
     private Role role;
     private Estado status = Estado.ACTIVO;
     private Person person;
+    private boolean passwordChanged = false;
 
-    public User(Integer id, String username, String password, Role role, Estado status, Person person) {
+    public User(Integer id, String username, String password, Role role, Estado status, Person person, Boolean passwordChanged) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
         this.status = status;
         this.person = person;
+        this.passwordChanged = passwordChanged;
     }
     public User() {}
 
@@ -61,5 +63,13 @@ public class User {
     public void setPersona(Person person) {
         this.person = person;
         person.setUser(this);
+    }
+
+    public boolean isPasswordChanged() {
+        return passwordChanged;
+    }
+
+    public void setPasswordChanged(boolean passwordChanged) {
+        this.passwordChanged = passwordChanged;
     }
 }
