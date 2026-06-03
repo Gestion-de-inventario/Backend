@@ -10,6 +10,8 @@ public class PurchaseDetailResponseDTO {
 
     private String productName;
 
+    private String productUnit;
+
     private BigDecimal quantity;
 
     private BigDecimal unitPrice;

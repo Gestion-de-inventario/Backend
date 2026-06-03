@@ -34,7 +34,7 @@ public class PurchaseMapper {
 
         dto.setProductId(detail.getProduct().getId());
         dto.setProductName(detail.getProduct().getName());
-
+        dto.setProductUnit(detail.getProduct().getUnit());
         dto.setQuantity(detail.getQuantity());
         dto.setUnitPrice(detail.getUnitPrice());
         dto.setSubTotal(detail.getSubTotal());
