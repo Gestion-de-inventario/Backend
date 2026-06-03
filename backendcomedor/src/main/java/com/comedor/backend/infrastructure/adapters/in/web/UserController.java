@@ -5,6 +5,7 @@ import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CambiarPasswordRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarUsuarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ForceChangePasswordRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class UserController {
     private final DesactivarUsuarioUseCase desactivarUsuarioUseCase;
     private final ActivarUsuarioUseCase activarUsuarioUseCase;
     private final CambiarPasswordUseCase cambiarPasswordUseCase;
+    private final ForceChangePasswordUseCase forceChangePasswordUseCase;
     private final UserRepositoryPort userRepositoryPort;
 
     @PreAuthorize("hasAuthority('USER_LIST_ALL')")
@@ -53,9 +55,9 @@ public class UserController {
     }
     @PreAuthorize("hasAuthority('USER_EDIT')")
     @PutMapping("/change-password/{id}")
-    public ResponseEntity<Void> changePassword(@PathVariable Integer id, @RequestBody CambiarPasswordRequestDTO dto) {
-        cambiarPasswordUseCase.cambiarPassword(id, dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<java.util.Map<String, String>> changePassword(@PathVariable Integer id, @RequestBody ForceChangePasswordRequestDTO dto) {
+        forceChangePasswordUseCase.changeForcePassword(id, dto);
+        return ResponseEntity.ok(java.util.Map.of("mensaje", "Contraseña actualizada correctamente"));
     }
 
     @PutMapping("/me/edit")
