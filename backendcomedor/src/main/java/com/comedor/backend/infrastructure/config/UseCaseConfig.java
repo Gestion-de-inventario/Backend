@@ -83,6 +83,15 @@ public class UseCaseConfig {
     }
 
     @Bean
+    public ForceChangePasswordService changePasswordService(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionService registrarModificacionService) {
+        return new ForceChangePasswordService(
+                userRepositoryPort,
+                passwordEncoder,
+                registrarModificacionService
+        );
+    }
+
+    @Bean
     public DesactivarUsuarioService desactivarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
     {
         return new DesactivarUsuarioService(
