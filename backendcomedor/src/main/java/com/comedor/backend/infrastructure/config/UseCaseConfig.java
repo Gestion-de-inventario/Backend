@@ -410,6 +410,21 @@ public class UseCaseConfig {
         return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper,registrarTransaccionUseCase,currentUserService);
     }
 
+    @Bean
+    CreateDishMenuService createDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, DishMenuMapper dishMenuMapper){
+        return new CreateDishMenuService(dishMenuRepositoryPort, productRepositoryPort,dishMenuMapper);
+    }
+
+    @Bean
+    EditDishMenuService editDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper){
+        return new EditDishMenuService(dishMenuRepositoryPort, productRepositoryPort, registrarModificacionUseCase, dishMenuMapper);
+    }
+
+    @Bean
+    ChangeStatusDishMenuService changeStatusDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper){
+        return new ChangeStatusDishMenuService(dishMenuRepositoryPort, registrarModificacionUseCase, dishMenuMapper);
+    }
+
 }
 
 

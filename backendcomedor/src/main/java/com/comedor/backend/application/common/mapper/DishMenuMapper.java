@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DishMenuMapper {
 
-    public DishMenuResponseDTO toResponse(DishMenu domain) {
+    public DishMenuResponseDTO toDto(DishMenu domain) {
 
         DishMenuResponseDTO dto = new DishMenuResponseDTO();
 
