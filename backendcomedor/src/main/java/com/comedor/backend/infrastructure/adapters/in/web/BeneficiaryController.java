@@ -109,18 +109,10 @@ public class BeneficiaryController {
     @PreAuthorize("hasAuthority('BENEFICIARY_EDIT')")
     @PutMapping("edit/{id}")
     public ResponseEntity<?> editar(@PathVariable int id, @Valid @RequestBody EditarBeneficiarioRequestDTO editarBeneficiarioRequest) {
-        try {
+
             Beneficiary beneficiaryUpdated = editarBeneficiarioUseCase.editar(id, editarBeneficiarioRequest);
             BeneficiarioResponseDTO responseDTO = beneficiaryMapper.convertToDTO(beneficiaryUpdated);
-
             return ResponseEntity.ok(responseDTO);
-        } catch (BeneficiarioNoEncontradoException e) {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (DniYaRegistradoException e) {
-            return  ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el Beneficiario");
-        }
     }
 
     @PreAuthorize("hasAuthority('BENEFICIARY_LIST_BY_STATUS')")

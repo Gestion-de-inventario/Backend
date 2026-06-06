@@ -39,6 +39,8 @@ public class BeneficiaryMapper {
         beneficiarioResponseDTO.setName(beneficiary.getName());
         beneficiarioResponseDTO.setLastname(beneficiary.getLastname());
         beneficiarioResponseDTO.setStatus(beneficiary.getStatus());
+        beneficiarioResponseDTO.setBeneficiaryType(beneficiary.getBeneficiaryType().getName());
+        beneficiarioResponseDTO.setBeneficiaryTypeId(beneficiary.getBeneficiaryType().getId());
         beneficiarioResponseDTO.setMenu_cost(beneficiary.getBeneficiaryType().getMenu_cost());
         return beneficiarioResponseDTO;
     }
@@ -56,18 +58,4 @@ public class BeneficiaryMapper {
                 personalDataReniec.getLastnames()
         );
     }
-
-    public Beneficiary convertToDomainUpdate(EditarBeneficiarioRequestDTO editarBeneficiarioRequest, int id) {
-        BeneficiaryType type = new BeneficiaryType();
-        type.setId(editarBeneficiarioRequest.getBeneficiaryTypeId());
-
-        return new Beneficiary(
-                id,
-                editarBeneficiarioRequest.getDni(),
-                editarBeneficiarioRequest.getName(),
-                editarBeneficiarioRequest.getLastname(),
-                editarBeneficiarioRequest.getStatus(),
-                type);
-    }
-
 }
