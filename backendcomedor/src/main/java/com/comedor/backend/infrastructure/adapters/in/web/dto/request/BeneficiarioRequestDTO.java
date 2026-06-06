@@ -15,6 +15,8 @@ public class BeneficiarioRequestDTO {
     @NotBlank(message = "Los nombres son obligatorios")
     private String name;
 
+    private Integer beneficiaryTypeId;
+
     @NotBlank(message = "Los apellidos son obligatorios")
     private String lastname;
 }

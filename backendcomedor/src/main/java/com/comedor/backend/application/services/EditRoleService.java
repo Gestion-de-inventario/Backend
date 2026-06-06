@@ -37,18 +37,21 @@ public class EditRoleService implements EditRoleUseCase {
                 .findById(id)
                 .orElseThrow(RolNoEncontradoException::new);
 
-        if (!existingRole.getName().equalsIgnoreCase(dto.getName()) &&
-                roleRepository.existsByNameIgnoreCaseAndIdNot(dto.getName(), id)) {
+        if (!existingRole.getName().equalsIgnoreCase(dto.getName().toUpperCase()) &&
+                roleRepository.existsByNameIgnoreCaseAndIdNot(dto.getName().toUpperCase(), id)) {
             throw new RoleAlreadyExistsException("Ya existe un rol con ese nombre");
         }
 
         if (!existingRole.getName().equalsIgnoreCase(dto.getName())) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
-                    "Role", "name", existingRole.getName(), dto.getName()
+                    "Role", "name", existingRole.getName(), dto.getName().toUpperCase()
             ));
         }
 
-        existingRole.setName(dto.getName());
+        existingRole.setName(dto.getName().toUpperCase());
+
+        roleRepository.update(existingRole);
+
 
         return roleDTOMapper.toResponse(existingRole);
     }

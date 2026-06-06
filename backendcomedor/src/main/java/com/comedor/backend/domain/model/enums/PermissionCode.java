@@ -13,6 +13,13 @@ public enum PermissionCode {
     BENEFICIARY_CHANGE_STATUS,
 
     // =========================
+    // BENEFICIARY_TYPE
+    // =========================
+    BENEFICIARY_TYPE_CREATE,
+    BENEFICIARY_TYPE_EDIT,
+    BENEFICIARY_TYPE_CHANGE_STATUS,
+    BENEFICIARY_TYPE_LIST_BY_STATUS,
+    // =========================
     // CATEGORY
     // =========================
     CATEGORY_LIST_BY_STATUS,

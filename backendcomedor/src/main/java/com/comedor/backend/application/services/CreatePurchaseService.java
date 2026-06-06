@@ -56,8 +56,6 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
 
             detail.setQuantity(item.getQuantity());
 
-            detail.setRemainingQuantity(item.getQuantity());
-
             detail.setUnitPrice(item.getUnitPrice());
 
             detail.setSubTotal(subtotal);

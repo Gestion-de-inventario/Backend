@@ -4,11 +4,15 @@ import com.comedor.backend.application.common.mapper.*;
 import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.application.services.*;
+import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.comedor.backend.application.services.RegistrarBeneficiarioService;
+
+import java.util.List;
 
 @Configuration
 public class UseCaseConfig {
@@ -102,8 +106,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public RegistrarBeneficiarioService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort) {
-        return new RegistrarBeneficiarioService(beneficiaryRepositoryPort);
+    public RegistrarBeneficiarioService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort,BeneficiaryMapper mapper) {
+        return new RegistrarBeneficiarioService(beneficiaryRepositoryPort,beneficiaryTypeRepositoryPort,mapper);
     }
 
     @Bean
@@ -112,8 +116,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
-        return new ConsultarYRegistrarReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase);
+    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
+        return new ConsultarYRegistrarReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase,beneficiaryTypeRepositoryPort);
     }
 
     @Bean
@@ -211,9 +215,10 @@ public class UseCaseConfig {
     @Bean
     CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository,
                                                      DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
-                                                     MenuReportMapper mapper,
-                                                     PurchaseDetailRepositoryPort purchaseDetailRepositoryPort, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
-        return new CrearReporteMenuService(repository,dishMenuRepository,productRepository,mapper, purchaseDetailRepositoryPort,registrarTransaccionUseCase,currentUserService);
+                                                     InventoryLotRepositoryPort inventoryLotRepository,
+                                                     MenuReportMapper mapper
+            , RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
+        return new CrearReporteMenuService(repository,dishMenuRepository,productRepository,inventoryLotRepository,mapper,registrarTransaccionUseCase,currentUserService);
     }
 
     @Bean
@@ -405,9 +410,9 @@ public class UseCaseConfig {
         return new ListPurchaseService(repository,mapper);
     }
     @Bean
-    ConfirmPurchaseUseCase confirmPurchaseUseCase(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService)
+    ConfirmPurchaseUseCase confirmPurchaseUseCase(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService,InventoryLotRepositoryPort inventoryLotRepository)
     {
-        return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper,registrarTransaccionUseCase,currentUserService);
+        return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper,registrarTransaccionUseCase,currentUserService,inventoryLotRepository);
     }
 
     @Bean
@@ -423,6 +428,30 @@ public class UseCaseConfig {
     @Bean
     ChangeStatusDishMenuService changeStatusDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper){
         return new ChangeStatusDishMenuService(dishMenuRepositoryPort, registrarModificacionUseCase, dishMenuMapper);
+    }
+
+    @Bean
+    ListBeneficiariesTypesByStatusUseCase listBeneficiariesTypesByStatusUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper)
+    {
+        return new ListBeneficiariesTypesByStatusService( repository, mapper);
+    }
+
+    @Bean
+    ChangeStatusBeneficiaryTypeUseCase changeStatusBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryRepositoryPort beneficiaryRepository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    {
+        return new ChangeStatusBeneficiaryTypeService(repository,beneficiaryRepository, mapper, registrarModificacionUseCase);
+    }
+
+    @Bean
+    CreateBeneficiaryTypeUseCase createBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper)
+    {
+        return new CreateBeneficiaryTypeService(repository, mapper);
+    }
+
+    @Bean
+    EditBeneficiaryTypeUseCase editBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    {
+        return new EditBeneficiaryTypeService(repository,mapper,registrarModificacionUseCase);
     }
 
 }

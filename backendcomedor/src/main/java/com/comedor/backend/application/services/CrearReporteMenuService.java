@@ -3,10 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.CrearReporteMenuUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
-import com.comedor.backend.application.ports.out.DishMenuRepositoryPort;
-import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
-import com.comedor.backend.application.ports.out.ProductRepositoryPort;
-import com.comedor.backend.application.ports.out.PurchaseDetailRepositoryPort;
+import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.domain.exceptions.ReporteMenuYaExistente;
 // Faltará importar tus clases de Excepciones personalizadas y StockMovement
 import com.comedor.backend.domain.exceptions.StockInsuficienteException;
@@ -31,20 +28,23 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
     private final MenuReportRepositoryPort repository;
     private final DishMenuRepositoryPort dishMenuRepository;
     private final ProductRepositoryPort productRepository;
+    private final InventoryLotRepositoryPort inventoryLotRepository;
     private final MenuReportMapper mapper;
-    private final PurchaseDetailRepositoryPort purchaseDetailRepositoryPort;
+
     private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
     private final CurrentUserService currentUserService;
 
     public CrearReporteMenuService(MenuReportRepositoryPort repository,
                                    DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
-                                   MenuReportMapper mapper,
-                                   PurchaseDetailRepositoryPort purchaseDetailRepositoryPort, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService) {
+                                   InventoryLotRepositoryPort inventoryLotRepository,
+                                   MenuReportMapper mapper
+                                  , RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService) {
         this.repository = repository;
         this.dishMenuRepository = dishMenuRepository;
         this.productRepository = productRepository;
+        this.inventoryLotRepository = inventoryLotRepository;
         this.mapper = mapper;
-        this.purchaseDetailRepositoryPort = purchaseDetailRepositoryPort;
+
         this.registrarTransaccionUseCase = registrarTransaccionUseCase;
         this.currentUserService = currentUserService;
     }
@@ -101,19 +101,26 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
         }
 
         List<StockMovement> movimientos = new ArrayList<>();
+
         BigDecimal totalSpent = BigDecimal.ZERO;
+
         for (DishSupply supply : dishMenu.getSupplies()) {
 
-            BigDecimal pendiente = supply.getQuantityNeeded()
-                    .multiply(BigDecimal.valueOf(request.getQuantityPrepared()));
+            BigDecimal pendiente =
+                    supply.getQuantityNeeded()
+                            .multiply(
+                                    BigDecimal.valueOf(
+                                            request.getQuantityPrepared()
+                                    )
+                            );
 
-            List<PurchaseDetail> lotes =
-                    purchaseDetailRepositoryPort
+            List<InventoryLot> lotes =
+                    inventoryLotRepository
                             .findAvailableByProduct(
                                     supply.getProduct().getId()
                             );
 
-            for (PurchaseDetail lote : lotes) {
+            for (InventoryLot lote : lotes) {
 
                 if (pendiente.compareTo(BigDecimal.ZERO) <= 0) {
                     break;
@@ -124,20 +131,20 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                                 lote.getRemainingQuantity()
                         );
 
-                StockMovement movement = new StockMovement();
+                StockMovement movement =
+                        new StockMovement();
 
-                movement.setProduct(supply.getProduct());
-                movement.setPurchaseDetail(lote);
+                movement.setInventoryLot(lote);
 
                 movement.setQuantityUsed(consumido);
 
                 movement.setUnitCost(
-                        lote.getUnitPrice()
+                        lote.getUnitCost()
                 );
 
                 movement.setTotalCost(
                         consumido.multiply(
-                                lote.getUnitPrice()
+                                lote.getUnitCost()
                         )
                 );
 
@@ -157,7 +164,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                                 .subtract(consumido)
                 );
 
-                purchaseDetailRepositoryPort.update(lote);
+                inventoryLotRepository.update(lote);
 
                 pendiente =
                         pendiente.subtract(consumido);

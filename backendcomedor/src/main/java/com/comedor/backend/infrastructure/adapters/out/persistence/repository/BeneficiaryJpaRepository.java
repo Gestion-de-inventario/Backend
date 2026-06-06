@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository;
 
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,10 @@ public interface BeneficiaryJpaRepository extends JpaRepository<BeneficiaryEntit
     @Query("SELECT b FROM BeneficiaryEntity b " +
             "WHERE b.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
     List<BeneficiaryEntity> getAllBeneficiariosActivos();
+
+    boolean existsByBeneficiaryTypeIdAndStatus(
+            Integer beneficiaryTypeId,
+            Estado status
+    );
 
 }

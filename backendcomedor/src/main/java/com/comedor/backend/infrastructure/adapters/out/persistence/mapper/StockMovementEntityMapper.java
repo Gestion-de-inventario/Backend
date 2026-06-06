@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockMovementEntityMapper {
 
-    private final ProductEntityMapper productMapper;
-    private final PurchaseEntityMapper purchaseMapper;
 
-    public StockMovementEntityMapper(ProductEntityMapper productMapper, PurchaseEntityMapper purchaseMapper) {
-        this.productMapper = productMapper;
+    private final PurchaseEntityMapper purchaseMapper;
+    private final InventoryLotEntityMapper inventoryMapper;
+    public StockMovementEntityMapper(PurchaseEntityMapper purchaseMapper, InventoryLotEntityMapper inventoryMapper) {
         this.purchaseMapper = purchaseMapper;
+        this.inventoryMapper = inventoryMapper;
     }
 
     public StockMovement toDomain(StockMovementEntity entity) {
@@ -24,12 +24,9 @@ public class StockMovementEntityMapper {
         StockMovement domain = new StockMovement();
         domain.setId(entity.getId());
 
-        if (entity.getProduct() != null) {
-            domain.setProduct(productMapper.toDomain(entity.getProduct()));
-        }
 
-        if (entity.getPurchaseDetail() != null) {
-            domain.setPurchaseDetail(purchaseMapper.toDetailDomain(entity.getPurchaseDetail()));
+        if (entity.getInventoryLot() != null) {
+            domain.setInventoryLot(inventoryMapper.toDomain(entity.getInventoryLot()));
         }
 
         /* * NOTA: Evitamos mapear el MenuReport hacia el dominio aquí para
@@ -52,18 +49,10 @@ public class StockMovementEntityMapper {
         StockMovementEntity entity = new StockMovementEntity();
         entity.setId(domain.getId());
 
-        if (domain.getProduct() != null) {
-            entity.setProduct(productMapper.toEntity(domain.getProduct()));
-        }
 
-        if (domain.getPurchaseDetail() != null) {
-            entity.setPurchaseDetail(purchaseMapper.toDetailEntity(domain.getPurchaseDetail()));
+        if (domain.getInventoryLot() != null) {
+            entity.setInventoryLot(inventoryMapper.toEntity(domain.getInventoryLot()));
         }
-
-        /* * NOTA: El seteo del 'MenuReportEntity' dentro de esta entidad
-         * YA SE HACE en el MenuReportEntityMapper (con entity.setMenuReport(...)).
-         * Hacerlo aquí causaría inyección cíclica en Spring.
-         */
 
         entity.setQuantityUsed(domain.getQuantityUsed());
         entity.setUnitCost(domain.getUnitCost());

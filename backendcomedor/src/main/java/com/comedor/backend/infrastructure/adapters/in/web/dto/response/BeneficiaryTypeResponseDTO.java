@@ -6,11 +6,14 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class BeneficiarioResponseDTO {
-    private int id;
-    private String dni;
+public class BeneficiaryTypeResponseDTO {
+    private Integer id;
+
     private String name;
-    private String lastname;
+
+    private String desc;
+
     private BigDecimal menu_cost;
+
     private Estado status;
 }

@@ -8,6 +8,11 @@ import java.util.List;
 
 @Component
 public class BeneficiaryEntityMapper {
+    private final BeneficiaryTypeEntityMapper beneficiaryTypeEntityMapper;
+
+    public BeneficiaryEntityMapper(BeneficiaryTypeEntityMapper beneficiaryTypeEntityMapper) {
+        this.beneficiaryTypeEntityMapper = beneficiaryTypeEntityMapper;
+    }
 
     public BeneficiaryEntity convertToEntity(Beneficiary beneficiary) {
         BeneficiaryEntity beneficiaryEntity = new BeneficiaryEntity();
@@ -20,6 +25,7 @@ public class BeneficiaryEntityMapper {
         beneficiaryEntity.setName(beneficiary.getName());
         beneficiaryEntity.setLastname(beneficiary.getLastname());
         beneficiaryEntity.setStatus(beneficiary.getStatus());
+        beneficiaryEntity.setBeneficiaryType(beneficiaryTypeEntityMapper.convertToEntity(beneficiary.getBeneficiaryType()));
         return beneficiaryEntity;
     }
 
@@ -29,7 +35,8 @@ public class BeneficiaryEntityMapper {
                 beneficiaryEntity.getDni(),
                 beneficiaryEntity.getName(),
                 beneficiaryEntity.getLastname(),
-                beneficiaryEntity.getStatus()
+                beneficiaryEntity.getStatus(),
+                beneficiaryTypeEntityMapper.convertToDomain(beneficiaryEntity.getBeneficiaryType())
         );
     }
 

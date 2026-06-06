@@ -12,11 +12,11 @@ public class PurchaseDetail {
 
     private BigDecimal quantity = BigDecimal.ZERO;
 
-    private BigDecimal remainingQuantity = BigDecimal.ZERO;
-
     private BigDecimal unitPrice = BigDecimal.ZERO;
 
     private BigDecimal subTotal = BigDecimal.ZERO;
+
+    private InventoryLot inventoryLot;
 
     public PurchaseDetail() {
     }
@@ -25,7 +25,6 @@ public class PurchaseDetail {
                           Purchase purchase,
                           Product product,
                           BigDecimal quantity,
-                          BigDecimal remainingQuantity,
                           BigDecimal unitPrice,
                           BigDecimal subTotal) {
 
@@ -33,9 +32,12 @@ public class PurchaseDetail {
         this.purchase = purchase;
         this.product = product;
         this.quantity = quantity;
-        this.remainingQuantity = remainingQuantity;
         this.unitPrice = unitPrice;
         this.subTotal = subTotal;
+    }
+
+    public InventoryLot getInventoryLot() {
+        return inventoryLot;
     }
 
     public Integer getId() {
@@ -70,14 +72,6 @@ public class PurchaseDetail {
         this.quantity = quantity;
     }
 
-    public BigDecimal getRemainingQuantity() {
-        return remainingQuantity;
-    }
-
-    public void setRemainingQuantity(BigDecimal remainingQuantity) {
-        this.remainingQuantity = remainingQuantity;
-    }
-
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
@@ -92,5 +86,9 @@ public class PurchaseDetail {
 
     public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
+    }
+
+    public void setInventoryLot(InventoryLot inventoryLot) {
+        this.inventoryLot = inventoryLot;
     }
 }

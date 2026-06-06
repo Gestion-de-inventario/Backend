@@ -7,18 +7,20 @@ public class Beneficiary {
     private String dni;
     private String name;
     private String lastname;
+    private BeneficiaryType beneficiaryType;
     private Estado status = Estado.ACTIVO;
 
     public Beneficiary() {
         return;
     }
 
-    public Beneficiary(int id, String dni, String name, String lastname, Estado status){
+    public Beneficiary(int id, String dni, String name, String lastname, Estado status,BeneficiaryType beneficiaryType){
         this.id = id;
         this.dni = dni;
         this.name = name;
         this.lastname = lastname;
         this.status = status;
+        this.beneficiaryType = beneficiaryType;
     }
 
     public int getId() { return id; }
@@ -27,8 +29,8 @@ public class Beneficiary {
     public String getLastname() { return lastname; }
     public Estado getStatus() { return status;}
 
-    public Beneficiary update(String dni, String name, String lastname, Estado status ) {
-        return new Beneficiary(this.id, dni, name, lastname, status);
+    public Beneficiary update(String dni, String name, String lastname, Estado status ,BeneficiaryType beneficiaryType) {
+        return new Beneficiary(this.id, dni, name, lastname, status,beneficiaryType);
     }
 
     public void marcarComoInactivo(){
@@ -57,5 +59,13 @@ public class Beneficiary {
 
     public void setStatus(Estado status) {
         this.status = status;
+    }
+
+    public BeneficiaryType getBeneficiaryType() {
+        return beneficiaryType;
+    }
+
+    public void setBeneficiaryType(BeneficiaryType beneficiaryType) {
+        this.beneficiaryType = beneficiaryType;
     }
 }

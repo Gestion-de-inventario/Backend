@@ -45,9 +45,8 @@ public class BeneficiaryController {
     @PostMapping("/create")
     public ResponseEntity<BeneficiarioResponseDTO> registrar(@Valid @RequestBody BeneficiarioRequestDTO beneficiarioRequestDTO) {
 
-        Beneficiary beneficiary = beneficiaryMapper.convertToDomain(beneficiarioRequestDTO);
 
-        Beneficiary beneficiaryRegistered = registrarBeneficiarioUseCase.registrarBeneficiario(beneficiary);
+        Beneficiary beneficiaryRegistered = registrarBeneficiarioUseCase.registrarBeneficiario(beneficiarioRequestDTO);
 
         BeneficiarioResponseDTO beneficiarioResponseDTO = beneficiaryMapper.convertToDTO(beneficiaryRegistered);
 
