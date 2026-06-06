@@ -121,8 +121,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public EditarBeneficiarioService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new EditarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    public EditarBeneficiarioService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
+        return new EditarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase,beneficiaryTypeRepositoryPort);
     }
 
     @Bean

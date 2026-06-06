@@ -11,6 +11,8 @@ public class BeneficiarioResponseDTO {
     private String dni;
     private String name;
     private String lastname;
+    private String beneficiaryType;
+    private Integer beneficiaryTypeId;
     private BigDecimal menu_cost;
     private Estado status;
 }
