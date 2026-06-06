@@ -8,20 +8,20 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "purchase_detail")
+@Table(name = "donation_detail")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseDetailEntity {
+public class DonationDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_detail_id")
+    @Column(name = "donation_detail_id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_id", nullable = false)
-    private PurchaseEntity purchase;
+    @JoinColumn(name = "donation_id", nullable = false)
+    private DonationEntity donation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -30,14 +30,7 @@ public class PurchaseDetailEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal quantity = BigDecimal.ZERO;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal subTotal = BigDecimal.ZERO;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "inventory_lot_id")
+    @JoinColumn(name = "inventory_lot_id", nullable = false)
     private InventoryLotEntity inventoryLot;
-
 }

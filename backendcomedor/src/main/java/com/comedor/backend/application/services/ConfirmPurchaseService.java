@@ -3,8 +3,11 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.ConfirmPurchaseUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
+import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
+import com.comedor.backend.application.ports.out.PurchaseDetailRepositoryPort;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
+import com.comedor.backend.domain.model.InventoryLot;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
@@ -14,6 +17,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.Transaccio
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
@@ -22,16 +26,18 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
     private final PurchaseMapper mapper;
     private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
     private final CurrentUserService currentUserService;
+    private final InventoryLotRepositoryPort inventoryLotRepository;
 
-    public ConfirmPurchaseService(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService) {
+    public ConfirmPurchaseService(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
         this.purchaseRepository = purchaseRepository;
         this.productRepository = productRepository;
         this.mapper = mapper;
         this.registrarTransaccionUseCase = registrarTransaccionUseCase;
         this.currentUserService = currentUserService;
+        this.inventoryLotRepository = inventoryLotRepository;
     }
 
-    //ESTADO : COMPRADO
+
     @Override
     public PurchaseResponseDTO confirm(Integer purchaseId) {
         Purchase purchase =
@@ -55,6 +61,22 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                             .add(detail.getQuantity())
             );
 
+            InventoryLot lot = new InventoryLot();
+
+            lot.setProduct(detail.getProduct());
+
+            lot.setQuantity(detail.getQuantity());
+
+            lot.setRemainingQuantity(detail.getQuantity());
+
+            lot.setUnitCost(detail.getUnitPrice());
+
+            lot.setEntryDate(LocalDateTime.now());
+
+            inventoryLotRepository.create(lot);
+
+            detail.setInventoryLot(lot);
+
             Integer usuarioId =
                     currentUserService.getCurrentUser().getId();
 
@@ -68,7 +90,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             productRepository.updateStock(product);
 
         }
-        
+
         Purchase updated =
                 purchaseRepository.updateStatus(purchaseId,EstadoOrden.RECIBIDO);
 

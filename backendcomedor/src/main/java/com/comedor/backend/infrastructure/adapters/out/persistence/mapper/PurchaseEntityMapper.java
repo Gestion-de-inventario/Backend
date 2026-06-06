@@ -94,8 +94,6 @@ public class PurchaseEntityMapper {
 
         detail.setQuantity(entity.getQuantity());
 
-        detail.setRemainingQuantity(entity.getRemainingQuantity());
-
         detail.setUnitPrice(entity.getUnitPrice());
 
         detail.setSubTotal(entity.getSubTotal());
@@ -131,8 +129,6 @@ public class PurchaseEntityMapper {
         entity.setId(domain.getId());
 
         entity.setQuantity(domain.getQuantity());
-
-        entity.setRemainingQuantity(domain.getRemainingQuantity());
 
         entity.setUnitPrice(domain.getUnitPrice());
 

@@ -84,4 +84,14 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
         return persistenceMapper.convertToDomain(jpaRepository.save(entity));
     }
 
+    @Override
+    public boolean isItAssignedToBeneficiary(Integer id) {
+
+        return jpaRepository
+                .existsByBeneficiaryTypeIdAndStatus(
+                        id,
+                        Estado.ACTIVO
+                );
+    }
+
 }

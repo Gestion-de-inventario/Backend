@@ -12,7 +12,6 @@ public interface PurchaseDetailJpaRepository extends JpaRepository<PurchaseDetai
     @Query("SELECT pd FROM PurchaseDetailEntity pd " +
             "JOIN pd.purchase p " +
             "WHERE pd.product.id = :productId " +
-            "AND pd.remainingQuantity > 0 " +
-            "ORDER BY p.purchaseDate ASC") // <--- Aquí estaba el error
+            "ORDER BY p.purchaseDate ASC")
     List<PurchaseDetailEntity> findAvailableByProductIdOrderByPurchaseDateAsc(@Param("productId") Integer productId);
 }

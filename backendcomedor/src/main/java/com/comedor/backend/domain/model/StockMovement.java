@@ -7,9 +7,7 @@ public class StockMovement {
 
     private Integer id;
 
-    private Product product;
-
-    private PurchaseDetail purchaseDetail;
+    private InventoryLot inventoryLot;
 
     private MenuReport menuReport;
 
@@ -25,8 +23,7 @@ public class StockMovement {
     }
 
     public StockMovement(Integer id,
-                         Product product,
-                         PurchaseDetail purchaseDetail,
+                         InventoryLot inventoryLot,
                          MenuReport menuReport,
                          BigDecimal quantityUsed,
                          BigDecimal unitCost,
@@ -34,8 +31,7 @@ public class StockMovement {
                          LocalDateTime movementDate) {
 
         this.id = id;
-        this.product = product;
-        this.purchaseDetail = purchaseDetail;
+        this.inventoryLot = inventoryLot;
         this.menuReport = menuReport;
         this.quantityUsed = quantityUsed;
         this.unitCost = unitCost;
@@ -51,20 +47,12 @@ public class StockMovement {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public InventoryLot getInventoryLot() {
+        return inventoryLot;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public PurchaseDetail getPurchaseDetail() {
-        return purchaseDetail;
-    }
-
-    public void setPurchaseDetail(PurchaseDetail purchaseDetail) {
-        this.purchaseDetail = purchaseDetail;
+    public void setInventoryLot(InventoryLot inventoryLot) {
+        this.inventoryLot = inventoryLot;
     }
 
     public MenuReport getMenuReport() {

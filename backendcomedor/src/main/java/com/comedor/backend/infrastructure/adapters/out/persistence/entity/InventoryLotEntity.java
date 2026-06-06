@@ -6,22 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "purchase_detail")
+@Table(name = "inventory_lot")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseDetailEntity {
+public class InventoryLotEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_detail_id")
+    @Column(name = "inventory_lot_id")
     private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_id", nullable = false)
-    private PurchaseEntity purchase;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -31,13 +28,11 @@ public class PurchaseDetailEntity {
     private BigDecimal quantity = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice = BigDecimal.ZERO;
+    private BigDecimal remainingQuantity = BigDecimal.ZERO;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal subTotal = BigDecimal.ZERO;
+    @Column(nullable = false, precision = 10, scale = 3)
+    private BigDecimal unitCost = BigDecimal.ZERO;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "inventory_lot_id")
-    private InventoryLotEntity inventoryLot;
-
+    @Column(nullable = false)
+    private LocalDateTime entryDate;
 }

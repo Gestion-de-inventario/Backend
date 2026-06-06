@@ -6,34 +6,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "beneficiary")
+@Table(name = "beneficiary_type")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BeneficiaryEntity {
-
+public class BeneficiaryTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    @Column(nullable = false, unique = true, length = 8)
-    private String dni;
-
-    @Column(nullable = false, length = 70) // 35
+    @Column(nullable = false, length = 70)
     private String name;
 
-    @Column(nullable = false, length = 80) // 40 paterno + 40 materno
-    private String lastname;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "beneficiary_type_id",
-            nullable = false
-    )
-    private BeneficiaryTypeEntity beneficiaryType;
+    @Column(length = 255)
+    private String description;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal menu_cost;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Estado status = Estado.ACTIVO;
 }
+
+
+
+
