@@ -3,10 +3,15 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.model.Beneficiary;
+import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
+import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryTypeEntity;
+import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryJpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +24,20 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
 
     private final BeneficiaryJpaRepository jpaRepository;
     private final BeneficiaryEntityMapper persistenceMapper;
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Beneficiary guardar(Beneficiary beneficiary) {
 
         BeneficiaryEntity entity = persistenceMapper.convertToEntity(beneficiary);
+
+        entity.setBeneficiaryType(
+                entityManager.getReference(
+                        BeneficiaryTypeEntity.class,
+                        beneficiary.getBeneficiaryType().getId()
+                )
+        );
 
         BeneficiaryEntity savedEntity = jpaRepository.save(entity);
 

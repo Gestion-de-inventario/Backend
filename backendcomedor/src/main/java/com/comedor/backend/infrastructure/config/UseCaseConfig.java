@@ -106,8 +106,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public RegistrarBeneficiarioService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort) {
-        return new RegistrarBeneficiarioService(beneficiaryRepositoryPort);
+    public RegistrarBeneficiarioService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort,BeneficiaryMapper mapper) {
+        return new RegistrarBeneficiarioService(beneficiaryRepositoryPort,beneficiaryTypeRepositoryPort,mapper);
     }
 
     @Bean
@@ -116,8 +116,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase) {
-        return new ConsultarYRegistrarReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase);
+    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
+        return new ConsultarYRegistrarReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase,beneficiaryTypeRepositoryPort);
     }
 
     @Bean
