@@ -2,9 +2,9 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ObtenerDashboardUseCase;
 import com.comedor.backend.application.ports.out.DashboardRepositoryPort;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.DashboardResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DashboardResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRotacionDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ResumenMensualDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenMensualDTO;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
@@ -22,16 +22,13 @@ public class ObtenerDashboardService implements ObtenerDashboardUseCase {
     @Override
     @Cacheable(value = "dashboardCache", key = "#anio + '-' + #mes")
     public DashboardResponseDTO ejecutar(int anio, int mes) {
-        // Calcular rangos de fechas para el mes solicitado
         LocalDate inicio = LocalDate.of(anio, mes, 1);
         LocalDate fin = inicio.withDayOfMonth(inicio.lengthOfMonth());
 
-        // Consultar los datos a través del puerto de salida
+        // 1. Obtener la rotación de productos
         List<ProductoRotacionDTO> topProductos = dashboardRepositoryPort.obtenerTop5ProductosMasRotados(inicio, fin);
-        BigDecimal valorInventario = dashboardRepositoryPort.obtenerValorTotalInventario();
-        List<ResumenMensualDTO> resumenGastos = dashboardRepositoryPort.obtenerGastosConsolidadosMensuales(anio, mes);
 
-        // Retornar el DTO consolidado que se guardará en caché
-        return new DashboardResponseDTO(topProductos, valorInventario, resumenGastos);
+        // 2. Obtener el consolidado financiero (Tarjetas y gráfico diario)
+        return dashboardRepositoryPort.obtenerConsolidadoFinanciero(anio, mes, topProductos);
     }
 }

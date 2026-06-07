@@ -11,6 +11,7 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
     }
 
     @Override
+    @CacheEvict(value = "dashboardCache", allEntries = true)
     public PurchaseResponseDTO create(CreatePurchaseRequestDTO request) {
 
         List<PurchaseDetail> details = new ArrayList<>();
