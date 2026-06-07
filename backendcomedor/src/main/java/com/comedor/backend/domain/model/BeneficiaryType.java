@@ -61,4 +61,15 @@ public class BeneficiaryType {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "BeneficiaryType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", menu_cost=" + menu_cost +
+                ", status=" + status +
+                '}';
+    }
 }

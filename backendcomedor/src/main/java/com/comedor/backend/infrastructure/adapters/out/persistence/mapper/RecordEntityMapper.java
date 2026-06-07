@@ -33,7 +33,6 @@ public class RecordEntityMapper {
         entity.setAmount(record.getAmount());
         entity.setProductSource(record.getProductSource());
         entity.setUnitPrice(record.getUnitPrice());
-        System.out.println(entity.toString());
         return entity;
     }
 

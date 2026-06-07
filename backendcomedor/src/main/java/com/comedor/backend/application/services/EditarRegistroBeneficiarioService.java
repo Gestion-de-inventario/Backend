@@ -31,6 +31,8 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
                 beneficiaryControlRepositoryPort
                         .findById(controlId);
 
+        System.out.println("Beneficiario control encontrado"+actual.toString());
+
 
         if(dto.getPago() != null)
         {

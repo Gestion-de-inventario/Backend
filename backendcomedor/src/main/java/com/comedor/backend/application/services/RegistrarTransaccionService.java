@@ -37,7 +37,6 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
         {
             transaccion.setFinalStock(transaccion.getCurrentStock().subtract(transaccion.getAmount()));
         }
-        System.out.println(transaccion.toString());
         return mapper.toDTO(repository.createTransaccion(transaccion));
     }
 }

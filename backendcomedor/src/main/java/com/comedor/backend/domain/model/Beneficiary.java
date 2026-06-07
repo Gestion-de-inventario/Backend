@@ -68,4 +68,16 @@ public class Beneficiary {
     public void setBeneficiaryType(BeneficiaryType beneficiaryType) {
         this.beneficiaryType = beneficiaryType;
     }
+
+    @Override
+    public String toString() {
+        return "Beneficiary{" +
+                "id=" + id +
+                ", dni='" + dni + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", beneficiaryType=" + beneficiaryType +
+                ", status=" + status +
+                '}';
+    }
 }
