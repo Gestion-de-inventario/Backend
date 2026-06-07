@@ -13,5 +13,6 @@ public enum ModuleCode {
     PERMISSION,
     MODIFICATION,
     DISH_MENU,
-    PURCHASE
+    PURCHASE,
+    REPORTS
 }

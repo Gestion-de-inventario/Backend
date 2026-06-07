@@ -105,4 +105,9 @@ public enum PermissionCode {
     DISH_MENU_CREATE,
     DISH_MENU_EDIT,
     DISH_MENU_CHANGE_STATUS,
+
+    // =========================
+    // REPORTS
+    // =========================
+    DASHBOARD_VIEW
 }
