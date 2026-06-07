@@ -25,8 +25,8 @@ public class Beneficiary {
 
     public int getId() { return id; }
     public String getDni() { return dni; }
-    public String getName() { return name.toUpperCase(); }
-    public String getLastname() { return lastname.toUpperCase(); }
+    public String getName() { return name; }
+    public String getLastname() { return lastname;}
     public Estado getStatus() { return status;}
 
     public Beneficiary update(String dni, String name, String lastname, Estado status ,BeneficiaryType beneficiaryType) {

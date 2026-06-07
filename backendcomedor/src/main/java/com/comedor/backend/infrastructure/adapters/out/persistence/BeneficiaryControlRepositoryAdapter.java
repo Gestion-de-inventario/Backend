@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.exceptions.BeneficiarioYaRegistradoException;
 import com.comedor.backend.domain.exceptions.ControlBeneficiarioNoEncontradoException;
 import com.comedor.backend.domain.model.BeneficiaryControl;
@@ -8,7 +9,10 @@ import com.comedor.backend.infrastructure.adapters.out.persistence.entity.Benefi
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryControlEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryControlEntityMapper;
+import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryTypeEntityMapper;
+import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.MenuReportEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryControlJpaRepository;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,10 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
     private final BeneficiaryControlJpaRepository beneficiaryControlJpaRepository;
 
     private final BeneficiaryControlEntityMapper beneficiaryControlEntityMapper;
+
+    private final BeneficiaryTypeEntityMapper beneficiaryTypeEntityMapper;
+
+    private final BeneficiaryJpaRepository beneficiaryJpaRepository;
 
     @PersistenceContext private EntityManager entityManager;
 

@@ -42,14 +42,14 @@ public class EditarBeneficiarioService implements EditarBeneficiarioUseCase {
             beneficiary.setDni(editarBeneficiarioRequest.getDni()); // ✅ Agregar
         }
 
-        if (editarBeneficiarioRequest.getName() != null && !editarBeneficiarioRequest.getName().equals(beneficiary.getName())) {
+        if (editarBeneficiarioRequest.getName() != null && !editarBeneficiarioRequest.getName().equalsIgnoreCase(beneficiary.getName())) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
                     "Beneficiario", "name", beneficiary.getName(), editarBeneficiarioRequest.getName()
             ));
             beneficiary.setName(editarBeneficiarioRequest.getName()); // ✅ Agregar
         }
 
-        if (editarBeneficiarioRequest.getLastname() != null && !editarBeneficiarioRequest.getLastname().equals(beneficiary.getLastname())) {
+        if (editarBeneficiarioRequest.getLastname() != null && !editarBeneficiarioRequest.getLastname().equalsIgnoreCase(beneficiary.getLastname())) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
                     "Beneficiario", "lastname", beneficiary.getLastname(), editarBeneficiarioRequest.getLastname()
             ));

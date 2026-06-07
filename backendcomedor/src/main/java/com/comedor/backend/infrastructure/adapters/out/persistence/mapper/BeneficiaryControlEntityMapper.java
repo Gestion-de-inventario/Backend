@@ -31,7 +31,6 @@ public class BeneficiaryControlEntityMapper {
     {
         BeneficiaryControlEntity entity = new BeneficiaryControlEntity();
         entity.setId(domainObject.getId());
-        entity.setBeneficiary(beneficiaryEntityMapper.convertToEntity(domainObject.getBeneficiario()));
         entity.setReceived(domainObject.getReceived());
         entity.setPaid(domainObject.getPaid());
         entity.setPayMethod(domainObject.getPayMethod());
