@@ -4,7 +4,6 @@ import com.comedor.backend.application.ports.in.ActualizarStockUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
-import org.springframework.cache.annotation.CacheEvict;
 
 import java.math.BigDecimal;
 
@@ -17,7 +16,6 @@ public class ActualizarStockService implements ActualizarStockUseCase {
     }
 
     @Override
-    @CacheEvict(value = "dashboardCache", allEntries = true)
     public void actualizarStock(int productoId, BigDecimal cantidad, TipoMovimiento tipoMovimiento) {
         Product product =
                 productRepositoryPort

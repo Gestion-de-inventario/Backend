@@ -4,10 +4,7 @@ import com.comedor.backend.application.ports.in.ObtenerDashboardUseCase;
 import com.comedor.backend.application.ports.out.DashboardRepositoryPort;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DashboardResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRotacionDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenMensualDTO;
-import org.springframework.cache.annotation.Cacheable;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +17,6 @@ public class ObtenerDashboardService implements ObtenerDashboardUseCase {
     }
 
     @Override
-    @Cacheable(value = "dashboardCache", key = "#anio + '-' + #mes")
     public DashboardResponseDTO ejecutar(int anio, int mes) {
         LocalDate inicio = LocalDate.of(anio, mes, 1);
         LocalDate fin = inicio.withDayOfMonth(inicio.lengthOfMonth());
