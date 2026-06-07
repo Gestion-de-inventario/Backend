@@ -22,8 +22,8 @@ public class BeneficiaryEntityMapper {
         }
 
         beneficiaryEntity.setDni(beneficiary.getDni());
-        beneficiaryEntity.setName(beneficiary.getName());
-        beneficiaryEntity.setLastname(beneficiary.getLastname());
+        beneficiaryEntity.setName(beneficiary.getName().toUpperCase());
+        beneficiaryEntity.setLastname(beneficiary.getLastname().toUpperCase());
         beneficiaryEntity.setStatus(beneficiary.getStatus());
         beneficiaryEntity.setBeneficiaryType(beneficiaryTypeEntityMapper.convertToEntity(beneficiary.getBeneficiaryType()));
         return beneficiaryEntity;
