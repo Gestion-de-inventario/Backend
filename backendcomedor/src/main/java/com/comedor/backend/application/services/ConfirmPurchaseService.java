@@ -15,6 +15,7 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
 
     @Override
+    @CacheEvict(value = "dashboardCache", allEntries = true)
     public PurchaseResponseDTO confirm(Integer purchaseId) {
         Purchase purchase =
                 purchaseRepository.findById(purchaseId);

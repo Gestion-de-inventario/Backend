@@ -463,6 +463,11 @@ public class UseCaseConfig {
     ExportarReporteExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
         return new ExportarReporteExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
     }
+
+    @Bean
+    ObtenerDashboardService obtenerDashboardService(DashboardRepositoryPort dashboardRepositoryPort){
+        return new ObtenerDashboardService(dashboardRepositoryPort);
+    }
 }
 
 
