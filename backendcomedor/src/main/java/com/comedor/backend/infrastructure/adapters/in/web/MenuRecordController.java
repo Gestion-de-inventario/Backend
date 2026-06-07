@@ -8,6 +8,8 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMen
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class MenuRecordController {
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
     private final ObtenerReporteMenuPorFechaUseCase obtenerReporteMenuPorFechaUseCase;
     private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
+    private final ExportarReportePDFUseCase exportarReportePDFUseCase;
+    private final ExportarReporteExcelUseCase exportarReporteExcelUseCase;
 
     @PreAuthorize("hasAuthority('MENU_REPORT_CREATE_REPORT')")
     @PostMapping("/create")
@@ -69,5 +73,25 @@ public class MenuRecordController {
     @GetMapping("/{id}/summary")
     public ResumenReporteMenuResponseDTO obtenerResumen(@PathVariable int id) {
         return obtenerResumenReporteMenuUseCase.obtenerResumen(id);
+    }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/{id}/export/pdf")
+    public ResponseEntity<byte[]> exportarPDF(@PathVariable int id) {
+        byte[] pdf = exportarReportePDFUseCase.exportar(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/{id}/export/excel")
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable int id) {
+        byte[] excel = exportarReporteExcelUseCase.exportar(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + id + ".xlsx")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(excel);
     }
 }

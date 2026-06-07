@@ -454,6 +454,15 @@ public class UseCaseConfig {
         return new EditBeneficiaryTypeService(repository,mapper,registrarModificacionUseCase);
     }
 
+    @Bean
+    ExportarReportePDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort){
+        return new ExportarReportePDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    }
+
+    @Bean
+    ExportarReporteExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
+        return new ExportarReporteExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    }
 }
 
 
