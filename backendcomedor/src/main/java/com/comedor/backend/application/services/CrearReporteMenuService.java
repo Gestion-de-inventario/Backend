@@ -14,8 +14,6 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMen
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoFaltanteResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockInsuficienteResponseDTO;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional; // MUY IMPORTANTE
 
 import java.math.BigDecimal;
@@ -52,7 +50,6 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
 
     @Override
     @Transactional
-    @CacheEvict(value = "dashboardCache", allEntries = true)
     public ReporteMenuResponseDTO crearReporteMenu(ReporteMenuRequestDTO request) {
         if (repository.existByDate(LocalDate.now())) {
             throw new ReporteMenuYaExistente("Ya existe un reporte menu para hoy");

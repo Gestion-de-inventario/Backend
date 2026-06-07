@@ -34,6 +34,7 @@ public interface DashboardJpaRepository extends JpaRepository<ProductEntity,Inte
     @Query("SELECT p.purchaseDate, SUM(p.totalSpent) " +
             "FROM PurchaseEntity p " +
             "WHERE EXTRACT(YEAR FROM p.purchaseDate) = :anio AND EXTRACT(MONTH FROM p.purchaseDate) = :mes " +
+            "AND p.status = 'RECIBIDO'"+
             "GROUP BY p.purchaseDate")
     List<Object[]> findDailyPurchaseSummary(@Param("anio") int anio, @Param("mes") int mes);
 }
