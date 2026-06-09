@@ -8,6 +8,7 @@ import com.comedor.backend.domain.model.Transactions;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +28,7 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
     public TransaccionResponseDTO registrarTransaccion(TransaccionRequestDTO transaccionRequestDTO) {
         Transactions transaccion = mapper.toDomain(transaccionRequestDTO);
         System.out.println(transaccion.toString());
-        transaccion.setDateTime(LocalDateTime.now());
+        transaccion.setDateTime(PeruTime.now());
         transaccion.setCurrentStock(productRepository.getProductoById(transaccionRequestDTO.getProductId()).getStock());
         TipoMovimiento type = transaccion.getType();
         if (type==TipoMovimiento.ENTRADA)

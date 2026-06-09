@@ -15,6 +15,7 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -70,7 +71,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
             lot.setUnitCost(detail.getUnitPrice());
 
-            lot.setEntryDate(LocalDateTime.now());
+            lot.setEntryDate(PeruTime.now());
 
             inventoryLotRepository.create(lot);
 

@@ -14,6 +14,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMen
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoFaltanteResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional; // MUY IMPORTANTE
 
 import java.math.BigDecimal;
@@ -51,7 +52,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
     @Override
     @Transactional
     public ReporteMenuResponseDTO crearReporteMenu(ReporteMenuRequestDTO request) {
-        if (repository.existByDate(LocalDate.now())) {
+        if (repository.existByDate(PeruTime.today())) {
             throw new ReporteMenuYaExistente("Ya existe un reporte menu para hoy");
         }
 
@@ -148,7 +149,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                 );
 
                 movement.setMovementDate(
-                        LocalDateTime.now()
+                        PeruTime.now()
                 );
 
                 movimientos.add(movement);
@@ -181,7 +182,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
 
         MenuReport reporte = new MenuReport();
         reporte.setId(null);
-        reporte.setDate(LocalDate.now());
+        reporte.setDate(PeruTime.today());
         reporte.setCooks(request.getCooks());
         reporte.setDishMenu(dishMenu);
         reporte.setQuantityPrepared(request.getQuantityPrepared());

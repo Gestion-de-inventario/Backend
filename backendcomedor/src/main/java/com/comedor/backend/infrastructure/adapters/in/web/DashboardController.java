@@ -2,6 +2,7 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.ObtenerDashboardUseCase;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DashboardResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,8 +26,8 @@ public class DashboardController {
             @RequestParam(value = "anio", required = false) Integer anio,
             @RequestParam(value = "mes", required = false) Integer mes) {
 
-        int añoBusqueda = (anio != null) ? anio : LocalDate.now().getYear();
-        int mesBusqueda = (mes != null) ? mes : LocalDate.now().getMonthValue();
+        int añoBusqueda = (anio != null) ? anio : PeruTime.today().getYear();
+        int mesBusqueda = (mes != null) ? mes : PeruTime.today().getMonthValue();
 
         DashboardResponseDTO response = obtenerDashboardUseCase.ejecutar(añoBusqueda, mesBusqueda);
         return ResponseEntity.ok(response);

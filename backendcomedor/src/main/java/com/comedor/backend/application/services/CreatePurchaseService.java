@@ -11,6 +11,7 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -67,7 +68,7 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
 
         Purchase purchase = new Purchase();
 
-        purchase.setPurchaseDate(LocalDate.now());
+        purchase.setPurchaseDate(PeruTime.today());
 
         purchase.setStatus(EstadoOrden.PENDIENTE);
 

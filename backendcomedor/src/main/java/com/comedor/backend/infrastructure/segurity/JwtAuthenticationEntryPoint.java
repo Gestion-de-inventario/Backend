@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.segurity;
 
 import com.comedor.backend.infrastructure.adapters.in.web.exceptions.CustomErrorResponse;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.*;
@@ -35,7 +36,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 
         CustomErrorResponse error = new CustomErrorResponse(
-                LocalDateTime.now(),
+                PeruTime.now(),
                 exceptionMsg,
                 requestUri
         );
