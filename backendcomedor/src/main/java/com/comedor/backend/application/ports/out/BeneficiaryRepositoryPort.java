@@ -20,5 +20,5 @@ public interface BeneficiaryRepositoryPort {
 
     Beneficiary desactivar(Integer id);
 
-    boolean isItAssignedToBeneficiary(Integer id);
+    boolean CategoryisItAssignedToBeneficiary(Integer id);
 }

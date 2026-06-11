@@ -98,7 +98,7 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
     }
 
     @Override
-    public boolean isItAssignedToBeneficiary(Integer id) {
+    public boolean CategoryisItAssignedToBeneficiary(Integer id) {
 
         return jpaRepository
                 .existsByBeneficiaryTypeIdAndStatus(

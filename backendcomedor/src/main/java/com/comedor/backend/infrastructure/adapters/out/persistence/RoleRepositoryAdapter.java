@@ -47,7 +47,7 @@ public class RoleRepositoryAdapter implements RoleRepositoryPort {
 
     @Override
     public List<Role> findByStatus(Estado status) {
-        if(status.toString().equals("TODOS"))
+        if(status==null)
         {
             return roleJpaRepository.findAll().stream()
                     .map(roleEntityMapper::toDomain)

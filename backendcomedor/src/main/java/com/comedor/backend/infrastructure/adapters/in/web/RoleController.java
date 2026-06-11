@@ -79,7 +79,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('ROLE_LIST_BY_STATUS')")
     public ResponseEntity<List<RolResponseDTO>>
     listRolesByStatus(
-            @RequestParam Estado status) {
+            @RequestParam(required = false)  Estado status) {
 
         return ResponseEntity.ok(
                 listRoleByStatusUseCase
