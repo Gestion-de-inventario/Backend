@@ -2,7 +2,6 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.ChangeStatusBeneficiaryTypeUseCase;
-import com.comedor.backend.application.ports.in.ChangeStatusDishMenuUseCase;
 import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
@@ -39,7 +38,7 @@ public class ChangeStatusBeneficiaryTypeService implements ChangeStatusBeneficia
         }
 
         if(nuevoEstado == Estado.INACTIVO &&
-                beneficiaryRepository.isItAssignedToBeneficiary(id)) {
+                beneficiaryRepository.CategoryisItAssignedToBeneficiary(id)) {
 
             throw new BeneficiaryTypeInUseException(
                     "No se puede desactivar el tipo porque tiene beneficiarios activos asociados."

@@ -98,4 +98,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         user.setStatus(Estado.ACTIVO);
         return userEntityMapper.toDomain(userJpaRepository.save(user));
     }
+
+    @Override
+    public boolean RoleIsAssignedToUser(int id) {
+        return userJpaRepository.existsByRoleIdAndStatus(id, Estado.ACTIVO);
+    }
 }

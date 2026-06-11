@@ -389,8 +389,8 @@ public class UseCaseConfig {
         return new AssignPermissionesService(roleRepository,permissionRepository,roleDTOMapper);
     }
     @Bean
-    RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new RoleChangeStatusService(roleRepository,roleDTOMapper,registrarModificacionUseCase);
+    RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, UserRepositoryPort userRepository,RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+        return new RoleChangeStatusService(roleRepository,userRepository,roleDTOMapper,registrarModificacionUseCase);
     }
     @Bean
     CreatePurchaseService createPurchaseService (PurchaseRepositoryPort purchaseRepository,

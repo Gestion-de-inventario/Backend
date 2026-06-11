@@ -6,11 +6,13 @@ import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.domain.exceptions.RoleInactiveException;
 import com.comedor.backend.domain.exceptions.UsuarioExistenteException;
 import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.Role;
 import com.comedor.backend.domain.model.User;
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarUsuarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
@@ -78,7 +80,10 @@ public class EditarUsuarioService implements EditarUsuarioUseCase {
 
         Role newRole = roleRepositoryPort.findById(newRoleId)
                 .orElseThrow(() -> new RuntimeException("Rol no existe"));
-
+        if(newRole.getStatus().equals(Estado.INACTIVO))
+        {
+            throw new RoleInactiveException("No se puede asignar un rol inactivo");
+        }
         if(newRoleId != user.getRol().getId()) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
                     "Usuario","role",user.getRol().getName(),newRole.getName()));
