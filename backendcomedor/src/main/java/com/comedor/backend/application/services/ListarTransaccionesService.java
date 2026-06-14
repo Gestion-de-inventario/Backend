@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ListarTransaccionesService implements ListarTransaccionesUseCase {
@@ -20,18 +21,17 @@ public class ListarTransaccionesService implements ListarTransaccionesUseCase {
         this.mapper = mapper;
     }
 
-
     @Override
-    public Page<TransaccionResponseDTO> list(int page, int size) {
+    public Page<TransaccionResponseDTO> list(int page, int size, LocalDate fechaInicio, LocalDate fechaFin) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("id").descending()
-        );
-
-        return repository
-                .showTransacciones(pageable)
-                .map(mapper::toDTO);
+        if (fechaInicio != null || fechaFin != null) {
+            return repository.showTransaccionesByPeriod(
+                    fechaInicio != null ? fechaInicio.toString() : null,
+                    fechaFin != null ? fechaFin.toString() : null,
+                    pageable
+            ).map(mapper::toDTO);
+        }
+        return repository.showTransacciones(pageable).map(mapper::toDTO);
     }
 }

@@ -470,6 +470,16 @@ public class UseCaseConfig {
     ObtenerDashboardService obtenerDashboardService(DashboardRepositoryPort dashboardRepositoryPort){
         return new ObtenerDashboardService(dashboardRepositoryPort);
     }
+
+    @Bean
+    ExportarTransaccionesPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper){
+        return new ExportarTransaccionesPDFService(repository, mapper);
+    }
+
+    @Bean
+    ExportarModificacionesPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper){
+        return new ExportarModificacionesPDFService(repository, mapper);
+    }
 }
 
 
