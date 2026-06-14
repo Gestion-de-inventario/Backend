@@ -11,6 +11,6 @@ public interface TransactionRepositoryPort {
     Transactions createTransaccion(Transactions transaccion);
     Page<Transactions> showTransacciones(Pageable pageable);
     Transactions showTransaccionById(int id);
-    List<Transactions> showTransaccionesByUserId(Integer id);
-    List<Transactions> showTransaccionesByPeriod(LocalDate fechaInicio, LocalDate fechaFin);
+    Page<Transactions> showTransaccionesByPeriod(String fechaInicio, String fechaFin, Pageable pageable);
+    List<Transactions> showTransaccionesByPeriod(String fechaInicio, String fechaFin);
 }
