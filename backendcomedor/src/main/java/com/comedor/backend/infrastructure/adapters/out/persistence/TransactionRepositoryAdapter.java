@@ -2,17 +2,21 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
+import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ProductEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TransactionsEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.UserEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.TransactionEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.TransactionJpaRepository;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.TransactionSpecification;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -39,8 +43,43 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public Page<Transactions> showTransacciones(Pageable pageable) {
-        return transactionJpaRepository.findAll(pageable)
+    public Page<Transactions> showTransacciones(LocalDate startDate,
+                                                LocalDate endDate,
+                                                TipoMovimiento type,
+                                                FuenteTransaccion source,
+                                                String productName,
+                                                Pageable pageable) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException(
+                    "La fecha de inicio no puede ser mayor que la fecha fin"
+            );
+        }
+
+        Specification<TransactionsEntity> spec =
+                (root, query, cb) -> cb.conjunction();
+
+        if (startDate != null) {
+            spec = spec.and(TransactionSpecification.dateAfter(startDate));
+        }
+
+        if (endDate != null) {
+            spec = spec.and(TransactionSpecification.dateBefore(endDate));
+        }
+
+        if (type != null) {
+            spec = spec.and(TransactionSpecification.hasType(type));
+        }
+
+        if (source != null) {
+            spec = spec.and(TransactionSpecification.hasSource(source));
+        }
+
+        if (productName != null && !productName.isBlank()) {
+            spec = spec.and(TransactionSpecification.productNameLike(productName));
+        }
+
+        return transactionJpaRepository
+                .findAll(spec, pageable)
                 .map(transactionEntityMapper::toDomain);
     }
 
