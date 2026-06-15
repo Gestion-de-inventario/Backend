@@ -85,6 +85,11 @@ public class MenuReportMapper {
             responseDTO.setBeneficiaries(beneficiaryControlMapper.toListDto(menuReport.getBeneficiaryControls()));
         }
 
+        if(menuReport.getCooks() !=null)
+        {
+            responseDTO.setCooks(menuReport.getCooks());
+        }
+
         return responseDTO;
     }
 
