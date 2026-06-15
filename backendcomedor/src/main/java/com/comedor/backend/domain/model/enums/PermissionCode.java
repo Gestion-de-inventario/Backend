@@ -39,6 +39,7 @@ public enum PermissionCode {
     MENU_REPORT_REMOVE_BENEFICIARY,
     MENU_REPORT_GET_SUMMARY,
     MENU_REPORT_EXPORT,
+    MENU_REPORT_LIST_ALL,
 
     // =========================
     // PRODUCT

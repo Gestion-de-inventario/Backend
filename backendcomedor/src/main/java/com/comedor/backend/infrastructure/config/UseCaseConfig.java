@@ -4,15 +4,11 @@ import com.comedor.backend.application.common.mapper.*;
 import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.application.services.*;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.comedor.backend.application.services.RegistrarBeneficiarioService;
-
-import java.util.List;
 
 @Configuration
 public class UseCaseConfig {
@@ -308,9 +304,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ObtenerReporteMenuPorFechaService obtenerReporteMenuPorFechaService (MenuReportRepositoryPort menuReportRepositoryPort, MenuReportMapper menuReportMapper, PersonRepositoryPort personRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase)
+    ListMenuReportDetailService obtenerReporteMenuPorFechaService (MenuReportRepositoryPort menuReportRepositoryPort, MenuReportMapper menuReportMapper, PersonRepositoryPort personRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase)
     {
-        return new ObtenerReporteMenuPorFechaService(menuReportRepositoryPort, menuReportMapper, personRepositoryPort,obtenerResumenReporteMenuUseCase);
+        return new ListMenuReportDetailService(menuReportRepositoryPort, menuReportMapper, personRepositoryPort,obtenerResumenReporteMenuUseCase);
     }
 
     @Bean
@@ -479,6 +475,12 @@ public class UseCaseConfig {
     @Bean
     ExportarModificacionesPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper){
         return new ExportarModificacionesPDFService(repository, mapper);
+    }
+
+    @Bean
+    ListMenuReportService listMenuReportService(MenuReportRepositoryPort repository, MenuReportMapper mapper)
+        {
+        return new ListMenuReportService(repository,mapper);
     }
 }
 

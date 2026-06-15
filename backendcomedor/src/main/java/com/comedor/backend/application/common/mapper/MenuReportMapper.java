@@ -5,12 +5,15 @@ import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.StockMovement; // <-- Importación actualizada
 import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.domain.model.DishMenu; // <-- Necesario para el toDomain
+import com.comedor.backend.domain.model.enums.MetodoPago;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ListMenuReportDetailResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -68,6 +71,11 @@ public class MenuReportMapper {
             responseDTO.setStatus(menuReport.getStatus());
         }
 
+        // Agregamos el registro
+        if(menuReport.getStockMovements() != null) {
+            responseDTO.setRegisters(stockMovementMapper.toListDto(menuReport.getStockMovements()));
+        }
+
         return responseDTO;
     }
 
@@ -83,22 +91,41 @@ public class MenuReportMapper {
                                                       ResumenReporteMenuResponseDTO resumen) {
         DetalleReporteMenuResponseDTO dto = new DetalleReporteMenuResponseDTO();
 
-        // 1. Datos básicos
         dto.setId(reporte.getId());
         dto.setDate(reporte.getDate());
         dto.setDay(reporte.getDate().getDayOfWeek().toString());
         dto.setMenu(menu);
 
-        // 🔥 AQUI ESTABA EL ERROR: Faltaban estas líneas
+
         dto.setQuantityPrepared(reporte.getQuantityPrepared());
         dto.setQuantityRemaining(reporte.getQuantityRemaining());
         dto.setStatus(reporte.getStatus() != null ? reporte.getStatus().name() : null);
 
-        // 2. Listas
         dto.setCocineras(personMapper.toListPersonaResponseDTO(cocineras));
         dto.setRegistro(stockMovementMapper.toListDto(stockMovements));
         dto.setBeneficiarios(beneficiaryControlMapper.toListDto(beneficiarios));
         dto.setResumenReporteMenu(resumen);
+
+        return dto;
+    }
+
+    public ListMenuReportDetailResponseDTO
+    listMenuReportDetailResponseDTO(
+            List<DetalleReporteMenuResponseDTO> reports,
+            BigDecimal totalEarned,
+            BigDecimal totalSpent,
+            BigDecimal net,
+            int uniqueBeneficiaryCount,
+            MetodoPago mostUsedPaymentMethod
+    ) {
+
+        ListMenuReportDetailResponseDTO dto =
+                new ListMenuReportDetailResponseDTO();
+
+        dto.setReports(reports);
+        dto.setTotalEarned(totalEarned);
+        dto.setTotalSpent(totalSpent);
+        dto.setNet(net);
 
         return dto;
     }

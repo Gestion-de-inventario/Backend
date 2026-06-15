@@ -13,7 +13,6 @@ public class DetalleReporteMenuResponseDTO {
     private String menu;
     private List<PersonaResponseDTO> cocineras;
 
-    // 🔥 Mantén solo este, borra el 'registroantiguo'
     private List<StockMovementResponseDTO> registro;
 
     private List<RegistroBeneficiarioResponseDTO> beneficiarios;
