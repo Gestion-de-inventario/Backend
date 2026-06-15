@@ -9,6 +9,7 @@ import com.comedor.backend.domain.exceptions.ReporteMenuYaExistente;
 import com.comedor.backend.domain.exceptions.StockInsuficienteException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.EstadoReporteMenu;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
@@ -94,7 +95,8 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                     usuarioId,
                     product.getId(),
                     requerido,
-                    TipoMovimiento.SALIDA
+                    TipoMovimiento.SALIDA,
+                            FuenteTransaccion.INVENTARIO
             );
             productRepository.updateStock(product);
         }
@@ -197,7 +199,8 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
             Integer usuarioId,
             Integer productoId,
             BigDecimal amount,
-            TipoMovimiento tipo
+            TipoMovimiento tipo,
+            FuenteTransaccion source
     ) {
         TransaccionRequestDTO dto = new TransaccionRequestDTO();
 
@@ -205,6 +208,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
         dto.setProductId(productoId);
         dto.setUserId(usuarioId);
         dto.setType(tipo);
+        dto.setSource(source);
 
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }
