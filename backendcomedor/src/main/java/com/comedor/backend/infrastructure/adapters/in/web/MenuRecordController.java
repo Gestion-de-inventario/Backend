@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.*;
+import com.comedor.backend.application.services.GetMenuReporByIdService;
 import com.comedor.backend.application.services.ListMenuReportService;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
@@ -27,6 +28,7 @@ public class MenuRecordController {
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
     private final ListMenuReportDetailUseCase listMenuReportDetailUseCase;
     private final ListMenuReportUseCase listMenuReportUseCase;
+    private final GetMenuReportByIdUseCase getMenuReportByIdUseCase;
     private final ExportarReportePDFUseCase exportarReportePDFUseCase;
     private final ExportarReporteExcelUseCase exportarReporteExcelUseCase;
 
@@ -67,6 +69,13 @@ public class MenuRecordController {
                 endDate
         );
     }
+    @PreAuthorize("hasAuthority('MENU_REPORT_LIST_ALL')")
+    @GetMapping("/{id}")
+    public ReporteMenuResponseDTO getById( @PathVariable int id)
+    {
+        return getMenuReportByIdUseCase.getMenuReportById(id);
+    }
+
 
     @PreAuthorize("hasAuthority('MENU_REPORT_ADD_BENEFICIARY')")
     @PostMapping("/{id}/beneficiaries")

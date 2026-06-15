@@ -57,6 +57,11 @@ public class MenuReportMapper {
             responseDTO.setDay(menuReport.getDate().getDayOfWeek().toString());
         }
 
+        // Agregamos el id del plato
+        if (menuReport.getDishMenu() != null) {
+            responseDTO.setDishId(menuReport.getDishMenu().getId());
+        }
+
         // Agregamos el nombre del plato
         if (menuReport.getDishMenu() != null) {
             responseDTO.setDishName(menuReport.getDishMenu().getName());
@@ -74,6 +79,11 @@ public class MenuReportMapper {
         // Agregamos el registro
         if(menuReport.getStockMovements() != null) {
             responseDTO.setRegisters(stockMovementMapper.toListDto(menuReport.getStockMovements()));
+        }
+
+        // Agregamos beneficiarios
+        if(menuReport.getBeneficiaryControls() != null) {
+            responseDTO.setBeneficiaries(beneficiaryControlMapper.toListDto(menuReport.getBeneficiaryControls()));
         }
 
         return responseDTO;

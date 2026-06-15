@@ -482,6 +482,11 @@ public class UseCaseConfig {
         {
         return new ListMenuReportService(repository,mapper);
     }
+
+    @Bean
+    GetMenuReporByIdService getMenuReporByIdService(MenuReportRepositoryPort repository, MenuReportMapper mapper){
+        return new GetMenuReporByIdService(repository,mapper);
+    }
 }
 
 
