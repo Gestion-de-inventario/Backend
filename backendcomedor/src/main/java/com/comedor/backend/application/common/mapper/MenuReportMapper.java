@@ -2,9 +2,8 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.Person;
-import com.comedor.backend.domain.model.StockMovement; // <-- Importación actualizada
+import com.comedor.backend.domain.model.StockMovement;
 import com.comedor.backend.domain.model.MenuReport;
-import com.comedor.backend.domain.model.DishMenu; // <-- Necesario para el toDomain
 import com.comedor.backend.domain.model.enums.MetodoPago;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;

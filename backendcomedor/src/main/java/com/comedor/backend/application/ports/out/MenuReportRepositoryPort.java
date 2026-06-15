@@ -13,6 +13,7 @@ public interface MenuReportRepositoryPort {
     boolean existByDate(LocalDate date);
     MenuReport findByDate(LocalDate date);
     MenuReport create(MenuReport menuReport);
+    MenuReport save(MenuReport menuReport);
     MenuReport update(MenuReport menuReport);
     Page<MenuReport> showMenuReport(
             LocalDate startDate,

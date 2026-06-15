@@ -3,7 +3,6 @@ package com.comedor.backend.infrastructure.adapters.out.persistence.mapper;
 import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import org.springframework.stereotype.Component;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component

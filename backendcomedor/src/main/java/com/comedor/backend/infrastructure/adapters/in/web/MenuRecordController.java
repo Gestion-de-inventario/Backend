@@ -4,6 +4,7 @@ import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.services.GetMenuReporByIdService;
 import com.comedor.backend.application.services.ListMenuReportService;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditMenuReportRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.*;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class MenuRecordController {
     private final AgregarRegistroBeneficiarioUseCase agregarRegistroBeneficiarioUseCase;
     private final EliminarRegistroBeneficiarioUseCase eliminarRegistroBeneficiarioUseCase;
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
+    private final EditMenuReportUseCase editMenuReportUseCase;
     private final ListMenuReportDetailUseCase listMenuReportDetailUseCase;
     private final ListMenuReportUseCase listMenuReportUseCase;
     private final GetMenuReportByIdUseCase getMenuReportByIdUseCase;
@@ -75,6 +77,17 @@ public class MenuRecordController {
     {
         return getMenuReportByIdUseCase.getMenuReportById(id);
     }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EDIT')")
+    @PostMapping("/{id}/edit")
+    public ReporteMenuResponseDTO edit(
+            @PathVariable int id,
+            @RequestBody EditMenuReportRequestDTO request
+    ) {
+        return editMenuReportUseCase.editMenuReport(id, request);
+    }
+
+
 
 
     @PreAuthorize("hasAuthority('MENU_REPORT_ADD_BENEFICIARY')")

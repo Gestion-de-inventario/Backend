@@ -487,6 +487,10 @@ public class UseCaseConfig {
     GetMenuReporByIdService getMenuReporByIdService(MenuReportRepositoryPort repository, MenuReportMapper mapper){
         return new GetMenuReporByIdService(repository,mapper);
     }
+    @Bean
+    EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
+        return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,personRepositoryPort,mapper,registrarTransaccionUseCase,currentUserService);
+    }
 }
 
 
