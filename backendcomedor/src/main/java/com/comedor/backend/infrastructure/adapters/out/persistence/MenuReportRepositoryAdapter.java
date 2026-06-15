@@ -6,7 +6,12 @@ import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.MenuReportEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.MenuReportJpaRepository;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.MenuReportSpecification;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.PurchaseSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -52,9 +57,66 @@ public class MenuReportRepositoryAdapter implements MenuReportRepositoryPort {
                 .toDomain(updated);
     }
 
+    private Specification<MenuReportEntity> buildSpecification(
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        if (
+                startDate != null &&
+                        endDate != null &&
+                        startDate.isAfter(endDate)
+        ) {
+            throw new IllegalArgumentException(
+                    "La fecha de inicio no puede ser mayor que la fecha fin"
+            );
+        }
+
+        Specification<MenuReportEntity> spec =
+                (root, query, cb) -> cb.conjunction();
+
+        if (startDate != null) {
+            spec = spec.and(
+                    MenuReportSpecification
+                            .reportDateAfter(startDate)
+            );
+        }
+
+        if (endDate != null) {
+            spec = spec.and(
+                    MenuReportSpecification
+                            .reportDateBefore(endDate)
+            );
+        }
+
+        return spec;
+    }
+
     @Override
-    public List<MenuReport> findByTimePeriod(LocalDate start, LocalDate end) {
-        return List.of();
+    public Page<MenuReport> showMenuReport(
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+    ) {
+        return menuReportJpaRepository
+                .findAll(
+                        buildSpecification(startDate, endDate),
+                        pageable
+                )
+                .map(menuReportEntityMapper::toDomain);
+    }
+
+    @Override
+    public List<MenuReport> showMenuReport(
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return menuReportJpaRepository
+                .findAll(
+                        buildSpecification(startDate, endDate)
+                )
+                .stream()
+                .map(menuReportEntityMapper::toDomain)
+                .toList();
     }
 
     @Override

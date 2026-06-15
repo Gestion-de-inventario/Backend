@@ -15,11 +15,9 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.Transaccio
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoFaltanteResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
-import org.springframework.transaction.annotation.Transactional; // MUY IMPORTANTE
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +50,10 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
     @Override
     @Transactional
     public ReporteMenuResponseDTO crearReporteMenu(ReporteMenuRequestDTO request) {
-        if (repository.existByDate(PeruTime.today())) {
+        // Corrección BU-009 , regresar la restricción una vez presentado en taller.
+        /*if (repository.existByDate(PeruTime.today())) {
             throw new ReporteMenuYaExistente("Ya existe un reporte menu para hoy");
-        }
+        }*/
 
         DishMenu dishMenu = dishMenuRepository.findById(request.getDishMenuId());
         List<ProductoFaltanteResponseDTO> productosFaltantes = new ArrayList<>();

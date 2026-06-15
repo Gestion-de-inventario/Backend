@@ -24,6 +24,7 @@ import com.itextpdf.layout.properties.VerticalAlignment;
 import org.springframework.core.io.ClassPathResource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ExportarReportePDFService implements ExportarReportePDFUseCase {
@@ -140,6 +141,208 @@ public class ExportarReportePDFService implements ExportarReportePDFUseCase {
                     .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
             firma.addCell(new Cell().add(new Paragraph("\n\n_______________________\nSello del Comedor"))
                     .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+            doc.add(firma);
+
+            doc.close();
+            return baos.toByteArray();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar PDF: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public byte[] exportar(LocalDate startDate, LocalDate endDate) {
+
+        List<MenuReport> reportes =
+                menuReportRepositoryPort.showMenuReport(startDate, endDate);
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document doc = new Document(pdf, PageSize.A4);
+            doc.setMargins(40, 40, 40, 40);
+
+            // ─────────────────────────────
+            // LOGO + HEADER GLOBAL
+            // ─────────────────────────────
+            try {
+                ClassPathResource logoResource =
+                        new ClassPathResource("static/logo.jpg");
+
+                ImageData imageData =
+                        ImageDataFactory.create(logoResource.getInputStream().readAllBytes());
+
+                Image logo = new Image(imageData)
+                        .setWidth(70)
+                        .setHeight(70);
+
+                Table header = new Table(UnitValue.createPercentArray(new float[]{1, 4}))
+                        .useAllAvailableWidth();
+
+                header.addCell(new Cell()
+                        .add(logo)
+                        .setBorder(Border.NO_BORDER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE));
+
+                header.addCell(new Cell()
+                        .add(new Paragraph("COMEDOR MUNICIPAL\nMUNICIPALIDAD PROVINCIAL DE TRUJILLO")
+                                .setBold()
+                                .setFontSize(14)
+                                .setFontColor(new DeviceRgb(48, 63, 159)))
+                        .add(new Paragraph("REPORTE GENERAL DE MENÚS")
+                                .setFontSize(11)
+                                .setFontColor(new DeviceRgb(100, 100, 100)))
+                        .setBorder(Border.NO_BORDER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE));
+
+                doc.add(header);
+
+            } catch (Exception e) {
+                doc.add(new Paragraph("REPORTE GENERAL DE MENÚS")
+                        .setBold()
+                        .setFontSize(16));
+            }
+
+            doc.add(new LineSeparator(new SolidLine())
+                    .setMarginTop(8)
+                    .setMarginBottom(12));
+
+            // ─────────────────────────────
+            // RANGO DE FECHAS
+            // ─────────────────────────────
+            doc.add(new Paragraph("RANGO: " +
+                    (startDate != null ? startDate : "SIN INICIO") +
+                    " - " +
+                    (endDate != null ? endDate : "SIN FIN"))
+                    .setFontSize(10)
+                    .setFontColor(new DeviceRgb(120, 120, 120)));
+
+            doc.add(new Paragraph(" "));
+
+            // ─────────────────────────────
+            // ITERAR REPORTES
+            // ─────────────────────────────
+            for (MenuReport reporte : reportes) {
+
+                List<BeneficiaryControl> beneficiarios =
+                        beneficiaryControlRepositoryPort.findByReporteId(reporte.getId());
+
+                // 🔹 SEPARADOR DE REPORTE
+                doc.add(new Paragraph("────────────────────────────────")
+                        .setFontColor(new DeviceRgb(200, 200, 200)));
+
+                doc.add(new Paragraph(
+                        "FECHA: " + reporte.getDate() + " | PLATO: " +
+                                (reporte.getDishMenu() != null
+                                        ? reporte.getDishMenu().getName()
+                                        : "-"))
+                        .setBold()
+                        .setFontSize(12)
+                        .setFontColor(new DeviceRgb(48, 63, 159)));
+
+                doc.add(new Paragraph(" "));
+
+                // ── INFO GENERAL ──
+                Table info = new Table(UnitValue.createPercentArray(new float[]{1, 1}))
+                        .useAllAvailableWidth();
+
+                info.addCell(infoCell("Estado", reporte.getStatus().name()));
+                info.addCell(infoCell("Preparados", String.valueOf(reporte.getQuantityPrepared())));
+                info.addCell(infoCell("Entregados",
+                        String.valueOf(reporte.getQuantityPrepared() - reporte.getQuantityRemaining())));
+                info.addCell(infoCell("Sobrantes", String.valueOf(reporte.getQuantityRemaining())));
+                info.addCell(infoCell("Total recaudado", "S/ " + reporte.getTotalEarned()));
+                info.addCell(infoCell("Total gastado", "S/ " + reporte.getTotalSpent()));
+
+                doc.add(info);
+                doc.add(new Paragraph(" "));
+
+                // ── INSUMOS ──
+                if (reporte.getDishMenu() != null &&
+                        !reporte.getDishMenu().getSupplies().isEmpty()) {
+
+                    doc.add(new Paragraph("INSUMOS UTILIZADOS")
+                            .setBold()
+                            .setFontSize(11)
+                            .setFontColor(new DeviceRgb(48, 63, 159)));
+
+                    Table insumos = new Table(UnitValue.createPercentArray(new float[]{3, 1, 1, 1}))
+                            .useAllAvailableWidth();
+
+                    insumos.addHeaderCell(headerCell("Producto"));
+                    insumos.addHeaderCell(headerCell("Por plato"));
+                    insumos.addHeaderCell(headerCell("Unidad"));
+                    insumos.addHeaderCell(headerCell("Total usado"));
+
+                    for (DishSupply supply : reporte.getDishMenu().getSupplies()) {
+
+                        BigDecimal totalUsado = supply.getQuantityNeeded()
+                                .multiply(BigDecimal.valueOf(reporte.getQuantityPrepared()));
+
+                        insumos.addCell(supply.getProduct().getName());
+                        insumos.addCell(supply.getQuantityNeeded().toString());
+                        insumos.addCell(supply.getProduct().getUnit());
+                        insumos.addCell(totalUsado.toString());
+                    }
+
+                    doc.add(insumos);
+                    doc.add(new Paragraph(" "));
+                }
+
+                // ── BENEFICIARIOS ──
+                doc.add(new Paragraph("CONTROL DE BENEFICIARIOS")
+                        .setBold()
+                        .setFontSize(11)
+                        .setFontColor(new DeviceRgb(48, 63, 159)));
+
+                Table bene = new Table(UnitValue.createPercentArray(new float[]{3, 1, 1, 1, 1}))
+                        .useAllAvailableWidth();
+
+                bene.addHeaderCell(headerCell("Beneficiario"));
+                bene.addHeaderCell(headerCell("DNI"));
+                bene.addHeaderCell(headerCell("Menús"));
+                bene.addHeaderCell(headerCell("Pagó"));
+                bene.addHeaderCell(headerCell("Método"));
+
+                for (BeneficiaryControl b : beneficiarios) {
+
+                    bene.addCell(b.getBeneficiario().getName() + " " +
+                            b.getBeneficiario().getLastname());
+
+                    bene.addCell(b.getBeneficiario().getDni());
+                    bene.addCell(String.valueOf(b.getMenusAmount()));
+                    bene.addCell(b.getPaid() ? "Sí" : "No");
+                    bene.addCell(b.getPayMethod() != null
+                            ? b.getPayMethod().name()
+                            : "-");
+                }
+
+                doc.add(bene);
+                doc.add(new Paragraph(" "));
+
+            }
+
+            // ─────────────────────────────
+            // FIRMA FINAL GLOBAL
+            // ─────────────────────────────
+            doc.add(new LineSeparator(new SolidLine())
+                    .setMarginTop(20));
+
+            Table firma = new Table(UnitValue.createPercentArray(new float[]{1, 1}))
+                    .useAllAvailableWidth();
+
+            firma.addCell(new Cell()
+                    .add(new Paragraph("\n\n_______________________\nFirma Responsable"))
+                    .setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.CENTER));
+
+            firma.addCell(new Cell()
+                    .add(new Paragraph("\n\n_______________________\nSello del Comedor"))
+                    .setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.CENTER));
+
             doc.add(firma);
 
             doc.close();
