@@ -42,6 +42,16 @@ public class MenuReportRepositoryAdapter implements MenuReportRepositoryPort {
                 menuReportJpaRepository.save(entity)
         );
     }
+    @Override
+    public MenuReport save(MenuReport menuReport) {
+
+        MenuReportEntity entity =
+                menuReportEntityMapper.toEntity(menuReport);
+
+        return menuReportEntityMapper.toDomain(
+                menuReportJpaRepository.save(entity)
+        );
+    }
 
     @Override
     public MenuReport update(MenuReport menuReport) {

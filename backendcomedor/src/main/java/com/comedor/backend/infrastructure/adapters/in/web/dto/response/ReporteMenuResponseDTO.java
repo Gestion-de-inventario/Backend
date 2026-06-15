@@ -16,6 +16,7 @@ public class ReporteMenuResponseDTO {
     private String dishName;
     private List<StockMovementResponseDTO> registers;
     private List<RegistroBeneficiarioResponseDTO> beneficiaries;
+    private List<Integer> cooks;
     private Integer quantityPrepared;
     private Integer quantityRemaining;
     private EstadoReporteMenu status;
