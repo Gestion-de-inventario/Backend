@@ -50,7 +50,7 @@ public class MenuRecordController {
         return listMenuReportDetailUseCase.list(startDate, endDate);
     }
 
-    @PreAuthorize("hasAuthority('MENU_REPORT_LIST_ALL')") //MENU_REPORT_GET_SUMMARY
+    @PreAuthorize("hasAuthority('MENU_REPORT_LIST_ALL')")
     @GetMapping("/list")
     public Page<ReporteMenuResponseDTO> list(
             @RequestParam(defaultValue = "0") int page,
@@ -111,6 +111,27 @@ public class MenuRecordController {
         byte[] pdf = exportarReportePDFUseCase.exportar(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/export/pdf")
+    public ResponseEntity<byte[]> exportarRangoPDF(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate
+    ) {
+        byte[] pdf = exportarReportePDFUseCase.exportar(startDate, endDate);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=reporte-" + startDate + "-" + endDate + ".pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
     }

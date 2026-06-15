@@ -141,4 +141,5 @@ public class MenuReport {
     public void removeBeneficiaryControl(int controlId) {
         this.beneficiaryControls.removeIf(c -> c.getId() == controlId);
     }
+
 }

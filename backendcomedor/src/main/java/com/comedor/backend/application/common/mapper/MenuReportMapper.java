@@ -136,6 +136,8 @@ public class MenuReportMapper {
         dto.setTotalEarned(totalEarned);
         dto.setTotalSpent(totalSpent);
         dto.setNet(net);
+        dto.setUniqueBeneficiaryCount(uniqueBeneficiaryCount);
+        dto.setMostUsedPaymentMethod(mostUsedPaymentMethod);
 
         return dto;
     }

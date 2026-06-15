@@ -12,6 +12,7 @@ import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.domain.model.enums.MetodoPago;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ListMenuReportDetailResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.function.UnaryOperator.identity;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 public class ListMenuReportDetailService implements ListMenuReportDetailUseCase {
 
@@ -103,32 +109,20 @@ public class ListMenuReportDetailService implements ListMenuReportDetailUseCase 
                 totalEarned.subtract(totalSpent);
 
         int uniqueBeneficiaryCount =
-                reports.stream()
-                        .flatMap(r ->
-                                r.getBeneficiaryControls().stream()
-                        )
-                        .map(b ->
-                                b.getBeneficiario().getId()
-                        )
+                details.stream()
+                        .flatMap(d -> d.getBeneficiarios().stream())
+                        .map(b -> b.getId())
                         .collect(Collectors.toSet())
                         .size();
 
         MetodoPago mostUsed =
-                reports.stream()
-                        .flatMap(r ->
-                                r.getBeneficiaryControls().stream()
-                        )
-                        .map(BeneficiaryControl::getPayMethod)
+                details.stream()
+                        .map(d -> d.getResumenReporteMenu().getMostUsedPaymentMethod())
                         .filter(Objects::nonNull)
-                        .collect(
-                                Collectors.groupingBy(
-                                        Function.identity(),
-                                        Collectors.counting()
-                                )
-                        )
+                        .collect(groupingBy(identity(), counting()))
                         .entrySet()
                         .stream()
-                        .max(Map.Entry.comparingByValue())
+                        .max(comparingByValue())
                         .map(Map.Entry::getKey)
                         .orElse(null);
 
