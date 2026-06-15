@@ -79,7 +79,7 @@ public class MenuRecordController {
     }
 
     @PreAuthorize("hasAuthority('MENU_REPORT_EDIT')")
-    @PostMapping("/{id}/edit")
+    @PutMapping("/{id}/edit")
     public ReporteMenuResponseDTO edit(
             @PathVariable int id,
             @RequestBody EditMenuReportRequestDTO request
