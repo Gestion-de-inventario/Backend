@@ -3,6 +3,8 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.TransactionMapper;
 import com.comedor.backend.application.ports.in.ListarTransaccionesUseCase;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
+import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,16 +24,27 @@ public class ListarTransaccionesService implements ListarTransaccionesUseCase {
     }
 
     @Override
-    public Page<TransaccionResponseDTO> list(int page, int size, LocalDate fechaInicio, LocalDate fechaFin) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    public Page<TransaccionResponseDTO> list(int page, int size,
+                                             LocalDate startDate,
+                                             LocalDate endDate,
+                                             TipoMovimiento type,
+                                             FuenteTransaccion source,
+                                             String productName) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(
+                        Sort.Order.desc("dateTime"),
+                        Sort.Order.desc("id")
+                )
+        );
 
-        if (fechaInicio != null || fechaFin != null) {
-            return repository.showTransaccionesByPeriod(
-                    fechaInicio != null ? fechaInicio.toString() : null,
-                    fechaFin != null ? fechaFin.toString() : null,
-                    pageable
-            ).map(mapper::toDTO);
-        }
-        return repository.showTransacciones(pageable).map(mapper::toDTO);
+        return repository.showTransacciones(startDate,
+                endDate,
+                type,
+                source,
+                productName,
+                pageable)
+                .map(mapper::toDTO);
     }
 }

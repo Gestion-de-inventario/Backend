@@ -2,6 +2,8 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.ExportarTransaccionesPDFUseCase;
 import com.comedor.backend.application.ports.in.ListarTransaccionesUseCase;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
+import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,9 +33,12 @@ public class TransactionController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(required = false) TipoMovimiento type,
+            @RequestParam(required = false) FuenteTransaccion source,
+            @RequestParam(required = false) String productName
     ) {
-        return listarTransaccionesUseCase.list(page, size, fechaInicio, fechaFin);
+        return listarTransaccionesUseCase.list(page, size, fechaInicio, fechaFin,type, source, productName);
     }
 
     @PreAuthorize("hasAuthority('TRANSACTION_LIST_ALL')")

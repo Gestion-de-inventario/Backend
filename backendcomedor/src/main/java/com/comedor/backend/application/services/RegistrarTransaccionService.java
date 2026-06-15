@@ -5,6 +5,7 @@ import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
@@ -30,6 +31,7 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
         System.out.println(transaccion.toString());
         transaccion.setDateTime(PeruTime.now());
         transaccion.setCurrentStock(productRepository.getProductoById(transaccionRequestDTO.getProductId()).getStock());
+
         TipoMovimiento type = transaccion.getType();
         if (type==TipoMovimiento.ENTRADA)
         {

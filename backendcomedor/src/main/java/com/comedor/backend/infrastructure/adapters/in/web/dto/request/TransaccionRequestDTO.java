@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.request;
 
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ public class TransaccionRequestDTO {
     private int productId;
     private Integer userId;
     private TipoMovimiento type;
+    private FuenteTransaccion source;
     private BigDecimal amount;
 
 }

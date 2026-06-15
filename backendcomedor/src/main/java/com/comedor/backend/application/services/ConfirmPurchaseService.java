@@ -12,6 +12,7 @@ import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
 import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
@@ -84,7 +85,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                     usuarioId,
                     product.getId(),
                     detail.getQuantity(),
-                    TipoMovimiento.ENTRADA
+                    TipoMovimiento.ENTRADA,
+                    FuenteTransaccion.COMPRA
             );
 
             productRepository.updateStock(product);
@@ -103,7 +105,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             Integer usuarioId,
             Integer productoId,
             BigDecimal amount,
-            TipoMovimiento tipo
+            TipoMovimiento tipo,
+            FuenteTransaccion source
     ) {
         TransaccionRequestDTO dto = new TransaccionRequestDTO();
 
@@ -111,6 +114,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
         dto.setProductId(productoId);
         dto.setUserId(usuarioId);
         dto.setType(tipo);
+        dto.setSource(source);
 
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }

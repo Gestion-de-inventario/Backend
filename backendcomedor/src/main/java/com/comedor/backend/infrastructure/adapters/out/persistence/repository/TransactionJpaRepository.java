@@ -1,16 +1,18 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository;
 
+
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TransactionsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TransactionJpaRepository extends JpaRepository<TransactionsEntity, Integer> {
+public interface TransactionJpaRepository extends JpaRepository<TransactionsEntity, Integer> ,
+        JpaSpecificationExecutor<TransactionsEntity> {
     boolean existsByProductId(int productoId);
 
     @Query(value = "SELECT * FROM transactions t WHERE " +

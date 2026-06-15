@@ -24,6 +24,7 @@ public class TransactionEntityMapper {
         domain.setUser(userEntityMapper.toDomain(entity.getUser()));
         domain.setDateTime(entity.getDateTime());
         domain.setType(entity.getType());
+        domain.setSource(entity.getSource());
         domain.setAmount(entity.getAmount());
         domain.setCurrentStock(entity.getCurrentStock());
         domain.setFinalStock(entity.getFinalStock());
@@ -36,6 +37,7 @@ public class TransactionEntityMapper {
         entity.setId(domain.getId());
         entity.setDateTime(domain.getDateTime());
         entity.setType(domain.getType());
+        entity.setSource(domain.getSource());
         entity.setAmount(domain.getAmount());
         entity.setCurrentStock(domain.getCurrentStock());
         entity.setFinalStock(domain.getFinalStock());
