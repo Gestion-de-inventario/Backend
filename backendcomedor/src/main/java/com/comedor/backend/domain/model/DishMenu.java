@@ -60,4 +60,14 @@ public class DishMenu {
     public void setSupplies(List<DishSupply> supplies) {
         this.supplies = supplies;
     }
+
+    @Override
+    public String toString() {
+        return "DishMenu{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", supplies=" + supplies +
+                '}';
+    }
 }
