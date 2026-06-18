@@ -45,7 +45,7 @@ public class MenuReportEntity {
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BeneficiaryControlEntity> beneficiaryControls = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menuReport", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menuReport", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<StockMovementEntity> stockMovements = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)

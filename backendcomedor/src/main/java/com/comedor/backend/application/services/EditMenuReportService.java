@@ -12,11 +12,15 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditMenuRe
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoFaltanteResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResultadoConsumoStock;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class EditMenuReportService implements EditMenuReportUseCase {
     private final MenuReportRepositoryPort menuReportRepositoryPort;
@@ -43,13 +47,52 @@ public class EditMenuReportService implements EditMenuReportUseCase {
 
     @Override
     @Transactional
-    public ReporteMenuResponseDTO editMenuReport(Integer id ,EditMenuReportRequestDTO request) {
+    public ReporteMenuResponseDTO editMenuReport(
+            Integer id,
+            EditMenuReportRequestDTO request
+    ) {
 
         MenuReport reporte =
                 menuReportRepositoryPort.findById(id);
 
+        boolean menuChanged =
+                !Objects.equals(
+                        reporte.getDishMenu().getId(),
+                        request.getDishMenuId()
+                );
+
+        boolean quantityChanged =
+                !Objects.equals(
+                        reporte.getQuantityPrepared(),
+                        request.getQuantityPrepared()
+                );
+
+        boolean cooksChanged =
+                !new HashSet<>(reporte.getCooks())
+                        .equals(new HashSet<>(request.getCooks()));
+
         // =========================
-        // 1. VALIDAR BENEFICIARIOS
+        // NO HUBO CAMBIOS
+        // =========================
+        if (!menuChanged && !quantityChanged && !cooksChanged) {
+            return mapper.toDto(reporte);
+        }
+
+        // =========================
+        // SOLO CAMBIARON COCINERAS
+        // =========================
+        if (!menuChanged && !quantityChanged && cooksChanged) {
+
+            reporte.setCooks(request.getCooks());
+
+            return mapper.toDto(
+                    menuReportRepositoryPort.save(reporte)
+            );
+        }
+
+        // =========================
+        // MENU O CANTIDAD CAMBIARON
+        // REQUIERE VALIDAR BENEFICIARIOS
         // =========================
         if (!reporte.getBeneficiaryControls().isEmpty()) {
             throw new IllegalStateException(
@@ -58,86 +101,137 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         }
 
         // =========================
-        // 2. CARGAR NUEVO MENÚ
+        // MENÚ FINAL
         // =========================
-        DishMenu newDishMenu =
-                dishMenuRepositoryPort.findById(request.getDishMenuId());
+        DishMenu finalDishMenu = reporte.getDishMenu();
 
-        BigDecimal oldQty =
-                BigDecimal.valueOf(reporte.getQuantityPrepared());
+        if (menuChanged) {
+            finalDishMenu =
+                    dishMenuRepositoryPort.findById(
+                            request.getDishMenuId()
+                    );
+        }
 
         BigDecimal newQty =
-                BigDecimal.valueOf(request.getQuantityPrepared());
-
-        BigDecimal diff = newQty.subtract(oldQty);
+                BigDecimal.valueOf(
+                        request.getQuantityPrepared()
+                );
 
         // =========================
-        // 3. VALIDAR STOCK SI AUMENTA
+        // VALIDAR STOCK
         // =========================
-        if (diff.compareTo(BigDecimal.ZERO) > 0) {
 
-            validarStockDisponible(newDishMenu, diff);
+        if (menuChanged || quantityChanged) {
+
+            validarStockEdicion(
+                    reporte,
+                    finalDishMenu,
+                    newQty
+            );
         }
 
         // =========================
-        // 4. REVERTIR STOCK VIEJO
+        // REVERTIR STOCK Y LOTES
         // =========================
         revertirStock(reporte);
 
         // =========================
-        // 5. APLICAR NUEVO STOCK
+        // APLICAR NUEVO CONSUMO
         // =========================
-        List<StockMovement> movimientos =
-                aplicarNuevoStock(newDishMenu, newQty);
+        ResultadoConsumoStock resultado =
+                aplicarNuevoStock(
+                        finalDishMenu,
+                        newQty
+                );
 
         // =========================
-        // 6. ACTUALIZAR ENTIDAD
+        // ACTUALIZAR ENTIDAD
         // =========================
-        List<Person> cooks =
-                personRepositoryPort.findAllByIds(request.getCooks());
+        reporte.setDishMenu(finalDishMenu);
+        reporte.setQuantityPrepared(
+                request.getQuantityPrepared()
+        );
+        reporte.setCooks(
+                request.getCooks()
+        );
 
-        reporte.setDishMenu(newDishMenu);
-        reporte.setQuantityPrepared(request.getQuantityPrepared());
-        reporte.setCooks(request.getCooks());
-        reporte.setStockMovements(movimientos);
+        for (StockMovement movement : resultado.getMovimientos()) {
+            movement.setMenuReport(reporte);
+        }
 
-        // =========================
-        // 7. LOG MODIFICACIÓN
-        // =========================
-        /*registrarMovimiento(
-                currentUserService.getCurrentUser().getId(),
-                reporte.getId(),
-                BigDecimal.ZERO,
-                TipoMovimiento.MODIFICACION,
-                FuenteTransaccion.INVENTARIO
-        );*/
+        reporte.setStockMovements(
+                resultado.getMovimientos()
+        );
+        reporte.setTotalSpent(
+                resultado.getTotalSpent()
+        );
 
-        // =========================
-        // 8. SAVE
-        // =========================
+        // pendiente:
+        // registrar transacción MODIFICACION
+
         return mapper.toDto(
                 menuReportRepositoryPort.save(reporte)
         );
     }
-    private void validarStockDisponible(DishMenu menu, BigDecimal diff) {
 
-        List<ProductoFaltanteResponseDTO> faltantes = new ArrayList<>();
 
-        for (DishSupply supply : menu.getSupplies()) {
+    private void validarStockEdicion(
+            MenuReport reporteActual,
+            DishMenu nuevoMenu,
+            BigDecimal nuevaCantidad
+    ) {
 
-            BigDecimal requerido =
-                    supply.getQuantityNeeded().multiply(diff);
+        List<ProductoFaltanteResponseDTO> faltantes =
+                new ArrayList<>();
+
+        for (DishSupply supply : nuevoMenu.getSupplies()) {
+
+            BigDecimal requeridoNuevo =
+                    supply.getQuantityNeeded()
+                            .multiply(nuevaCantidad);
+
+            BigDecimal liberado = BigDecimal.ZERO;
+
+            DishMenu menuActual = reporteActual.getDishMenu();
+
+            DishSupply supplyActual =
+                    menuActual.getSupplies()
+                            .stream()
+                            .filter(s ->
+                                    Objects.equals(
+                                            s.getProduct().getId(),
+                                            supply.getProduct().getId()
+                                    )
+                            )
+                            .findFirst()
+                            .orElse(null);
+
+            if (supplyActual != null) {
+
+                liberado =
+                        supplyActual.getQuantityNeeded()
+                                .multiply(
+                                        BigDecimal.valueOf(
+                                                reporteActual.getQuantityPrepared()
+                                        )
+                                );
+            }
 
             Product product = supply.getProduct();
 
-            if (product.getStock().compareTo(requerido) < 0) {
+            BigDecimal stockDisponible =
+                    product.getStock().add(liberado);
 
-                faltantes.add(new ProductoFaltanteResponseDTO(
-                        product.getId(),
-                        product.getName(),
-                        product.getUnit(),
-                        requerido.subtract(product.getStock())
-                ));
+            if (stockDisponible.compareTo(requeridoNuevo) < 0) {
+
+                faltantes.add(
+                        new ProductoFaltanteResponseDTO(
+                                product.getId(),
+                                product.getName(),
+                                product.getUnit(),
+                                requeridoNuevo.subtract(stockDisponible)
+                        )
+                );
             }
         }
 
@@ -145,7 +239,6 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             throw new StockInsuficienteException(faltantes);
         }
     }
-
     private void revertirStock(MenuReport reporte) {
 
         BigDecimal qty =
@@ -177,12 +270,13 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         }
     }
 
-    private List<StockMovement> aplicarNuevoStock(
+    private ResultadoConsumoStock aplicarNuevoStock(
             DishMenu menu,
             BigDecimal qty
     ) {
 
         List<StockMovement> movimientos = new ArrayList<>();
+
         BigDecimal totalSpent = BigDecimal.ZERO;
 
         for (DishSupply supply : menu.getSupplies()) {
@@ -197,31 +291,55 @@ public class EditMenuReportService implements EditMenuReportUseCase {
 
             for (InventoryLot lote : lotes) {
 
-                if (pendiente.compareTo(BigDecimal.ZERO) <= 0) break;
+                if (pendiente.compareTo(BigDecimal.ZERO) <= 0) {
+                    break;
+                }
 
                 BigDecimal consumido =
-                        pendiente.min(lote.getRemainingQuantity());
+                        pendiente.min(
+                                lote.getRemainingQuantity()
+                        );
 
-                StockMovement m = new StockMovement();
-                m.setInventoryLot(lote);
-                m.setQuantityUsed(consumido);
-                m.setUnitCost(lote.getUnitCost());
-                m.setTotalCost(consumido.multiply(lote.getUnitCost()));
+                StockMovement movement =
+                        new StockMovement();
 
-                movimientos.add(m);
+                movement.setInventoryLot(lote);
+                movement.setQuantityUsed(consumido);
+                movement.setUnitCost(lote.getUnitCost());
+
+                BigDecimal totalCost =
+                        consumido.multiply(
+                                lote.getUnitCost()
+                        );
+
+                movement.setTotalCost(totalCost);
+
+                movement.setMovementDate(PeruTime.now());
+
+                movimientos.add(movement);
+
+                totalSpent =
+                        totalSpent.add(totalCost);
 
                 lote.setRemainingQuantity(
-                        lote.getRemainingQuantity().subtract(consumido)
+                        lote.getRemainingQuantity()
+                                .subtract(consumido)
                 );
 
                 inventoryLotRepository.update(lote);
 
-                pendiente = pendiente.subtract(consumido);
+                pendiente =
+                        pendiente.subtract(consumido);
             }
         }
 
-        return movimientos;
+        return new ResultadoConsumoStock(
+                movimientos,
+                totalSpent
+        );
     }
+
+
   /*  private void registrarMovimiento(
             Integer usuarioId,
             Integer productoId,
