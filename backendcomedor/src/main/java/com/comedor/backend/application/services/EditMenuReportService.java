@@ -151,6 +151,9 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         reporte.setQuantityPrepared(
                 request.getQuantityPrepared()
         );
+        reporte.setQuantityRemaining(
+                request.getQuantityPrepared()
+        );
         reporte.setCooks(
                 request.getCooks()
         );
@@ -281,8 +284,12 @@ public class EditMenuReportService implements EditMenuReportUseCase {
 
         for (DishSupply supply : menu.getSupplies()) {
 
-            BigDecimal pendiente =
+            BigDecimal requerido =
                     supply.getQuantityNeeded().multiply(qty);
+
+            BigDecimal pendiente = requerido;
+
+            Product product = supply.getProduct();
 
             List<InventoryLot> lotes =
                     inventoryLotRepository.findAvailableByProduct(
@@ -331,6 +338,12 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                 pendiente =
                         pendiente.subtract(consumido);
             }
+            // Descontar del stock agregado del producto
+            product.setStock(
+                    product.getStock().subtract(requerido)
+            );
+
+            productRepository.updateStock(product);
         }
 
         return new ResultadoConsumoStock(
