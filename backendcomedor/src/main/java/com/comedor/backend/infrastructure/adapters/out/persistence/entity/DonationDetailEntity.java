@@ -31,6 +31,6 @@ public class DonationDetailEntity {
     private BigDecimal quantity = BigDecimal.ZERO;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "inventory_lot_id", nullable = false)
+    @JoinColumn(name = "inventory_lot_id")
     private InventoryLotEntity inventoryLot;
 }

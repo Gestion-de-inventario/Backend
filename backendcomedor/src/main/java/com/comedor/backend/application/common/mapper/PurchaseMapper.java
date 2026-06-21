@@ -1,10 +1,14 @@
 package com.comedor.backend.application.common.mapper;
 
+import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseDetailResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @Component
 public class PurchaseMapper {
@@ -41,4 +45,5 @@ public class PurchaseMapper {
 
         return dto;
     }
+
 }

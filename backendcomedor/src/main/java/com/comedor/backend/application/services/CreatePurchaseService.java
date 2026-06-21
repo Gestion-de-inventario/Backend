@@ -51,15 +51,8 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
                     item.getQuantity()
                             .multiply(item.getUnitPrice());
 
-            PurchaseDetail detail = new PurchaseDetail();
-
-            detail.setProduct(product);
-
-            detail.setQuantity(item.getQuantity());
-
-            detail.setUnitPrice(item.getUnitPrice());
-
-            detail.setSubTotal(subtotal);
+            PurchaseDetail detail = createPurchaseDetail(
+                    product,item,subtotal);
 
             details.add(detail);
 
@@ -82,5 +75,17 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
                 purchaseRepository.save(purchase);
 
         return purchaseMapper.toResponse(savedPurchase);
+    }
+
+    public PurchaseDetail createPurchaseDetail(Product product, CreatePurchaseDetailRequestDTO item, BigDecimal subtotal) {
+        PurchaseDetail detail = new PurchaseDetail();
+        detail.setProduct(product);
+
+        detail.setQuantity(item.getQuantity());
+
+        detail.setUnitPrice(item.getUnitPrice());
+
+        detail.setSubTotal(subtotal);
+        return detail;
     }
 }

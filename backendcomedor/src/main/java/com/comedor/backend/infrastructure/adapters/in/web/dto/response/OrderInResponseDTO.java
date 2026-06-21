@@ -1,19 +1,24 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
+import com.comedor.backend.domain.model.enums.FuenteProducto;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+
 @Data
-public class PurchaseResponseDTO {
+public class OrderInResponseDTO {
+
+    private String reference;
+
     private Integer id;
 
-    private LocalDate purchaseDate;
+    private FuenteProducto source;
+
+    private LocalDate date;
 
     private String status;
 
     private BigDecimal totalSpent;
 
-    private List<PurchaseDetailResponseDTO> details;
 }
