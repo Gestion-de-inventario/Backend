@@ -14,5 +14,7 @@ public enum ModuleCode {
     MODIFICATION,
     DISH_MENU,
     PURCHASE,
-    REPORTS
+    DONATION,
+    REPORTS,
+    ORDER
 }

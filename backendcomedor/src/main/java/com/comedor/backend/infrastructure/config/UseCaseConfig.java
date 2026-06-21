@@ -491,6 +491,40 @@ public class UseCaseConfig {
     EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
         return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,personRepositoryPort,mapper,registrarTransaccionUseCase,currentUserService);
     }
+    @Bean
+    CreateDonationService createDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository)
+    {
+        return new CreateDonationService(repository,mapper,productRepository);
+    }
+
+    @Bean
+    ConfirmDonationService confirmDonationService (DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository)
+    {
+        return new ConfirmDonationService(repository,mapper,productRepository,registrarTransaccionUseCase,currentUserService,inventoryLotRepository);
+    }
+
+    @Bean
+    ListDonationService listDonationService (DonationRepositoryPort repository, DonationMapper mapper)
+    {
+        return new ListDonationService(repository,mapper);
+    }
+
+    @Bean
+    ListOrderInsService listOrderInsService (OrderInRepositoryPort orderInRepositoryPort,
+                                             OrderInMapper orderInMapper)
+    {
+        return new ListOrderInsService(orderInRepositoryPort,orderInMapper);
+    }
+
+    @Bean
+    GetPurchaseByIdService getPurchaseByIdService(PurchaseRepositoryPort repository, PurchaseMapper mapper){
+        return new GetPurchaseByIdService(repository,mapper);
+    }
+
+    @Bean
+    GetDonationByIdService getDonationByIdService(DonationRepositoryPort repository, DonationMapper mapper){
+        return new GetDonationByIdService(repository,mapper);
+    }
 }
 
 

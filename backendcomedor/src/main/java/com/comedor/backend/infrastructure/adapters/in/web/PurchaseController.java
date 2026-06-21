@@ -2,6 +2,7 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.ConfirmPurchaseUseCase;
 import com.comedor.backend.application.ports.in.CreatePurchaseUseCase;
+import com.comedor.backend.application.ports.in.GetPurchaseByIdUseCase;
 import com.comedor.backend.application.ports.in.ListPurchaseUseCase;
 import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
@@ -22,7 +23,9 @@ public class PurchaseController {
     private final CreatePurchaseUseCase createPurchaseUseCase;
     private final ListPurchaseUseCase listPurchaseUseCase;
     private final ConfirmPurchaseUseCase confirmPurchaseUseCase;
-    @PreAuthorize("hasAuthority('PURCHASE_CREATE')")
+    private final GetPurchaseByIdUseCase getPurchaseByIdUseCase;
+
+    @PreAuthorize("hasAuthority('CREATE_ORDER_IN')")
     @PostMapping
     public PurchaseResponseDTO create(
             @RequestBody CreatePurchaseRequestDTO request
@@ -62,5 +65,10 @@ public class PurchaseController {
             @PathVariable Integer id
     ) {
         return confirmPurchaseUseCase.confirm(id);
+    }
+
+    @GetMapping("/{id}")
+    public PurchaseResponseDTO getById(@PathVariable Integer id) {
+        return getPurchaseByIdUseCase.getById(id);
     }
 }

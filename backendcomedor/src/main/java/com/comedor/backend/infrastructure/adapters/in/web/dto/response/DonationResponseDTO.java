@@ -2,18 +2,15 @@ package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 @Data
-public class PurchaseResponseDTO {
+public class DonationResponseDTO {
     private Integer id;
 
-    private LocalDate purchaseDate;
+    private LocalDate donationDate;
 
     private String status;
 
-    private BigDecimal totalSpent;
-
-    private List<PurchaseDetailResponseDTO> details;
+    private List<DonationDetailResponseDTO> details;
 }

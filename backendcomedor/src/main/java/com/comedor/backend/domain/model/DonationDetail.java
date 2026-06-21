@@ -9,9 +9,11 @@ public class DonationDetail {
 
     private Product product;
 
-    private BigDecimal quantity = BigDecimal.ZERO;;
+    private BigDecimal quantity = BigDecimal.ZERO;
 
     private InventoryLot inventoryLot;
+
+
 
     public DonationDetail() {
     }

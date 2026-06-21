@@ -93,11 +93,20 @@ public enum PermissionCode {
     PERMISSION_LIST_ALL,
 
     // =========================
+    // ORDER
+    // =========================
+    CREATE_ORDER_IN,
+    ORDER_IN_LIST_ALL,
+    // =========================
     // PURCHASE
     // =========================
-    PURCHASE_CREATE,
     PURCHASE_LIST_ALL,
     PURCHASE_CHANGE_STATUS,
+    // =========================
+    // DONATION
+    // =========================
+    DONATION_LIST_ALL,
+    DONATION_CHANGE_STATUS,
 
     // =========================
     // DISH_MENU

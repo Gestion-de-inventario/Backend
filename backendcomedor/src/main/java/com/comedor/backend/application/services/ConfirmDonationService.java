@@ -1,54 +1,50 @@
 package com.comedor.backend.application.services;
 
-import com.comedor.backend.application.common.mapper.PurchaseMapper;
-import com.comedor.backend.application.ports.in.ConfirmPurchaseUseCase;
+import com.comedor.backend.application.common.mapper.DonationMapper;
+import com.comedor.backend.application.ports.in.ConfirmDonationUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
+import com.comedor.backend.application.ports.out.DonationRepositoryPort;
 import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
-import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
-import com.comedor.backend.domain.model.InventoryLot;
-import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.domain.model.Purchase;
-import com.comedor.backend.domain.model.PurchaseDetail;
+import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
 
-public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
-
-    private final PurchaseRepositoryPort purchaseRepository;
+public class ConfirmDonationService implements ConfirmDonationUseCase {
+    private final DonationRepositoryPort repository;
+    private final DonationMapper mapper;
     private final ProductRepositoryPort productRepository;
-    private final PurchaseMapper mapper;
     private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
     private final CurrentUserService currentUserService;
     private final InventoryLotRepositoryPort inventoryLotRepository;
 
-    public ConfirmPurchaseService(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
-        this.purchaseRepository = purchaseRepository;
-        this.productRepository = productRepository;
+    public ConfirmDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
+        this.repository = repository;
         this.mapper = mapper;
+        this.productRepository = productRepository;
         this.registrarTransaccionUseCase = registrarTransaccionUseCase;
         this.currentUserService = currentUserService;
         this.inventoryLotRepository = inventoryLotRepository;
     }
 
     @Override
-    public PurchaseResponseDTO confirm(Integer purchaseId) {
-        Purchase purchase =
-                purchaseRepository.findById(purchaseId);
+    public DonationResponseDTO confirm(Integer donationId) {
 
-        if (purchase.getStatus() == EstadoOrden.RECIBIDO) {
+        Donation donation = repository.findById(donationId);
+
+        if (donation.getStatus() == EstadoOrden.RECIBIDO) {
             throw new RuntimeException(
                     "La orden ya fue confirmada"
             );
         }
 
-        for (PurchaseDetail detail : purchase.getDetails()) {
+        for (DonationDetail detail : donation.getDetails()) {
 
             Product product =
                     productRepository.getProductoById(
@@ -68,7 +64,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
             lot.setRemainingQuantity(detail.getQuantity());
 
-            lot.setUnitCost(detail.getUnitPrice());
+            lot.setUnitCost(BigDecimal.ZERO);
 
             lot.setEntryDate(PeruTime.now());
 
@@ -84,19 +80,16 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                     product.getId(),
                     detail.getQuantity(),
                     TipoMovimiento.ENTRADA,
-                    FuenteTransaccion.COMPRA
+                    FuenteTransaccion.DONACION
             );
 
             productRepository.updateStock(product);
 
         }
+        Donation updatedDonation = repository.changeStatus(donationId, EstadoOrden.RECIBIDO);
 
-        Purchase updated =
-                purchaseRepository.updateStatus(purchaseId,EstadoOrden.RECIBIDO);
-
-        return mapper.toResponse(updated);
+        return mapper.toResponse(updatedDonation);
     }
-
 
 
     private void registrarMovimiento(
@@ -116,7 +109,4 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }
-
 }
-
-
