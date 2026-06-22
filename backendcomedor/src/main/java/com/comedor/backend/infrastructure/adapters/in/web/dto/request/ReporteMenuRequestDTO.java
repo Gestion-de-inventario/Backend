@@ -2,6 +2,7 @@ package com.comedor.backend.infrastructure.adapters.in.web.dto.request;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -9,4 +10,6 @@ public class ReporteMenuRequestDTO {
     private Integer dishMenuId;
     private Integer quantityPrepared;
     private List<Integer> cooks;
+    //Refactor CUEVA
+    private LocalDate createDate;
 }

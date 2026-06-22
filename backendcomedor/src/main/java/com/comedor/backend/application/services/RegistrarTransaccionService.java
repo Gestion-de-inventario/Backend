@@ -29,7 +29,7 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
     public TransaccionResponseDTO registrarTransaccion(TransaccionRequestDTO transaccionRequestDTO) {
         Transactions transaccion = mapper.toDomain(transaccionRequestDTO);
         System.out.println(transaccion.toString());
-        transaccion.setDateTime(PeruTime.now());
+        transaccion.setDateTime(transaccionRequestDTO.getDateTime());
         transaccion.setCurrentStock(productRepository.getProductoById(transaccionRequestDTO.getProductId()).getStock());
 
         TipoMovimiento type = transaccion.getType();
