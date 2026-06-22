@@ -39,6 +39,8 @@ public class MenuReportMapper {
 
         // Seteamos la cantidad preparada (Vital para el FIFO y el quantityRemaining)
         menuReport.setQuantityPrepared(dto.getQuantityPrepared());
+        // Refactor fecha CUEVA
+        menuReport.setDate(dto.getCreateDate());
 
         menuReport.setCooks(dto.getCooks());
         return menuReport;

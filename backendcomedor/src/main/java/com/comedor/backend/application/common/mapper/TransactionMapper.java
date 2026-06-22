@@ -17,6 +17,7 @@ public class TransactionMapper {
         transaccion.setType(dto.getType());
         transaccion.setSource(dto.getSource());
         transaccion.setAmount(dto.getAmount());
+        transaccion.setDateTime(dto.getDateTime());
 
         Product product = new Product();
         product.setId(dto.getProductId());

@@ -4,6 +4,7 @@ import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.CreatePurchaseUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
@@ -52,7 +53,7 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
                             .multiply(item.getUnitPrice());
 
             PurchaseDetail detail = createPurchaseDetail(
-                    product,item,subtotal);
+                    product, item, subtotal);
 
             details.add(detail);
 
@@ -61,7 +62,13 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
 
         Purchase purchase = new Purchase();
 
-        purchase.setPurchaseDate(PeruTime.today());
+        //CUEVA refactor fecha
+        //purchase.setPurchaseDate(PeruTime.today());
+        if(request.getDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+        purchase.setPurchaseDate(request.getDate());
 
         purchase.setStatus(EstadoOrden.PENDIENTE);
 

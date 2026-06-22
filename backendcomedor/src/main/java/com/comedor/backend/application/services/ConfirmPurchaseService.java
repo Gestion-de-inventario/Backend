@@ -6,6 +6,7 @@ import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
 import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.InventoryLot;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
@@ -18,6 +19,8 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseR
 import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
@@ -41,6 +44,11 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
     public PurchaseResponseDTO confirm(Integer purchaseId) {
         Purchase purchase =
                 purchaseRepository.findById(purchaseId);
+
+        if(purchase.getPurchaseDate().isAfter(PeruTime.today()))
+        {
+            throw new DateException("Error al confirmar orden : No se puede marcar como recibido una orden de compra futura");
+        }
 
         if (purchase.getStatus() == EstadoOrden.RECIBIDO) {
             throw new RuntimeException(
@@ -84,7 +92,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                     product.getId(),
                     detail.getQuantity(),
                     TipoMovimiento.ENTRADA,
-                    FuenteTransaccion.COMPRA
+                    FuenteTransaccion.COMPRA,
+                    PeruTime.now()
             );
 
             productRepository.updateStock(product);
@@ -104,7 +113,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             Integer productoId,
             BigDecimal amount,
             TipoMovimiento tipo,
-            FuenteTransaccion source
+            FuenteTransaccion source,
+            LocalDateTime dateTime
     ) {
         TransaccionRequestDTO dto = new TransaccionRequestDTO();
 
@@ -113,6 +123,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
         dto.setUserId(usuarioId);
         dto.setType(tipo);
         dto.setSource(source);
+        dto.setDateTime(dateTime);
 
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }

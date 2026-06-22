@@ -4,6 +4,7 @@ import com.comedor.backend.application.common.mapper.DonationMapper;
 import com.comedor.backend.application.ports.in.CreateDonationUseCase;
 import com.comedor.backend.application.ports.out.DonationRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.Donation;
 import com.comedor.backend.domain.model.DonationDetail;
 import com.comedor.backend.domain.model.Product;
@@ -42,7 +43,13 @@ public class CreateDonationService implements CreateDonationUseCase {
             details.add(detail);
         }
         Donation donation = new Donation();
-        donation.setDonationDate(PeruTime.today());
+        //CUEVA refactor fecha
+        //donation.setDonationDate(PeruTime.today());
+        if(request.getDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+        donation.setDonationDate(request.getDate());
         donation.setStatus(EstadoOrden.PENDIENTE);
         donation.setDetails(details);
 

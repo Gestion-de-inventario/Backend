@@ -13,5 +13,6 @@ public class TransaccionRequestDTO {
     private TipoMovimiento type;
     private FuenteTransaccion source;
     private BigDecimal amount;
+    private LocalDateTime dateTime;
 
 }

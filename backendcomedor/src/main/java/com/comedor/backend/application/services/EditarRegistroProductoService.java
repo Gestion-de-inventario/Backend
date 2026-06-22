@@ -12,9 +12,12 @@ import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroProductoResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class EditarRegistroProductoService implements EditarRegistroProductoUseCase {
     private final ProductRecordRepositoryPort
@@ -125,7 +128,8 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
                 usuarioId,
                 actual.getProduct().getId(),
                 actual.getAmount(),
-                TipoMovimiento.ENTRADA
+                TipoMovimiento.ENTRADA,
+                PeruTime.now()
         );
     }
 
@@ -149,7 +153,8 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
                     usuarioId,
                     record.getProduct().getId(),
                     record.getAmount(),
-                    TipoMovimiento.ENTRADA
+                    TipoMovimiento.ENTRADA,
+                    PeruTime.now()
             );
         }
 
@@ -163,7 +168,8 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
                 usuarioId,
                 record.getProduct().getId(),
                 record.getAmount(),
-                TipoMovimiento.SALIDA
+                TipoMovimiento.SALIDA,
+                PeruTime.now()
         );
     }
 
@@ -172,7 +178,9 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
             Integer usuarioId,
             Integer productoId,
             BigDecimal amount,
-            TipoMovimiento tipo)
+            TipoMovimiento tipo,
+            LocalDateTime dateTime
+    )
     {
 
         TransaccionRequestDTO dto =new TransaccionRequestDTO();
@@ -181,7 +189,7 @@ public class EditarRegistroProductoService implements EditarRegistroProductoUseC
         dto.setProductId(productoId);
         dto.setAmount(amount);
         dto.setType(tipo);
-
+        dto.setDateTime(dateTime);
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }
 }

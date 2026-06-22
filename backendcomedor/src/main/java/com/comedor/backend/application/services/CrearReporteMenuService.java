@@ -4,6 +4,7 @@ import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.CrearReporteMenuUseCase;
 import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
 import com.comedor.backend.application.ports.out.*;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.exceptions.ReporteMenuYaExistente;
 // Faltará importar tus clases de Excepciones personalizadas y StockMovement
 import com.comedor.backend.domain.exceptions.StockInsuficienteException;
@@ -19,6 +20,7 @@ import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
     @Override
     @Transactional
     public ReporteMenuResponseDTO crearReporteMenu(ReporteMenuRequestDTO request) {
-        // Corrección BU-009 , regresar la restricción una vez presentado en taller.
+        // CUEVA Corrección BU-009 , regresar la restricción una vez presentado en taller.
         /*if (repository.existByDate(PeruTime.today())) {
             throw new ReporteMenuYaExistente("Ya existe un reporte menu para hoy");
         }*/
@@ -96,7 +98,10 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                     product.getId(),
                     requerido,
                     TipoMovimiento.SALIDA,
-                            FuenteTransaccion.INVENTARIO
+                    FuenteTransaccion.INVENTARIO,
+                    // CUEVA
+                    // PeruTime.now()
+                    request.getCreateDate().atStartOfDay()
             );
             productRepository.updateStock(product);
         }
@@ -149,9 +154,12 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
                         )
                 );
 
-                movement.setMovementDate(
+                //Refactor fecha CUEVA
+                /* movement.setMovementDate(
                         PeruTime.now()
-                );
+                );*/
+                movement.setMovementDate(request.getCreateDate().atStartOfDay());
+                //
 
                 movimientos.add(movement);
 
@@ -183,7 +191,15 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
 
         MenuReport reporte = new MenuReport();
         reporte.setId(null);
-        reporte.setDate(PeruTime.today());
+        // Refactor de fecha CUEVA
+        //reporte.setDate(PeruTime.today());
+        if(request.getCreateDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+
+        reporte.setDate(request.getCreateDate());
+        //
         reporte.setCooks(request.getCooks());
         reporte.setDishMenu(dishMenu);
         reporte.setQuantityPrepared(request.getQuantityPrepared());
@@ -200,7 +216,8 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
             Integer productoId,
             BigDecimal amount,
             TipoMovimiento tipo,
-            FuenteTransaccion source
+            FuenteTransaccion source,
+            LocalDateTime dateTime
     ) {
         TransaccionRequestDTO dto = new TransaccionRequestDTO();
 
@@ -209,7 +226,7 @@ public class CrearReporteMenuService implements CrearReporteMenuUseCase {
         dto.setUserId(usuarioId);
         dto.setType(tipo);
         dto.setSource(source);
-
+        dto.setDateTime(dateTime);
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }
 }

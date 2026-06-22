@@ -6,6 +6,7 @@ import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
 import com.comedor.backend.application.ports.out.DonationRepositoryPort;
 import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.domain.model.enums.FuenteTransaccion;
@@ -15,6 +16,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationR
 import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class ConfirmDonationService implements ConfirmDonationUseCase {
     private final DonationRepositoryPort repository;
@@ -37,6 +39,11 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
     public DonationResponseDTO confirm(Integer donationId) {
 
         Donation donation = repository.findById(donationId);
+
+        if(donation.getDonationDate().isAfter(PeruTime.today()))
+        {
+            throw new DateException("Error al confirmar orden : No se puede marcar como recibido una orden de donacion futura");
+        }
 
         if (donation.getStatus() == EstadoOrden.RECIBIDO) {
             throw new RuntimeException(
@@ -80,7 +87,8 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
                     product.getId(),
                     detail.getQuantity(),
                     TipoMovimiento.ENTRADA,
-                    FuenteTransaccion.DONACION
+                    FuenteTransaccion.DONACION,
+                    PeruTime.now()
             );
 
             productRepository.updateStock(product);
@@ -97,7 +105,8 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
             Integer productoId,
             BigDecimal amount,
             TipoMovimiento tipo,
-            FuenteTransaccion source
+            FuenteTransaccion source,
+            LocalDateTime localDateTime
     ) {
         TransaccionRequestDTO dto = new TransaccionRequestDTO();
 
@@ -106,6 +115,7 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
         dto.setUserId(usuarioId);
         dto.setType(tipo);
         dto.setSource(source);
+        dto.setDateTime(localDateTime);
 
         registrarTransaccionUseCase.registrarTransaccion(dto);
     }
