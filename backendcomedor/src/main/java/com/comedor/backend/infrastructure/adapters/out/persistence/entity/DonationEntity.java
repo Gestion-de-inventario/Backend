@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class DonationEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoOrden status;
+    private StatusOrder status;
 
     @Column(nullable = false)
     private LocalDate donationDate;

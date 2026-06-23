@@ -1,13 +1,11 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
-import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
+import com.comedor.backend.domain.exceptions.BeneficiaryNotFoundException;
 import com.comedor.backend.domain.model.Beneficiary;
-import com.comedor.backend.domain.model.BeneficiaryType;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryTypeEntity;
-import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -67,14 +65,14 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
     }
 
     @Override
-    public List<Beneficiary> getBeneficiarioByStatus(Estado estado) {
-        if(estado == null)
+    public List<Beneficiary> getBeneficiarioByStatus(Status status) {
+        if(status == null)
         {   return persistenceMapper.convertToListDomain(jpaRepository.findAll());
-        } else if (estado == Estado.ACTIVO)
+        } else if (status == Status.ACTIVO)
         {
             return persistenceMapper.convertToListDomain(jpaRepository.getAllBeneficiariosActivos());
         }
-        else if (estado == Estado.INACTIVO)
+        else if (status == Status.INACTIVO)
         {
             return persistenceMapper.convertToListDomain(jpaRepository.getAllBeneficiariosInactivos());
         }
@@ -84,16 +82,16 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
     @Override
     public Beneficiary activar(Integer id) {
         BeneficiaryEntity entity = jpaRepository.findById(id)
-                .orElseThrow(() -> new BeneficiarioNoEncontradoException("Beneficiario no encontrado: " + id));
-        entity.setStatus(Estado.ACTIVO);
+                .orElseThrow(() -> new BeneficiaryNotFoundException("Beneficiario no encontrado: " + id));
+        entity.setStatus(Status.ACTIVO);
         return persistenceMapper.convertToDomain(jpaRepository.save(entity));
     }
 
     @Override
     public Beneficiary desactivar(Integer id) {
         BeneficiaryEntity entity = jpaRepository.findById(id)
-                .orElseThrow(() -> new BeneficiarioNoEncontradoException("Beneficiario no encontrado: " + id));
-        entity.setStatus(Estado.INACTIVO);
+                .orElseThrow(() -> new BeneficiaryNotFoundException("Beneficiario no encontrado: " + id));
+        entity.setStatus(Status.INACTIVO);
         return persistenceMapper.convertToDomain(jpaRepository.save(entity));
     }
 
@@ -103,7 +101,7 @@ public class BeneficiaryRepositoryAdapter implements BeneficiaryRepositoryPort {
         return jpaRepository
                 .existsByBeneficiaryTypeIdAndStatus(
                         id,
-                        Estado.ACTIVO
+                        Status.ACTIVO
                 );
     }
 

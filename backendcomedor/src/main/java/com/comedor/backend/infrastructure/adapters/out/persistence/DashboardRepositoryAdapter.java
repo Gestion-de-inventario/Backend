@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.DashboardRepositoryPort;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRotacionDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRotationDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DashboardResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenMensualDTO;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.DashboardJpaRepository;
@@ -25,15 +25,15 @@ public class DashboardRepositoryAdapter implements DashboardRepositoryPort {
     }
 
     @Override
-    public List<ProductoRotacionDTO> obtenerTop5ProductosMasRotados(LocalDate inicio, LocalDate fin) {
+    public List<ProductRotationDTO> obtenerTop5ProductosMasRotados(LocalDate inicio, LocalDate fin) {
         LocalDateTime inicioDateTime = inicio.atStartOfDay();
         LocalDateTime finDateTime = fin.atTime(23, 59, 59);
-        List<ProductoRotacionDTO> resultado = dashboardJpaRepository.findTop5ProductosMasRotados(inicioDateTime, finDateTime);
+        List<ProductRotationDTO> resultado = dashboardJpaRepository.findTop5ProductosMasRotados(inicioDateTime, finDateTime);
         return resultado.size() > 5 ? resultado.subList(0, 5) : resultado;
     }
 
     @Override
-    public DashboardResponseDTO obtenerConsolidadoFinanciero(int anio, int mes, List<ProductoRotacionDTO> topProductos) {
+    public DashboardResponseDTO obtenerConsolidadoFinanciero(int anio, int mes, List<ProductRotationDTO> topProductos) {
         Map<String, ResumenMensualDTO> mapaDiario = new TreeMap<>(); 
 
         BigDecimal totalIngresos = BigDecimal.ZERO;

@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface TagJpaRepository extends JpaRepository<TagEntity, Integer> {
     @Query("SELECT sc FROM TagEntity sc " +
-            "WHERE sc.status = com.comedor.backend.domain.model.enums.Estado.INACTIVO")
+            "WHERE sc.status = com.comedor.backend.domain.model.enums.Status.INACTIVO")
     List<TagEntity> getAllEtiquetasInactivas();
     @Query("SELECT sc FROM TagEntity sc " +
-            "WHERE sc.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+            "WHERE sc.status = com.comedor.backend.domain.model.enums.Status.ACTIVO")
     List<TagEntity> getAllEtiquetasActivas();
     Optional<TagEntity> findById(int id);
     boolean existsByName(String name);

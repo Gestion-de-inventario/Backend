@@ -2,18 +2,14 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.RoleMapper;
 import com.comedor.backend.application.ports.in.EditRoleUseCase;
-import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
-import com.comedor.backend.application.ports.out.PermissionRepositoryPort;
+import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
-import com.comedor.backend.domain.exceptions.RolNoEncontradoException;
+import com.comedor.backend.domain.exceptions.RoleNotFoundException;
 import com.comedor.backend.domain.exceptions.RoleAlreadyExistsException;
-import com.comedor.backend.domain.model.Permission;
 import com.comedor.backend.domain.model.Role;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
-
-import java.util.Set;
 
 public class EditRoleService implements EditRoleUseCase {
     private final RoleRepositoryPort roleRepository;
@@ -21,13 +17,13 @@ public class EditRoleService implements EditRoleUseCase {
 
     private final RoleMapper roleDTOMapper;
 
-    private final RegistrarModificacionUseCase registrarModificacionUseCase;
+    private final RegisterModificationUseCase registerModificationUseCase;
 
 
-    public EditRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+    public EditRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegisterModificationUseCase registerModificationUseCase) {
         this.roleRepository = roleRepository;
         this.roleDTOMapper = roleDTOMapper;
-        this.registrarModificacionUseCase = registrarModificacionUseCase;
+        this.registerModificationUseCase = registerModificationUseCase;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class EditRoleService implements EditRoleUseCase {
 
         Role existingRole = roleRepository
                 .findById(id)
-                .orElseThrow(RolNoEncontradoException::new);
+                .orElseThrow(RoleNotFoundException::new);
 
         if (!existingRole.getName().equalsIgnoreCase(dto.getName().toUpperCase()) &&
                 roleRepository.existsByNameIgnoreCaseAndIdNot(dto.getName().toUpperCase(), id)) {
@@ -43,7 +39,7 @@ public class EditRoleService implements EditRoleUseCase {
         }
 
         if (!existingRole.getName().equalsIgnoreCase(dto.getName())) {
-            registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
+            registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Role", "name", existingRole.getName(), dto.getName().toUpperCase()
             ));
         }

@@ -4,7 +4,7 @@ import com.comedor.backend.application.common.mapper.RoleMapper;
 import com.comedor.backend.application.ports.in.ListRoleByStatusUseCase;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.domain.model.Role;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class ListRolesByStatusService implements ListRoleByStatusUseCase {
 
     @Override
     public List<RolResponseDTO> listRolesByStatus(
-            Estado status) {
+            Status status) {
 
         List<Role> roles =
                 roleRepository.findByStatus(status);

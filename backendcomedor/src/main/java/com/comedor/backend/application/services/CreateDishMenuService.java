@@ -7,7 +7,7 @@ import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.model.DishMenu;
 import com.comedor.backend.domain.model.DishSupply;
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateDishMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DishMenuResponseDTO;
 
@@ -34,7 +34,7 @@ public class CreateDishMenuService implements CreateDishMenuUseCase {
 
         DishMenu dishMenu = new DishMenu();
         dishMenu.setName(request.getName().toUpperCase());
-        dishMenu.setStatus(Estado.ACTIVO);
+        dishMenu.setStatus(Status.ACTIVO);
 
         List<DishSupply> supplies = request.getSupplies().stream().map(s -> {
             Product product = productRepositoryPort.getProductoById(s.getProductId());

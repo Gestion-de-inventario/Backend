@@ -1,7 +1,7 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Donation;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,9 +12,9 @@ public interface DonationRepositoryPort {
     Page<Donation> showDonation(
             LocalDate startDate,
             LocalDate endDate,
-            EstadoOrden status,
+            StatusOrder status,
             Pageable pageable
     );
     Donation findById(Integer id);
-    Donation changeStatus(Integer id, EstadoOrden status);
+    Donation changeStatus(Integer id, StatusOrder status);
 }

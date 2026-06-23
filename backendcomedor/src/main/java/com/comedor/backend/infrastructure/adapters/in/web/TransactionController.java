@@ -1,10 +1,10 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.ExportarTransaccionesPDFUseCase;
-import com.comedor.backend.application.ports.in.ListarTransaccionesUseCase;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
+import com.comedor.backend.application.ports.in.ExportTransactionsPDFUseCase;
+import com.comedor.backend.application.ports.in.ListTransactionsUseCase;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,27 +18,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
-    private final ListarTransaccionesUseCase listarTransaccionesUseCase;
-    private final ExportarTransaccionesPDFUseCase exportarTransaccionesPDFUseCase;
+    private final ListTransactionsUseCase listTransactionsUseCase;
+    private final ExportTransactionsPDFUseCase exportTransactionsPDFUseCase;
 
     @PreAuthorize("hasAuthority('TRANSACTION_LIST_ALL')")
     @GetMapping
-    public Page<TransaccionResponseDTO> list(
+    public Page<TransactionResponseDTO> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-            @RequestParam(required = false) TipoMovimiento type,
-            @RequestParam(required = false) FuenteTransaccion source,
+            @RequestParam(required = false) MovementType type,
+            @RequestParam(required = false) TransactionSource source,
             @RequestParam(required = false) String productName
     ) {
-        return listarTransaccionesUseCase.list(page, size, fechaInicio, fechaFin,type, source, productName);
+        return listTransactionsUseCase.list(page, size, fechaInicio, fechaFin,type, source, productName);
     }
 
     @PreAuthorize("hasAuthority('TRANSACTION_LIST_ALL')")
@@ -47,7 +46,7 @@ public class TransactionController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
     ) {
-        byte[] pdf = exportarTransaccionesPDFUseCase.exportar(fechaInicio, fechaFin);
+        byte[] pdf = exportTransactionsPDFUseCase.exportar(fechaInicio, fechaFin);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transacciones.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

@@ -2,7 +2,7 @@ package com.comedor.backend.application.ports.out;
 
 
 import com.comedor.backend.domain.model.Role;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public interface RoleRepositoryPort {
 
     List<Role> findAll();
 
-    List<Role> findByStatus(Estado status);
+    List<Role> findByStatus(Status status);
 
     Role save(Role role);
 

@@ -1,7 +1,7 @@
 package com.comedor.backend.application.ports.in;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.OrderInResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -13,7 +13,7 @@ public interface ListOrderInsUseCase {
             int size,
             LocalDate startDate,
             LocalDate endDate,
-            FuenteProducto source,
-            EstadoOrden status
+            ProductSource source,
+            StatusOrder status
     );
 }

@@ -1,6 +1,6 @@
 package com.comedor.backend.application.ports.in;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -12,6 +12,6 @@ public interface ListDonationUseCase {
             int size,
             LocalDate startDate,
             LocalDate endDate,
-            EstadoOrden status
+            StatusOrder status
     );
 }

@@ -8,7 +8,7 @@ import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.Donation;
 import com.comedor.backend.domain.model.DonationDetail;
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateDonationDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateDonationRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
@@ -50,7 +50,7 @@ public class CreateDonationService implements CreateDonationUseCase {
             throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
         }
         donation.setDonationDate(request.getDate());
-        donation.setStatus(EstadoOrden.PENDIENTE);
+        donation.setStatus(StatusOrder.PENDIENTE);
         donation.setDetails(details);
 
         Donation savedDonation = repository.save(donation);

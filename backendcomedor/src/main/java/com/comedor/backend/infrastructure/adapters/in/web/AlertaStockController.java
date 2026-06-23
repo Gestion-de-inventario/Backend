@@ -1,8 +1,8 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.common.mapper.AlertaStockMapper;
-import com.comedor.backend.application.ports.in.ObtenerAlertasStockUseCase;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AlertaStockResponseDTO;
+import com.comedor.backend.application.ports.in.GetStockAlertsUseCase;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockAlertResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlertaStockController {
 
-    private final ObtenerAlertasStockUseCase obtenerAlertasStockUseCase;
+    private final GetStockAlertsUseCase getStockAlertsUseCase;
     private final AlertaStockMapper alertaStockMapper;
 
     @PreAuthorize("hasAuthority('PRODUCT_ALERT_STOCK_VIEW')")
     @GetMapping("/stock-min")
-    public ResponseEntity<List<AlertaStockResponseDTO>> obtenerAlertasStock() {
-        List<AlertaStockResponseDTO> alertas = alertaStockMapper.toResponseDTOList(
-                obtenerAlertasStockUseCase.obtenerProductosBajoStock()
+    public ResponseEntity<List<StockAlertResponseDTO>> obtenerAlertasStock() {
+        List<StockAlertResponseDTO> alertas = alertaStockMapper.toResponseDTOList(
+                getStockAlertsUseCase.obtenerProductosBajoStock()
         );
         return ResponseEntity.ok(alertas);
     }

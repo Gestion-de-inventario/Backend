@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.math.BigDecimal;
 
@@ -9,12 +9,12 @@ public class BeneficiaryType {
     private String name;
     private String desc;
     private BigDecimal menu_cost;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
     public BeneficiaryType() {
     }
 
-    public BeneficiaryType(Integer id, String name, String desc, BigDecimal menu_cost, Estado status) {
+    public BeneficiaryType(Integer id, String name, String desc, BigDecimal menu_cost, Status status) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -38,11 +38,11 @@ public class BeneficiaryType {
         return menu_cost;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

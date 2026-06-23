@@ -8,7 +8,7 @@ import com.comedor.backend.infrastructure.segurity.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.comedor.backend.application.services.RegistrarBeneficiarioService;
+import com.comedor.backend.application.services.RegisterBeneficiaryService;
 
 @Configuration
 public class UseCaseConfig {
@@ -29,30 +29,30 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public ListarUsuariosActivosUseCase listarUsuariosUseCase(
+    public ListActiveUsersUseCase listarUsuariosUseCase(
             UserRepositoryPort usuarioRepository,
             UserMapper userMapper
 
     ) {
-        return new ListarUsariosActivosService(
+        return new ListActiveUsersService(
                 usuarioRepository,
                 userMapper
         );
     }
 
     @Bean
-    public ListarTodosLosUsuariosUseCase listarTodosLosUsuariosUseCase (UserRepositoryPort userRepositoryPort, UserMapper userMapper)
+    public ListAllUsersUseCase listarTodosLosUsuariosUseCase (UserRepositoryPort userRepositoryPort, UserMapper userMapper)
     {
-        return new ListarTodoLosUsuariosService(
+        return new ListAllUsersService(
                 userRepositoryPort,
                 userMapper
         );
     }
 
     @Bean
-    public CrearUsuarioUseCase crearUsuarioUseCase (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RoleRepositoryPort roleRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder)
+    public CreateUserUseCase crearUsuarioUseCase (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RoleRepositoryPort roleRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder)
     {
-        return new CrearUsuarioService(
+        return new CreateUserService(
                 userRepositoryPort,
                 userMapper,
                 roleRepositoryPort,
@@ -62,20 +62,20 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public EditarUsuarioService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase,RoleRepositoryPort roleRepositoryPort)
+    public EditUserService editarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterModificationUseCase registerModificationUseCase, RoleRepositoryPort roleRepositoryPort)
     {
-        return new EditarUsuarioService(
+        return new EditUserService(
                 userMapper,
                 userRepositoryPort,
                 personRepositoryPort,
-                registrarModificacionUseCase,
+                registerModificationUseCase,
                 roleRepositoryPort
         );
     }
 
     @Bean
-    public CambiarPasswordUseCase cambiarPasswordUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionService registrarModificacionService) {
-        return new CambiarPasswordService(
+    public ChangePasswordUseCase cambiarPasswordUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterModificationService registrarModificacionService) {
+        return new ChangePasswordService(
                 userRepositoryPort,
                 passwordEncoder,
                 registrarModificacionService
@@ -83,7 +83,7 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public ForceChangePasswordService changePasswordService(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionService registrarModificacionService) {
+    public ForceChangePasswordService changePasswordService(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterModificationService registrarModificacionService) {
         return new ForceChangePasswordService(
                 userRepositoryPort,
                 passwordEncoder,
@@ -92,147 +92,147 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public DesactivarUsuarioService desactivarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    public DeactivateUserService desactivarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegisterModificationUseCase registerModificationUseCase)
     {
-        return new DesactivarUsuarioService(
+        return new DeactivateUserService(
                 userRepositoryPort,
                 userMapper,
-                registrarModificacionUseCase
+                registerModificationUseCase
         );
     }
 
     @Bean
-    public RegistrarBeneficiarioService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort,BeneficiaryMapper mapper) {
-        return new RegistrarBeneficiarioService(beneficiaryRepositoryPort,beneficiaryTypeRepositoryPort,mapper);
+    public RegisterBeneficiaryService beneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort, BeneficiaryMapper mapper) {
+        return new RegisterBeneficiaryService(beneficiaryRepositoryPort,beneficiaryTypeRepositoryPort,mapper);
     }
 
     @Bean
-    public ConsultarDatosPorDniService consultarDatosPorDniService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ReniecPort reniecPort) {
-        return new ConsultarDatosPorDniService(beneficiaryRepositoryPort, reniecPort);
+    public GetDataByDniService consultarDatosPorDniService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ReniecPort reniecPort) {
+        return new GetDataByDniService(beneficiaryRepositoryPort, reniecPort);
     }
 
     @Bean
-    public ConsultarYRegistrarReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, ConsultarDatosPorDniService consultarDatosPorDniUseCase,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
-        return new ConsultarYRegistrarReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase,beneficiaryTypeRepositoryPort);
+    public GetAndRegisterByReniecService consultarYRegistrarReniecService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, GetDataByDniService consultarDatosPorDniUseCase, BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
+        return new GetAndRegisterByReniecService(beneficiaryRepositoryPort,consultarDatosPorDniUseCase,beneficiaryTypeRepositoryPort);
     }
 
     @Bean
-    public EditarBeneficiarioService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase,BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
-        return new EditarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase,beneficiaryTypeRepositoryPort);
+    public EditBeneficiaryService editarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegisterModificationUseCase registerModificationUseCase, BeneficiaryTypeRepositoryPort beneficiaryTypeRepositoryPort) {
+        return new EditBeneficiaryService(beneficiaryRepositoryPort, registerModificationUseCase,beneficiaryTypeRepositoryPort);
     }
 
     @Bean
-    EditarProductoService editarProductoService(ProductRepositoryPort productRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase){
-        return new EditarProductoService(productRepositoryPort, registrarModificacionUseCase);
+    EditProductService editarProductoService(ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase){
+        return new EditProductService(productRepositoryPort, registerModificationUseCase);
     }
 
     @Bean
-    ListarBeneficiarioServicePorEstado listarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, BeneficiaryMapper beneficiaryMapper) {
-        return new ListarBeneficiarioServicePorEstado(beneficiaryRepositoryPort, beneficiaryMapper);
+    ListBeneficiariesByStatusService listarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, BeneficiaryMapper beneficiaryMapper) {
+        return new ListBeneficiariesByStatusService(beneficiaryRepositoryPort, beneficiaryMapper);
     }
 
     @Bean
-    public CrearCategoriaService crearCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper) {
-        return new CrearCategoriaService(
+    public CreateCategoryService crearCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper) {
+        return new CreateCategoryService(
                 categoryRepositoryPort,
                 categoryMapper
         );
     }
 
     @Bean
-    public ListarCategoriasPorEstadoService listarCategoriasPorEstadoService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper)
+    public ListCategoriesByStatusService listarCategoriasPorEstadoService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper)
     {
-        return new ListarCategoriasPorEstadoService(
+        return new ListCategoriesByStatusService(
                 categoryRepositoryPort,
                 categoryMapper
         );
     }
 
     @Bean
-    public CrearEtiquetaService crearEtiquetaService(TagRepositoryPort tagRepositoryPort, TagMapper tagMapper)
+    public CreateTagService crearEtiquetaService(TagRepositoryPort tagRepositoryPort, TagMapper tagMapper)
     {
-        return new CrearEtiquetaService(tagRepositoryPort, tagMapper);
+        return new CreateTagService(tagRepositoryPort, tagMapper);
     }
 
     @Bean
-    public ListarEtiquetasPorEstadoService listarEtiquetasPorEstadoService(TagRepositoryPort tagRepositoryPort, TagMapper tagMapper)
+    public ListTagsByStatusService listarEtiquetasPorEstadoService(TagRepositoryPort tagRepositoryPort, TagMapper tagMapper)
     {
-        return new ListarEtiquetasPorEstadoService(tagRepositoryPort, tagMapper);
+        return new ListTagsByStatusService(tagRepositoryPort, tagMapper);
     }
 
     @Bean
-    DesactivarCategoriaService desactivarCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new DesactivarCategoriaService(
-                categoryRepositoryPort, categoryMapper, registrarModificacionUseCase
+    DeactivateCategoryService desactivarCategoriaService(CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegisterModificationUseCase registerModificationUseCase) {
+        return new DeactivateCategoryService(
+                categoryRepositoryPort, categoryMapper, registerModificationUseCase
         );
     }
     @Bean
-    DesactivarEtiquetaService desactivarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new DesactivarEtiquetaService(
-                tagRepositoryPort, tagMapper, registrarModificacionUseCase
-        );
-    }
-
-    @Bean
-    ActivarCategoriaService activarCategoriaService (CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new ActivarCategoriaService(
-                categoryRepositoryPort, categoryMapper, registrarModificacionUseCase
-        );
-    }
-    @Bean
-    ActivarEtiquetaService activarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
-    {
-        return new ActivarEtiquetaService(
-                tagRepositoryPort, tagMapper, registrarModificacionUseCase
+    DeactivateTagService desactivarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegisterModificationUseCase registerModificationUseCase) {
+        return new DeactivateTagService(
+                tagRepositoryPort, tagMapper, registerModificationUseCase
         );
     }
 
     @Bean
-    ListarProductosPorEstadoService listarProductosPorEstadoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper)
+    ActivateCategoryService activarCategoriaService (CategoryRepositoryPort categoryRepositoryPort, CategoryMapper categoryMapper, RegisterModificationUseCase registerModificationUseCase) {
+        return new ActivateCategoryService(
+                categoryRepositoryPort, categoryMapper, registerModificationUseCase
+        );
+    }
+    @Bean
+    ActivateTagService activarEtiquetaService (TagRepositoryPort tagRepositoryPort, TagMapper tagMapper, RegisterModificationUseCase registerModificationUseCase)
     {
-        return new ListarProductosPorEstadoService(productRepositoryPort, productMapper);
+        return new ActivateTagService(
+                tagRepositoryPort, tagMapper, registerModificationUseCase
+        );
     }
 
     @Bean
-    CrearProductoService crearProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort) {
-        return new CrearProductoService(productRepositoryPort, productMapper, categoryRepositoryPort, tagRepositoryPort);
-
-    }
-    @Bean
-    ActivarProductoService activarProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
-        return new ActivarProductoService(productRepositoryPort, productMapper, registrarModificacionUseCase);
-    }
-    @Bean
-    DesactivarProductoService desactivarProductoService (ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    ListProductsByStatusService listarProductosPorEstadoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper)
     {
-        return new DesactivarProductoService(productRepositoryPort, productMapper, registrarModificacionUseCase);
+        return new ListProductsByStatusService(productRepositoryPort, productMapper);
     }
 
     @Bean
-    CrearReporteMenuService crearReporteMenuService (MenuReportRepositoryPort repository,
+    CreateProductService crearProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort) {
+        return new CreateProductService(productRepositoryPort, productMapper, categoryRepositoryPort, tagRepositoryPort);
+
+    }
+    @Bean
+    ActivateProductService activarProductoService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegisterModificationUseCase registerModificationUseCase){
+        return new ActivateProductService(productRepositoryPort, productMapper, registerModificationUseCase);
+    }
+    @Bean
+    DeactivateProductService desactivarProductoService (ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegisterModificationUseCase registerModificationUseCase)
+    {
+        return new DeactivateProductService(productRepositoryPort, productMapper, registerModificationUseCase);
+    }
+
+    @Bean
+    CreateMenuReportService crearReporteMenuService (MenuReportRepositoryPort repository,
                                                      DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
                                                      InventoryLotRepositoryPort inventoryLotRepository,
                                                      MenuReportMapper mapper
-            , RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
-        return new CrearReporteMenuService(repository,dishMenuRepository,productRepository,inventoryLotRepository,mapper,registrarTransaccionUseCase,currentUserService);
+            , RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
+        return new CreateMenuReportService(repository,dishMenuRepository,productRepository,inventoryLotRepository,mapper, registerTransactionUseCase,currentUserService);
     }
 
     @Bean
-    RegistrarTransaccionService registrarTransaccionService(TransactionRepositoryPort repository,ProductRepositoryPort productRepository ,TransactionMapper mapper)
+    RegisterTransactionService registrarTransaccionService(TransactionRepositoryPort repository, ProductRepositoryPort productRepository , TransactionMapper mapper)
     {
-        return new RegistrarTransaccionService(repository,productRepository,mapper);
+        return new RegisterTransactionService(repository,productRepository,mapper);
     }
 
     @Bean
-    ListarTransaccionesService listarTransaccionesService (TransactionRepositoryPort repository, TransactionMapper mapper)
+    ListTransactionsService listarTransaccionesService (TransactionRepositoryPort repository, TransactionMapper mapper)
     {
-        return new ListarTransaccionesService(repository,mapper);
+        return new ListTransactionsService(repository,mapper);
     }
 
     @Bean
-    AgregarRegistroProductoService agregarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort, ProductRecordMapper productRecordMapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, ActualizarStockUseCase actualizarStockUseCase, RevisarStockUseCase revisarStockUseCase, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase)
+    AddRecordProductService agregarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort, ProductRecordMapper productRecordMapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, UpdateStockUseCase updateStockUseCase, CheckStockUseCase checkStockUseCase, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase)
     {
-        return new AgregarRegistroProductoService(productRecordRepositoryPort, productRecordMapper,registrarTransaccionUseCase,currentUserService,actualizarStockUseCase,revisarStockUseCase, recalcularResumenReporteUseCase);
+        return new AddRecordProductService(productRecordRepositoryPort, productRecordMapper, registerTransactionUseCase,currentUserService, updateStockUseCase, checkStockUseCase, recalculateSummaryReportUseCase);
     }
 
     @Bean
@@ -241,78 +241,78 @@ public class UseCaseConfig {
     }
 
     @Bean
-    RevisarStockService revisarStockService (ProductRepositoryPort productRepositoryPort)
+    CheckStockService revisarStockService (ProductRepositoryPort productRepositoryPort)
     {
-        return new RevisarStockService(productRepositoryPort);
+        return new CheckStockService(productRepositoryPort);
     }
 
     @Bean
-    ActualizarStockService actualizarStockService(ProductRepositoryPort productRepositoryPort)
+    UpdateStockService actualizarStockService(ProductRepositoryPort productRepositoryPort)
     {
-        return new ActualizarStockService(productRepositoryPort);
+        return new UpdateStockService(productRepositoryPort);
     }
 
     @Bean
-    RecalcularResumenReporteService recalcularResumenReporteService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, ProductRecordRepositoryPort productRecordRepositoryPort)
+    RecalculateSummaryReportService recalcularResumenReporteService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, ProductRecordRepositoryPort productRecordRepositoryPort)
     {
-        return new RecalcularResumenReporteService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, productRecordRepositoryPort);
+        return new RecalculateSummaryReportService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, productRecordRepositoryPort);
     }
 
     @Bean
-    EditarRegistroBeneficiarioService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,MenuReportRepositoryPort menuReportRepositoryPort)
+    EditBeneficiaryRecordService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort)
     {
-        return new EditarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,recalcularResumenReporteUseCase,menuReportRepositoryPort);
+        return new EditBeneficiaryRecordService(beneficiaryControlRepositoryPort, beneficiaryControlMapper, recalculateSummaryReportUseCase,menuReportRepositoryPort);
     }
 
     @Bean
-    AgregarRegistroBeneficiarioService agregarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
-                                                                          BeneficiaryControlMapper beneficiaryControlMapper, BeneficiaryRepositoryPort beneficiaryRepositoryPort,
-                                                                          RecalcularResumenReporteUseCase recalcularResumenReporteUseCase, MenuReportRepositoryPort menuReportRepositoryPort)
+    AddRecordBeneficiaryService agregarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
+                                                                   BeneficiaryControlMapper beneficiaryControlMapper, BeneficiaryRepositoryPort beneficiaryRepositoryPort,
+                                                                   RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort)
     {
-        return new AgregarRegistroBeneficiarioService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,beneficiaryRepositoryPort,recalcularResumenReporteUseCase,menuReportRepositoryPort);
+        return new AddRecordBeneficiaryService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,beneficiaryRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort);
     }
 
     @Bean
-    EliminarRegistroBeneficiarioService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,MenuReportRepositoryPort menuReportRepositoryPort){
-        return new EliminarRegistroBeneficiarioService(beneficiaryControlRepositoryPort,recalcularResumenReporteUseCase,menuReportRepositoryPort);
+    DeleteBeneficiaryRecordService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort){
+        return new DeleteBeneficiaryRecordService(beneficiaryControlRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort);
     }
 
     @Bean
-    EditarRegistroProductoService editarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort,
-                                                                 ProductRecordMapper productRecordMapper,
-                                                                 ActualizarStockUseCase actualizarStockUseCase,
-                                                                 RegistrarTransaccionUseCase registrarTransaccionUseCase,
-                                                                 RecalcularResumenReporteUseCase recalcularResumenReporteUseCase,
-                                                                 CurrentUserService currentUserService){
-        return new EditarRegistroProductoService(productRecordRepositoryPort, productRecordMapper,actualizarStockUseCase,registrarTransaccionUseCase,recalcularResumenReporteUseCase,currentUserService);
+    EditProductRegistryService editarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort,
+                                                              ProductRecordMapper productRecordMapper,
+                                                              UpdateStockUseCase updateStockUseCase,
+                                                              RegisterTransactionUseCase registerTransactionUseCase,
+                                                              RecalculateSummaryReportUseCase recalculateSummaryReportUseCase,
+                                                              CurrentUserService currentUserService){
+        return new EditProductRegistryService(productRecordRepositoryPort, productRecordMapper, updateStockUseCase, registerTransactionUseCase, recalculateSummaryReportUseCase,currentUserService);
     }
 
     @Bean
-    EliminarRegistroProductoService eliminarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort,
-                                                                     RegistrarTransaccionUseCase registrarTransaccionUseCase,
-                                                                     CurrentUserService currentUserService,
-                                                                     RecalcularResumenReporteUseCase recalcularResumenReporteUseCase){
-        return new EliminarRegistroProductoService(productRecordRepositoryPort,registrarTransaccionUseCase,currentUserService,recalcularResumenReporteUseCase);
+    DeleteProductRecordService eliminarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort,
+                                                                RegisterTransactionUseCase registerTransactionUseCase,
+                                                                CurrentUserService currentUserService,
+                                                                RecalculateSummaryReportUseCase recalculateSummaryReportUseCase){
+        return new DeleteProductRecordService(productRecordRepositoryPort, registerTransactionUseCase,currentUserService, recalculateSummaryReportUseCase);
     }
 
     @Bean
-    ObtenerResumenReporteMenuService obtenerResumenReporteMenuService (MenuReportRepositoryPort menuReportRepositoryPort,
-                                                                       BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
-                                                                       SummaryMenuReportMapper summaryMenuReportMapper)
+    GetSummaryMenuReportService obtenerResumenReporteMenuService (MenuReportRepositoryPort menuReportRepositoryPort,
+                                                                  BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
+                                                                  SummaryMenuReportMapper summaryMenuReportMapper)
     {
-        return new ObtenerResumenReporteMenuService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, summaryMenuReportMapper);
+        return new GetSummaryMenuReportService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, summaryMenuReportMapper);
     }
 
     @Bean
-    ListMenuReportDetailService obtenerReporteMenuPorFechaService (MenuReportRepositoryPort menuReportRepositoryPort, MenuReportMapper menuReportMapper, PersonRepositoryPort personRepositoryPort, ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase)
+    ListMenuReportDetailService obtenerReporteMenuPorFechaService (MenuReportRepositoryPort menuReportRepositoryPort, MenuReportMapper menuReportMapper, PersonRepositoryPort personRepositoryPort, GetSummaryMenuReportUseCase getSummaryMenuReportUseCase)
     {
-        return new ListMenuReportDetailService(menuReportRepositoryPort, menuReportMapper, personRepositoryPort,obtenerResumenReporteMenuUseCase);
+        return new ListMenuReportDetailService(menuReportRepositoryPort, menuReportMapper, personRepositoryPort, getSummaryMenuReportUseCase);
     }
 
     @Bean
-    ActivarUsuarioService activarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    ActivateUserService activarUsuarioService (UserRepositoryPort userRepositoryPort, UserMapper userMapper, RegisterModificationUseCase registerModificationUseCase)
     {
-        return new ActivarUsuarioService(userRepositoryPort, userMapper, registrarModificacionUseCase);
+        return new ActivateUserService(userRepositoryPort, userMapper, registerModificationUseCase);
     }
 
     @Bean
@@ -321,8 +321,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditRoleService editRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase){
-        return new EditRoleService(roleRepository,roleDTOMapper, registrarModificacionUseCase);
+    EditRoleService editRoleService(RoleRepositoryPort roleRepository, RoleMapper roleDTOMapper, RegisterModificationUseCase registerModificationUseCase){
+        return new EditRoleService(roleRepository,roleDTOMapper, registerModificationUseCase);
     }
 
     @Bean
@@ -341,18 +341,18 @@ public class UseCaseConfig {
     }
 
     @Bean
-    RegistrarModificacionService registrarModificacionService(ModificationsRepositoryPort modificationsRepositoryPort, UserRepositoryPort userRepositoryPort) {
-        return new RegistrarModificacionService(modificationsRepositoryPort, userRepositoryPort);
+    RegisterModificationService registrarModificacionService(ModificationsRepositoryPort modificationsRepositoryPort, UserRepositoryPort userRepositoryPort) {
+        return new RegisterModificationService(modificationsRepositoryPort, userRepositoryPort);
     }
 
     @Bean
-    ListarModificacionesService listarModificacionesService(ModificationsRepositoryPort modificationsRepositoryPort, ModificationsMapper modificationsMapper) {
-        return new ListarModificacionesService(modificationsRepositoryPort, modificationsMapper);
+    ListModificationsService listarModificacionesService(ModificationsRepositoryPort modificationsRepositoryPort, ModificationsMapper modificationsMapper) {
+        return new ListModificationsService(modificationsRepositoryPort, modificationsMapper);
     }
 
     @Bean
-    ObtenerAlertasStockService obtenerAlertasStockService(ProductRepositoryPort productRepositoryPort) {
-        return new ObtenerAlertasStockService(productRepositoryPort);
+    GetStockAlertsService obtenerAlertasStockService(ProductRepositoryPort productRepositoryPort) {
+        return new GetStockAlertsService(productRepositoryPort);
     }
 
     @Bean
@@ -370,13 +370,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ActivarBeneficiarioService activarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new ActivarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    ActivateBeneficiaryService activarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegisterModificationUseCase registerModificationUseCase) {
+        return new ActivateBeneficiaryService(beneficiaryRepositoryPort, registerModificationUseCase);
     }
 
     @Bean
-    DesactivarBeneficiarioService desactivarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new DesactivarBeneficiarioService(beneficiaryRepositoryPort, registrarModificacionUseCase);
+    DeactivateBeneficiaryService desactivarBeneficiarioService(BeneficiaryRepositoryPort beneficiaryRepositoryPort, RegisterModificationUseCase registerModificationUseCase) {
+        return new DeactivateBeneficiaryService(beneficiaryRepositoryPort, registerModificationUseCase);
     }
 
     @Bean
@@ -385,8 +385,8 @@ public class UseCaseConfig {
         return new AssignPermissionesService(roleRepository,permissionRepository,roleDTOMapper);
     }
     @Bean
-    RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, UserRepositoryPort userRepository,RoleMapper roleDTOMapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
-        return new RoleChangeStatusService(roleRepository,userRepository,roleDTOMapper,registrarModificacionUseCase);
+    RoleChangeStatusService roleChangeStatusService(RoleRepositoryPort roleRepository, UserRepositoryPort userRepository,RoleMapper roleDTOMapper, RegisterModificationUseCase registerModificationUseCase) {
+        return new RoleChangeStatusService(roleRepository,userRepository,roleDTOMapper, registerModificationUseCase);
     }
     @Bean
     CreatePurchaseService createPurchaseService (PurchaseRepositoryPort purchaseRepository,
@@ -408,9 +408,9 @@ public class UseCaseConfig {
         return new ListPurchaseService(repository,mapper);
     }
     @Bean
-    ConfirmPurchaseUseCase confirmPurchaseUseCase(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService,InventoryLotRepositoryPort inventoryLotRepository)
+    ConfirmPurchaseUseCase confirmPurchaseUseCase(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository)
     {
-        return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper,registrarTransaccionUseCase,currentUserService,inventoryLotRepository);
+        return new ConfirmPurchaseService(purchaseRepository,productRepository,mapper, registerTransactionUseCase,currentUserService,inventoryLotRepository);
     }
 
     @Bean
@@ -419,13 +419,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditDishMenuService editDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper){
-        return new EditDishMenuService(dishMenuRepositoryPort, productRepositoryPort, registrarModificacionUseCase, dishMenuMapper);
+    EditDishMenuService editDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase, DishMenuMapper dishMenuMapper){
+        return new EditDishMenuService(dishMenuRepositoryPort, productRepositoryPort, registerModificationUseCase, dishMenuMapper);
     }
 
     @Bean
-    ChangeStatusDishMenuService changeStatusDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper){
-        return new ChangeStatusDishMenuService(dishMenuRepositoryPort, registrarModificacionUseCase, dishMenuMapper);
+    ChangeStatusDishMenuService changeStatusDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, RegisterModificationUseCase registerModificationUseCase, DishMenuMapper dishMenuMapper){
+        return new ChangeStatusDishMenuService(dishMenuRepositoryPort, registerModificationUseCase, dishMenuMapper);
     }
 
     @Bean
@@ -435,9 +435,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ChangeStatusBeneficiaryTypeUseCase changeStatusBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryRepositoryPort beneficiaryRepository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    ChangeStatusBeneficiaryTypeUseCase changeStatusBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryRepositoryPort beneficiaryRepository, BeneficiaryTypeMapper mapper, RegisterModificationUseCase registerModificationUseCase)
     {
-        return new ChangeStatusBeneficiaryTypeService(repository,beneficiaryRepository, mapper, registrarModificacionUseCase);
+        return new ChangeStatusBeneficiaryTypeService(repository,beneficiaryRepository, mapper, registerModificationUseCase);
     }
 
     @Bean
@@ -447,34 +447,34 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditBeneficiaryTypeUseCase editBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase)
+    EditBeneficiaryTypeUseCase editBeneficiaryTypeUseCase(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegisterModificationUseCase registerModificationUseCase)
     {
-        return new EditBeneficiaryTypeService(repository,mapper,registrarModificacionUseCase);
+        return new EditBeneficiaryTypeService(repository,mapper, registerModificationUseCase);
     }
 
     @Bean
-    ExportarReportePDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort){
-        return new ExportarReportePDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    ExportReportPDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort){
+        return new ExportReportPDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
     }
 
     @Bean
-    ExportarReporteExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
-        return new ExportarReporteExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    ExportReportExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
+        return new ExportReportExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
     }
 
     @Bean
-    ObtenerDashboardService obtenerDashboardService(DashboardRepositoryPort dashboardRepositoryPort){
-        return new ObtenerDashboardService(dashboardRepositoryPort);
+    GetDashboardService obtenerDashboardService(DashboardRepositoryPort dashboardRepositoryPort){
+        return new GetDashboardService(dashboardRepositoryPort);
     }
 
     @Bean
-    ExportarTransaccionesPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper){
-        return new ExportarTransaccionesPDFService(repository, mapper);
+    ExportTransactionsPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper){
+        return new ExportTransactionsPDFService(repository, mapper);
     }
 
     @Bean
-    ExportarModificacionesPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper){
-        return new ExportarModificacionesPDFService(repository, mapper);
+    ExportModificationsPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper){
+        return new ExportModificationsPDFService(repository, mapper);
     }
 
     @Bean
@@ -488,8 +488,8 @@ public class UseCaseConfig {
         return new GetMenuReporByIdService(repository,mapper);
     }
     @Bean
-    EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService){
-        return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,personRepositoryPort,mapper,registrarTransaccionUseCase,currentUserService);
+    EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
+        return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,personRepositoryPort,mapper, registerTransactionUseCase,currentUserService);
     }
     @Bean
     CreateDonationService createDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository)
@@ -498,9 +498,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ConfirmDonationService confirmDonationService (DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository)
+    ConfirmDonationService confirmDonationService (DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository)
     {
-        return new ConfirmDonationService(repository,mapper,productRepository,registrarTransaccionUseCase,currentUserService,inventoryLotRepository);
+        return new ConfirmDonationService(repository,mapper,productRepository, registerTransactionUseCase,currentUserService,inventoryLotRepository);
     }
 
     @Bean

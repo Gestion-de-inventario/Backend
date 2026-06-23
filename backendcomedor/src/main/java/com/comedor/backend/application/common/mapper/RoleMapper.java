@@ -2,9 +2,8 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Permission;
 import com.comedor.backend.domain.model.Role;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateRoleRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,7 @@ public class RoleMapper {
         return new Role(
                 0,
                 dto.getName().toUpperCase(),
-                Estado.ACTIVO,
+                Status.ACTIVO,
                 permissions != null
                         ? permissions
                         : new HashSet<>()

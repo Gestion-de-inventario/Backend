@@ -1,8 +1,8 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.ListOrderInsUseCase;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.OrderInResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,10 +37,10 @@ public class OrderInController {
             LocalDate endDate,
 
             @RequestParam(required = false)
-            FuenteProducto source,
+            ProductSource source,
 
             @RequestParam(required = false)
-            EstadoOrden status
+            StatusOrder status
     ) {
         return listOrderInsUseCase.list(
                 page,

@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Table;
@@ -28,6 +28,6 @@ public class TagEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Estado status;
+    private Status status;
 
 }

@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +32,7 @@ public class ProductEntity {
     private String unit;
 
     @Enumerated(EnumType.STRING)
-    private Estado status;
+    private Status status;
 
     @Column(precision = 10, scale = 3)
     private BigDecimal stock;

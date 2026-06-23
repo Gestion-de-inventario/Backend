@@ -4,7 +4,7 @@ import com.comedor.backend.application.ports.in.ChangeStatusDishMenuUseCase;
 import com.comedor.backend.application.ports.in.CreateDishMenuUseCase;
 import com.comedor.backend.application.ports.in.EditDishMenuUseCase;
 import com.comedor.backend.application.ports.in.ListDishMenusUseCase;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateDishMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DishMenuResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.EditDishMenuRequestDTO;
@@ -47,7 +47,7 @@ public class DishMenuController {
     @PreAuthorize("hasAuthority('DISH_MENU_CHANGE_STATUS')")
     @PostMapping("/{id}/changeStatus")
     public DishMenuResponseDTO changeStatus(@PathVariable Integer id,
-                                            @RequestParam Estado estado) {
-        return changeStatusDishMenuUseCase.changeStatus(id, estado);
+                                            @RequestParam Status status) {
+        return changeStatusDishMenuUseCase.changeStatus(id, status);
     }
 }

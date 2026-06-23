@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.ExportarModificacionesPDFUseCase;
-import com.comedor.backend.application.ports.in.ListarModificacionesUseCase;
+import com.comedor.backend.application.ports.in.ExportModificationsPDFUseCase;
+import com.comedor.backend.application.ports.in.ListModificationsUseCase;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ModificationsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,8 +22,8 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ModificationsController {
 
-    private final ListarModificacionesUseCase listarModificacionesUseCase;
-    private final ExportarModificacionesPDFUseCase exportarModificacionesPDFUseCase;
+    private final ListModificationsUseCase listModificationsUseCase;
+    private final ExportModificationsPDFUseCase exportModificationsPDFUseCase;
 
 
     @PreAuthorize("hasAuthority('MODIFICATION_LIST_ALL')")
@@ -34,7 +34,7 @@ public class ModificationsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
     ) {
-        return ResponseEntity.ok(listarModificacionesUseCase.list(page, size, fechaInicio, fechaFin));
+        return ResponseEntity.ok(listModificationsUseCase.list(page, size, fechaInicio, fechaFin));
     }
 
     @PreAuthorize("hasAuthority('MODIFICATION_LIST_ALL')")
@@ -43,7 +43,7 @@ public class ModificationsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
     ) {
-        byte[] pdf = exportarModificacionesPDFUseCase.exportar(fechaInicio, fechaFin);
+        byte[] pdf = exportModificationsPDFUseCase.exportar(fechaInicio, fechaFin);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=modificaciones.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

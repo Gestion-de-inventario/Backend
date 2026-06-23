@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.EstadoReporteMenu;
+import com.comedor.backend.domain.model.enums.StatusMenuReport;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,5 +56,5 @@ public class MenuReportEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoReporteMenu status;
+    private StatusMenuReport status;
 }

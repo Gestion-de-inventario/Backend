@@ -2,7 +2,7 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.domain.model.Person;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioBasicoDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BasicUserResponseDTO;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.PersonEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.PersonJpaRepository;
@@ -39,7 +39,7 @@ public class PersonRepositoryAdapter implements PersonRepositoryPort {
     }
 
     @Override
-    public Optional<UsuarioBasicoDTO> findUsuarioBasicoDtoById(Integer id) {
+    public Optional<BasicUserResponseDTO> findUsuarioBasicoDtoById(Integer id) {
         return Optional.empty();
     }
 

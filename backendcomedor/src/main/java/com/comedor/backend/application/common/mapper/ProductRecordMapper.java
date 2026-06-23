@@ -2,8 +2,8 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Record;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroProductoResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRecordRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductRecordResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class ProductRecordMapper {
 
-    public Record toDomain(RegistroProductoRequestDTO requestDTO)
+    public Record toDomain(ProductRecordRequestDTO requestDTO)
     {
         Record record = new Record();
         Product product = new Product();
@@ -23,9 +23,9 @@ public class ProductRecordMapper {
         return record;
     }
 
-    public RegistroProductoResponseDTO toDto(Record record)
+    public ProductRecordResponseDTO toDto(Record record)
     {
-        RegistroProductoResponseDTO responseDTO = new RegistroProductoResponseDTO();
+        ProductRecordResponseDTO responseDTO = new ProductRecordResponseDTO();
         if(record.getProduct() != null)
         {
             responseDTO.setProductoId(record.getProduct().getId());
@@ -39,7 +39,7 @@ public class ProductRecordMapper {
         return responseDTO;
     }
 
-    public List<RegistroProductoResponseDTO> toListDto (List<Record> records)
+    public List<ProductRecordResponseDTO> toListDto (List<Record> records)
     {
        return records.stream().map(this::toDto).toList();
     }

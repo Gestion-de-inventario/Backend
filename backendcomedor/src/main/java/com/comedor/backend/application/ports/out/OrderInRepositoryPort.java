@@ -1,9 +1,8 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.OrderIn;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
-import com.comedor.backend.infrastructure.adapters.out.persistence.entity.OrderInViewEntity;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,8 +12,8 @@ public interface OrderInRepositoryPort {
     Page<OrderIn> showOrderIns(
             LocalDate startDate,
             LocalDate endDate,
-            FuenteProducto source,
-            EstadoOrden status,
+            ProductSource source,
+            StatusOrder status,
             Pageable pageable
     );
 }

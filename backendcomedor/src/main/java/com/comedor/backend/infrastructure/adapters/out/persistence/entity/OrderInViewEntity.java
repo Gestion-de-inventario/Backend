@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,12 +48,12 @@ public class OrderInViewEntity {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private FuenteProducto source;
+    private ProductSource source;
 
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
-    private EstadoOrden status;
+    private StatusOrder status;
 
     @Column(name = "total_spent")
     private BigDecimal totalSpent;

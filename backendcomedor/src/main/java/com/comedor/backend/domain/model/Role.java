@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,11 +8,11 @@ import java.util.Set;
 public class Role {
     private int id;
     private String name;
-    private Estado status;
+    private Status status;
     private Set<Permission> permissions = new HashSet<>();
 
     public Role(int id,
-                String name,Estado status,
+                String name, Status status,
                 Set<Permission> permissions) {
 
         this.id = id;
@@ -33,7 +33,7 @@ public class Role {
         return name.toUpperCase();
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -49,7 +49,7 @@ public class Role {
         this.name = name.toUpperCase();
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

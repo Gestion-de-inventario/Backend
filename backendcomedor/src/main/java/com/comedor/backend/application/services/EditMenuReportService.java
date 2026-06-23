@@ -2,17 +2,14 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.EditMenuReportUseCase;
-import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
+import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.*;
-import com.comedor.backend.domain.exceptions.StockInsuficienteException;
+import com.comedor.backend.domain.exceptions.InsufficientStockException;
 import com.comedor.backend.domain.model.*;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditMenuReportRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoFaltanteResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResultadoConsumoStock;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MissingProductResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockConsumptionResultResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,24 +27,24 @@ public class EditMenuReportService implements EditMenuReportUseCase {
     private final PersonRepositoryPort personRepositoryPort;
     private final MenuReportMapper mapper;
 
-    private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
+    private final RegisterTransactionUseCase registerTransactionUseCase;
     private final CurrentUserService currentUserService;
 
-    public EditMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService) {
+    public EditMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.dishMenuRepositoryPort = dishMenuRepositoryPort;
         this.productRepository = productRepository;
         this.inventoryLotRepository = inventoryLotRepository;
         this.personRepositoryPort = personRepositoryPort;
         this.mapper = mapper;
-        this.registrarTransaccionUseCase = registrarTransaccionUseCase;
+        this.registerTransactionUseCase = registerTransactionUseCase;
         this.currentUserService = currentUserService;
     }
 
 
     @Override
     @Transactional
-    public ReporteMenuResponseDTO editMenuReport(
+    public MenuReportResponseDTO editMenuReport(
             Integer id,
             EditMenuReportRequestDTO request
     ) {
@@ -138,7 +135,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         // =========================
         // APLICAR NUEVO CONSUMO
         // =========================
-        ResultadoConsumoStock resultado =
+        StockConsumptionResultResponseDTO resultado =
                 aplicarNuevoStock(
                         finalDishMenu,
                         newQty
@@ -184,7 +181,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             BigDecimal nuevaCantidad
     ) {
 
-        List<ProductoFaltanteResponseDTO> faltantes =
+        List<MissingProductResponseDTO> faltantes =
                 new ArrayList<>();
 
         for (DishSupply supply : nuevoMenu.getSupplies()) {
@@ -228,7 +225,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             if (stockDisponible.compareTo(requeridoNuevo) < 0) {
 
                 faltantes.add(
-                        new ProductoFaltanteResponseDTO(
+                        new MissingProductResponseDTO(
                                 product.getId(),
                                 product.getName(),
                                 product.getUnit(),
@@ -239,7 +236,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         }
 
         if (!faltantes.isEmpty()) {
-            throw new StockInsuficienteException(faltantes);
+            throw new InsufficientStockException(faltantes);
         }
     }
     private void revertirStock(MenuReport reporte) {
@@ -273,7 +270,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         }
     }
 
-    private ResultadoConsumoStock aplicarNuevoStock(
+    private StockConsumptionResultResponseDTO aplicarNuevoStock(
             DishMenu menu,
             BigDecimal qty
     ) {
@@ -346,7 +343,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             productRepository.updateStock(product);
         }
 
-        return new ResultadoConsumoStock(
+        return new StockConsumptionResultResponseDTO(
                 movimientos,
                 totalSpent
         );

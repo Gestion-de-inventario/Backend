@@ -4,7 +4,7 @@ import com.comedor.backend.application.ports.in.ConfirmPurchaseUseCase;
 import com.comedor.backend.application.ports.in.CreatePurchaseUseCase;
 import com.comedor.backend.application.ports.in.GetPurchaseByIdUseCase;
 import com.comedor.backend.application.ports.in.ListPurchaseUseCase;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class PurchaseController {
             LocalDate endDate,
 
             @RequestParam(required = false)
-            EstadoOrden status
+            StatusOrder status
     ) {
         return listPurchaseUseCase.list(
                 page,

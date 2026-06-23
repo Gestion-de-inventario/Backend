@@ -1,12 +1,12 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.util.List;
 
 public interface ProductRepositoryPort {
-    List<Product> getProductosByStatus(Estado estado);
+    List<Product> getProductosByStatus(Status status);
     Product createProducto(Product product);
     boolean existByName(String nombre);
     Product deactivateById(int id);

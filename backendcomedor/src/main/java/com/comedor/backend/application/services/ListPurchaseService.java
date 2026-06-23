@@ -3,7 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.ListPurchaseUseCase;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +27,7 @@ public class ListPurchaseService implements ListPurchaseUseCase {
                                           int size,
                                           LocalDate startDate,
                                           LocalDate endDate,
-                                          EstadoOrden status) {
+                                          StatusOrder status) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,

@@ -4,7 +4,7 @@ import com.comedor.backend.application.ports.in.ConfirmDonationUseCase;
 import com.comedor.backend.application.ports.in.CreateDonationUseCase;
 import com.comedor.backend.application.ports.in.GetDonationByIdUseCase;
 import com.comedor.backend.application.ports.in.ListDonationUseCase;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateDonationRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
 
@@ -48,7 +48,7 @@ public class DonationController {
             LocalDate endDate,
 
             @RequestParam(required = false)
-            EstadoOrden status
+            StatusOrder status
     ) {
         return listDonationUseCase.list(
                 page,

@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.EstadoReporteMenu;
+import com.comedor.backend.domain.model.enums.StatusMenuReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ public class MenuReport {
     private BigDecimal totalEarned = BigDecimal.ZERO;
     private BigDecimal totalSpent = BigDecimal.ZERO;
 
-    private EstadoReporteMenu status;
+    private StatusMenuReport status;
 
 
     public MenuReport() {
@@ -36,7 +36,7 @@ public class MenuReport {
                       List<StockMovement> stockMovements,
                       BigDecimal totalEarned,
                       BigDecimal totalSpent,
-                      EstadoReporteMenu status) {
+                      StatusMenuReport status) {
 
         this.id = id;
         this.date = date;
@@ -131,11 +131,11 @@ public class MenuReport {
         this.totalSpent = totalSpent;
     }
 
-    public EstadoReporteMenu getStatus() {
+    public StatusMenuReport getStatus() {
         return status;
     }
 
-    public void setStatus(EstadoReporteMenu status) {
+    public void setStatus(StatusMenuReport status) {
         this.status = status;
     }
     public void removeBeneficiaryControl(int controlId) {

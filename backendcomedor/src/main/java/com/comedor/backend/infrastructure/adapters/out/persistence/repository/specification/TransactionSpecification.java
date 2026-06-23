@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification;
 
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TransactionsEntity;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -31,7 +31,7 @@ public class TransactionSpecification {
         };
     }
 
-    public static Specification<TransactionsEntity> hasType(TipoMovimiento type) {
+    public static Specification<TransactionsEntity> hasType(MovementType type) {
         return (root, query, cb) -> {
             if (type == null) return null;
 
@@ -39,7 +39,7 @@ public class TransactionSpecification {
         };
     }
 
-    public static Specification<TransactionsEntity> hasSource(FuenteTransaccion source) {
+    public static Specification<TransactionsEntity> hasSource(TransactionSource source) {
         return (root, query, cb) -> {
             if (source == null) return null;
 

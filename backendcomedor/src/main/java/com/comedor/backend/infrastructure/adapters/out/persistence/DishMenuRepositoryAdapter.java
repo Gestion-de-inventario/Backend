@@ -2,7 +2,7 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.DishMenuRepositoryPort;
 import com.comedor.backend.domain.model.DishMenu;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.DishMenuEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.DishMenuEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.DishMenuJpaRepository;
@@ -37,7 +37,7 @@ public class DishMenuRepositoryAdapter implements DishMenuRepositoryPort {
 
     @Override
     public List<DishMenu> findAllActive() {
-        return dishMenuJpaRepository.findByStatus(Estado.ACTIVO)
+        return dishMenuJpaRepository.findByStatus(Status.ACTIVO)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

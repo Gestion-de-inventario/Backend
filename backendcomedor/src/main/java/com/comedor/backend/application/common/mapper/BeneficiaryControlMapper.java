@@ -2,9 +2,8 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.BeneficiaryControl;
-import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryRecordResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -42,12 +41,12 @@ public class BeneficiaryControlMapper {
         return control;
     }
 
-    public RegistroBeneficiarioResponseDTO toDto(
+    public BeneficiaryRecordResponseDTO toDto(
             BeneficiaryControl control
     ) {
 
-        RegistroBeneficiarioResponseDTO dto =
-                new RegistroBeneficiarioResponseDTO();
+        BeneficiaryRecordResponseDTO dto =
+                new BeneficiaryRecordResponseDTO();
 
         dto.setId(control.getId());
 
@@ -61,7 +60,7 @@ public class BeneficiaryControlMapper {
 
         dto.setCantidad(control.getMenusAmount());
 
-        dto.setMetodoPago(
+        dto.setPaymentMethod(
                 control.getPayMethod()
         );
 
@@ -84,7 +83,7 @@ public class BeneficiaryControlMapper {
         return dto;
     }
 
-    public List<RegistroBeneficiarioResponseDTO> toListDto(List<BeneficiaryControl> control)
+    public List<BeneficiaryRecordResponseDTO> toListDto(List<BeneficiaryControl> control)
     {
         return control.stream().map(this::toDto).toList();
     }

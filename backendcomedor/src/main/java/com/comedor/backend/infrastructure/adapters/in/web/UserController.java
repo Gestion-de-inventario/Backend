@@ -3,10 +3,10 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.domain.model.User;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CambiarPasswordRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarUsuarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ChangePasswordRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditUserRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ForceChangePasswordRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UserRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import lombok.RequiredArgsConstructor;
 
@@ -22,36 +22,36 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final ListarUsuariosActivosUseCase listarUsuariosActivosUseCase;
-    private final ListarTodosLosUsuariosUseCase listarTodosLosUsuariosUseCase;
-    private final CrearUsuarioUseCase crearUsuarioUseCase;
-    private final EditarUsuarioUseCase editarUsuarioUseCase;
-    private final DesactivarUsuarioUseCase desactivarUsuarioUseCase;
-    private final ActivarUsuarioUseCase activarUsuarioUseCase;
-    private final CambiarPasswordUseCase cambiarPasswordUseCase;
+    private final ListActiveUsersUseCase listActiveUsersUseCase;
+    private final ListAllUsersUseCase listAllUsersUseCase;
+    private final CreateUserUseCase createUserUseCase;
+    private final EditUserUseCase editUserUseCase;
+    private final DeactivateUserUseCase deactivateUserUseCase;
+    private final ActivateUserUseCase activateUserUseCase;
+    private final ChangePasswordUseCase changePasswordUseCase;
     private final ForceChangePasswordUseCase forceChangePasswordUseCase;
     private final UserRepositoryPort userRepositoryPort;
 
     @PreAuthorize("hasAuthority('USER_LIST_ALL')")
     @GetMapping("/all")
     public List<UsuarioResponseDTO> listAllUsers() {
-        return listarTodosLosUsuariosUseCase.ListarTodoLosUsuarios();
+        return listAllUsersUseCase.ListarTodoLosUsuarios();
     }
 
     @PreAuthorize("hasAuthority('USER_LIST_ACTIVE')")
     @GetMapping("/actived")
     public List<UsuarioResponseDTO> listActivatedUsers() {
-        return listarUsuariosActivosUseCase.ListarUsuariosActivos();
+        return listActiveUsersUseCase.ListarUsuariosActivos();
     }
     @PreAuthorize("hasAuthority('USER_CREATE')")
     @PostMapping("/register")
-    public UsuarioResponseDTO createUser(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
-        return crearUsuarioUseCase.crearUsuario(usuarioRequestDTO);
+    public UsuarioResponseDTO createUser(@RequestBody UserRequestDTO userRequestDTO) {
+        return createUserUseCase.crearUsuario(userRequestDTO);
     }
     @PreAuthorize("hasAuthority('USER_EDIT')")
     @PutMapping("/edit/{id}")
-    public UsuarioResponseDTO editUser(@PathVariable Integer id, @RequestBody EditarUsuarioRequestDTO editarUsuarioRequestDTO) {
-        return editarUsuarioUseCase.EditarUsuario(id,editarUsuarioRequestDTO);
+    public UsuarioResponseDTO editUser(@PathVariable Integer id, @RequestBody EditUserRequestDTO editUserRequestDTO) {
+        return editUserUseCase.EditarUsuario(id, editUserRequestDTO);
     }
     @PreAuthorize("hasAuthority('USER_EDIT')")
     @PutMapping("/change-password/{id}")
@@ -61,22 +61,22 @@ public class UserController {
     }
 
     @PutMapping("/me/edit")
-    public UsuarioResponseDTO editMyProfile(Authentication authentication, @RequestBody EditarUsuarioRequestDTO dto) {
+    public UsuarioResponseDTO editMyProfile(Authentication authentication, @RequestBody EditUserRequestDTO dto) {
         String username = authentication.getName();
 
         User user = userRepositoryPort.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        return editarUsuarioUseCase.EditarUsuario(user.getId(), dto);
+        return editUserUseCase.EditarUsuario(user.getId(), dto);
     }
 
     @PutMapping("/me/change-password")
-    public ResponseEntity<java.util.Map<String, String>> changeMyPassword(Authentication authentication, @RequestBody CambiarPasswordRequestDTO dto) {
+    public ResponseEntity<java.util.Map<String, String>> changeMyPassword(Authentication authentication, @RequestBody ChangePasswordRequestDTO dto) {
         String username = authentication.getName();
         User user = userRepositoryPort.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        cambiarPasswordUseCase.cambiarPassword(user.getId(), dto);
+        changePasswordUseCase.cambiarPassword(user.getId(), dto);
 
         return ResponseEntity.ok(java.util.Map.of("mensaje", "Contraseña actualizada correctamente"));
     }
@@ -85,12 +85,12 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER_DEACTIVATE')")
     @PostMapping("deactivate/{id}")
     public UsuarioResponseDTO deactivateUser(@PathVariable Integer id) {
-        return desactivarUsuarioUseCase.desactivarUsuario(id);
+        return deactivateUserUseCase.desactivarUsuario(id);
     }
 
     @PreAuthorize("hasAuthority('USER_ACTIVATE')")
     @PostMapping("activate/{id}")
     public UsuarioResponseDTO activateUser(@PathVariable Integer id) {
-        return activarUsuarioUseCase.activateUser(id);
+        return activateUserUseCase.activateUser(id);
     }
 }

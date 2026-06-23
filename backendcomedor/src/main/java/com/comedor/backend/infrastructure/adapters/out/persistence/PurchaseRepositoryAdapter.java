@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
-import com.comedor.backend.domain.exceptions.OrdenDeCompraNoEncontrada;
+import com.comedor.backend.domain.exceptions.PurchaseOrderNotFoundException;
 import com.comedor.backend.domain.model.Purchase;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.PurchaseSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class PurchaseRepositoryAdapter implements PurchaseRepositoryPort {
     public Page<Purchase> showPurchase(
             LocalDate startDate,
             LocalDate endDate,
-            EstadoOrden status,
+            StatusOrder status,
             Pageable pageable
     ) {
 
@@ -90,7 +90,7 @@ public class PurchaseRepositoryAdapter implements PurchaseRepositoryPort {
         PurchaseEntity entity = purchaseJpaRepository
                 .findById(id)
                 .orElseThrow(() ->
-                        new OrdenDeCompraNoEncontrada(
+                        new PurchaseOrderNotFoundException(
                                 "Orden de compra no encontrada"
                         )
                 );
@@ -100,12 +100,12 @@ public class PurchaseRepositoryAdapter implements PurchaseRepositoryPort {
 
     @Override
     public Purchase updateStatus(Integer purchaseId,
-                                 EstadoOrden status) {
+                                 StatusOrder status) {
 
         PurchaseEntity entity =
                 purchaseJpaRepository.findById(purchaseId)
                         .orElseThrow(() ->
-                                new OrdenDeCompraNoEncontrada(
+                                new PurchaseOrderNotFoundException(
                                         "Orden de compra no encontrada"
                                 )
                         );

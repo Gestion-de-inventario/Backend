@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.MetodoPago;
+import com.comedor.backend.domain.model.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +32,7 @@ public class BeneficiaryControlEntity {
     private boolean paid = false;
 
     @Enumerated(EnumType.STRING)
-    private MetodoPago payMethod;
+    private PaymentMethod payMethod;
 
     @Column(name = "menus_amount", nullable = false)
     private int menusAmount;

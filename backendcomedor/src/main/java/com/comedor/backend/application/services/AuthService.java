@@ -3,10 +3,10 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.AuthMapper;
 import com.comedor.backend.application.ports.in.LoginUseCase;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
-import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
-import com.comedor.backend.domain.exceptions.UsuarioDeshabilitadoException;
+import com.comedor.backend.domain.exceptions.InvalidCredentialsException;
+import com.comedor.backend.domain.exceptions.DisabledUserException;
 import com.comedor.backend.domain.model.User;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
 import com.comedor.backend.infrastructure.segurity.JwtUtil;
@@ -30,15 +30,15 @@ public class AuthService implements LoginUseCase {
     public AuthResponseDTO login(AuthRequestDTO request) {
 
         User user = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(CredencialesInvalidasException::new);
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CredencialesInvalidasException();
+            throw new InvalidCredentialsException();
         }
 
-        if(user.getStatus().equals(Estado.INACTIVO))
+        if(user.getStatus().equals(Status.INACTIVO))
         {
-            throw new UsuarioDeshabilitadoException("El usuario :"+user.getPersona().getName()+
+            throw new DisabledUserException("El usuario :"+user.getPersona().getName()+
                     " "+user.getPersona().getLastname()+" se encuentra deshabilitado, comunicarse con la administradora.");
         }
 

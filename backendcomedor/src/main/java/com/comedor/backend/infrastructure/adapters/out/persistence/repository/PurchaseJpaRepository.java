@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PurchaseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,7 @@ public interface PurchaseJpaRepository
     Page<PurchaseEntity> findAll(Pageable pageable);
 
     Page<PurchaseEntity> findByStatus(
-            EstadoOrden status,
+            StatusOrder status,
             Pageable pageable
     );
 
@@ -30,7 +30,7 @@ public interface PurchaseJpaRepository
     Page<PurchaseEntity> findByPurchaseDateBetweenAndStatus(
             LocalDate startDate,
             LocalDate endDate,
-            EstadoOrden status,
+            StatusOrder status,
             Pageable pageable
     );
 }

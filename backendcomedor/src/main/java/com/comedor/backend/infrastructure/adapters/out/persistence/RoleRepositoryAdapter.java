@@ -1,9 +1,8 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
-import com.comedor.backend.domain.model.Permission;
 import com.comedor.backend.domain.model.Role;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.domain.model.enums.PermissionCode;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PermissionEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.RoleEntity;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -46,7 +44,7 @@ public class RoleRepositoryAdapter implements RoleRepositoryPort {
     }
 
     @Override
-    public List<Role> findByStatus(Estado status) {
+    public List<Role> findByStatus(Status status) {
         if(status==null)
         {
             return roleJpaRepository.findAll().stream()

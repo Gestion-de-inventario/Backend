@@ -2,11 +2,9 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.DonationMapper;
 import com.comedor.backend.application.ports.in.ListDonationUseCase;
-import com.comedor.backend.application.ports.in.ListPurchaseUseCase;
 import com.comedor.backend.application.ports.out.DonationRepositoryPort;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +23,7 @@ public class ListDonationService implements ListDonationUseCase {
     }
 
     @Override
-    public Page<DonationResponseDTO> list(int page, int size, LocalDate startDate, LocalDate endDate, EstadoOrden status) {
+    public Page<DonationResponseDTO> list(int page, int size, LocalDate startDate, LocalDate endDate, StatusOrder status) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,

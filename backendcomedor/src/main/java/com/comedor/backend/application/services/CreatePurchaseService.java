@@ -8,14 +8,13 @@ import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
         }
         purchase.setPurchaseDate(request.getDate());
 
-        purchase.setStatus(EstadoOrden.PENDIENTE);
+        purchase.setStatus(StatusOrder.PENDIENTE);
 
         purchase.setTotalSpent(totalSpent);
 

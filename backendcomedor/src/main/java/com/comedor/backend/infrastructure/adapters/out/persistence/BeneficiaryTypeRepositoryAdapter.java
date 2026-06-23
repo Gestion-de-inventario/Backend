@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
-import com.comedor.backend.domain.exceptions.TipoDeBeneficiarioNoEncontrado;
+import com.comedor.backend.domain.exceptions.BeneficiaryTypeNotFoundException;
 import com.comedor.backend.domain.model.BeneficiaryType;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryTypeEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryTypeEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryTypeJpaRepository;
@@ -40,11 +40,11 @@ public class BeneficiaryTypeRepositoryAdapter implements BeneficiaryTypeReposito
     @Override
     public BeneficiaryType findById(Integer id) {
         return mapper.convertToDomain(repository.findById(id).
-                orElseThrow(()-> new TipoDeBeneficiarioNoEncontrado("Tipo de beneficiario no encontrado")));
+                orElseThrow(()-> new BeneficiaryTypeNotFoundException("Tipo de beneficiario no encontrado")));
     }
 
     @Override
-    public List<BeneficiaryType> findByStatus(Estado status) {
+    public List<BeneficiaryType> findByStatus(Status status) {
         if(status==null)
         {
             return mapper.convertToListDomain(repository.findAll());

@@ -3,7 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.GetMenuReportByIdUseCase;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportResponseDTO;
 
 public class GetMenuReporByIdService implements GetMenuReportByIdUseCase {
     private final MenuReportRepositoryPort repository;
@@ -15,7 +15,7 @@ public class GetMenuReporByIdService implements GetMenuReportByIdUseCase {
     }
 
     @Override
-    public ReporteMenuResponseDTO getMenuReportById(Integer id) {
+    public MenuReportResponseDTO getMenuReportById(Integer id) {
         return mapper.toDto(repository.findById(id));
     }
 }

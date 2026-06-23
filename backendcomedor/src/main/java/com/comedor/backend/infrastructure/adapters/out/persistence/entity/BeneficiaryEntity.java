@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,5 +35,5 @@ public class BeneficiaryEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 }

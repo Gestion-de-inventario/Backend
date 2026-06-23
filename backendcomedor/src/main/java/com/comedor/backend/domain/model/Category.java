@@ -1,13 +1,13 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 public class Category {
     private int id;
     private String name;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -26,7 +26,7 @@ public class Category {
         return name;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 }

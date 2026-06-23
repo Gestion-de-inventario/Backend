@@ -3,7 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.CreateBeneficiaryTypeUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
-import com.comedor.backend.domain.exceptions.TipoDeBeneficiarioYaExiste;
+import com.comedor.backend.domain.exceptions.BeneficiaryTypeAlreadyExistsException;
 import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryTypeRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
@@ -22,7 +22,7 @@ public class CreateBeneficiaryTypeService implements CreateBeneficiaryTypeUseCas
 
         if(repository.existsByName(requestDTO.getName().toUpperCase()))
         {
-            throw new TipoDeBeneficiarioYaExiste("Ya existe un tipo de beneficiario con el nombre : " + requestDTO.getName().toUpperCase());
+            throw new BeneficiaryTypeAlreadyExistsException("Ya existe un tipo de beneficiario con el nombre : " + requestDTO.getName().toUpperCase());
         }
 
         BeneficiaryType domain = mapper.convertToDomain(requestDTO);

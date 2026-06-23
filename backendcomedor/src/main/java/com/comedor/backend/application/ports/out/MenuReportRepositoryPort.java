@@ -1,11 +1,9 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.MenuReport;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
 

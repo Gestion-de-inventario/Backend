@@ -1,7 +1,7 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Beneficiary;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public interface BeneficiaryRepositoryPort {
 
     Optional<Beneficiary> findById(Integer id);
 
-    List<Beneficiary> getBeneficiarioByStatus(Estado estado);
+    List<Beneficiary> getBeneficiarioByStatus(Status status);
 
     Beneficiary activar(Integer id);
 

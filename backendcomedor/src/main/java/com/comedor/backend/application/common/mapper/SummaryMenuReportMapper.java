@@ -1,7 +1,7 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.MenuReport;
-import com.comedor.backend.domain.model.enums.MetodoPago;
+import com.comedor.backend.domain.model.enums.PaymentMethod;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class SummaryMenuReportMapper {
     public ResumenReporteMenuResponseDTO toDto(
             MenuReport reporte,
             int beneficiariosCount,
-            MetodoPago metodoMasUsado
+            PaymentMethod metodoMasUsado
     ) {
 
         ResumenReporteMenuResponseDTO dto =
