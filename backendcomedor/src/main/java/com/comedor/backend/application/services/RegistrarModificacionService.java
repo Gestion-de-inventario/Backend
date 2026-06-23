@@ -7,6 +7,7 @@ import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
 import com.comedor.backend.domain.model.Modifications;
 import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class RegistrarModificacionService implements RegistrarModificacionUseCas
         mod.setEditedAttribute(modificationsRequestDTO.getEditedAttribute());
         mod.setPreviousValue(modificationsRequestDTO.getPreviousValue());
         mod.setNewValue(modificationsRequestDTO.getNewValue());
-        mod.setDateTime(LocalDateTime.now());
+        mod.setDateTime(PeruTime.now());
 
         modificationsRepositoryPort.registrar(mod);
     }

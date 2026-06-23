@@ -23,12 +23,8 @@ public class StockMovementEntity {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_detail_id", nullable = false)
-    private PurchaseDetailEntity purchaseDetail;
+    @JoinColumn(name = "inventory_lot_id", nullable = false)
+    private InventoryLotEntity inventoryLot;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_report_id", nullable = false)

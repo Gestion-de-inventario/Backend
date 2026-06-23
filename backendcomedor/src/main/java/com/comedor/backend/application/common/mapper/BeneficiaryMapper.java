@@ -1,6 +1,7 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Beneficiary;
+import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.domain.model.PersonalDataReniec;
 import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
@@ -15,13 +16,19 @@ import java.util.List;
 public class BeneficiaryMapper {
 
     public Beneficiary convertToDomain(BeneficiarioRequestDTO requestDTO) {
-       return new Beneficiary(
-               0,
-               requestDTO.getDni(),
-               requestDTO.getName(),
-               requestDTO.getLastname(),
-               Estado.ACTIVO
+        BeneficiaryType type = new BeneficiaryType();
+        type.setId(requestDTO.getBeneficiaryTypeId());
+        Beneficiary domain = new  Beneficiary(
+                0,
+                requestDTO.getDni(),
+                requestDTO.getName(),
+                requestDTO.getLastname(),
+                Estado.ACTIVO,
+                type
+
        );
+
+        return domain;
     }
 
     public BeneficiarioResponseDTO convertToDTO(Beneficiary beneficiary) {
@@ -32,6 +39,9 @@ public class BeneficiaryMapper {
         beneficiarioResponseDTO.setName(beneficiary.getName());
         beneficiarioResponseDTO.setLastname(beneficiary.getLastname());
         beneficiarioResponseDTO.setStatus(beneficiary.getStatus());
+        beneficiarioResponseDTO.setBeneficiaryType(beneficiary.getBeneficiaryType().getName());
+        beneficiarioResponseDTO.setBeneficiaryTypeId(beneficiary.getBeneficiaryType().getId());
+        beneficiarioResponseDTO.setMenu_cost(beneficiary.getBeneficiaryType().getMenu_cost());
         return beneficiarioResponseDTO;
     }
 
@@ -48,14 +58,4 @@ public class BeneficiaryMapper {
                 personalDataReniec.getLastnames()
         );
     }
-
-    public Beneficiary convertToDomainUpdate(EditarBeneficiarioRequestDTO editarBeneficiarioRequest, int id) {
-        return new Beneficiary(
-                id,
-                editarBeneficiarioRequest.getDni(),
-                editarBeneficiarioRequest.getName(),
-                editarBeneficiarioRequest.getLastname(),
-                editarBeneficiarioRequest.getStatus());
-    }
-
 }

@@ -2,6 +2,7 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,6 @@ public class BeneficiaryControlMapper {
         Beneficiary beneficiary = new Beneficiary();
 
         beneficiary.setId(dto.getBeneficiarioId());
-
         control.setBeneficiario(beneficiary);
 
         if (dto.getPago() != null) {
@@ -48,6 +48,8 @@ public class BeneficiaryControlMapper {
 
         RegistroBeneficiarioResponseDTO dto =
                 new RegistroBeneficiarioResponseDTO();
+
+        dto.setId(control.getId());
 
         dto.setName(
                 control.getBeneficiario().getName()

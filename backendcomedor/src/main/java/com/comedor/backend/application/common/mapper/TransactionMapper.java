@@ -15,7 +15,9 @@ public class TransactionMapper {
     public Transactions toDomain(TransaccionRequestDTO dto) {
         Transactions transaccion = new Transactions();
         transaccion.setType(dto.getType());
+        transaccion.setSource(dto.getSource());
         transaccion.setAmount(dto.getAmount());
+        transaccion.setDateTime(dto.getDateTime());
 
         Product product = new Product();
         product.setId(dto.getProductId());
@@ -33,6 +35,7 @@ public class TransactionMapper {
         dto.setId(transaccion.getId());
         dto.setDateTime(transaccion.getDateTime());
         dto.setType(transaccion.getType());
+        dto.setSource(transaccion.getSource());
         dto.setAmount(transaccion.getAmount());
         dto.setCurrentStock(transaccion.getCurrentStock());
         dto.setFinalStock(transaccion.getFinalStock());

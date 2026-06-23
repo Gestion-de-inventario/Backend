@@ -1,10 +1,12 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository;
 
+import com.comedor.backend.domain.model.enums.Estado;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.DishMenuEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DishMenuJpaRepository extends JpaRepository<DishMenuEntity, Integer> {
@@ -13,4 +15,8 @@ public interface DishMenuJpaRepository extends JpaRepository<DishMenuEntity, Int
             "JOIN FETCH s.product p " +
             "WHERE dm.id = :id")
     Optional<DishMenuEntity> findByIdWithSupplies(@Param("id") Integer id);
+
+    List<DishMenuEntity> findByStatus(Estado status);
+    boolean existsByNameIgnoreCase(String name);
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Integer id);
 }

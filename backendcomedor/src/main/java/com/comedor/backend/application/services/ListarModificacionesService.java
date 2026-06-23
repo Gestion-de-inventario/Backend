@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ListarModificacionesService implements ListarModificacionesUseCase {
@@ -22,15 +23,16 @@ public class ListarModificacionesService implements ListarModificacionesUseCase 
     }
 
     @Override
-    public Page<ModificationsResponseDTO> list(int page, int size) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("id").descending()
-        );
+    public Page<ModificationsResponseDTO> list(int page, int size, LocalDate fechaInicio, LocalDate fechaFin) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-        return modificationsRepositoryPort
-                .list(pageable)
-                .map(modificationsMapper::toResponseDTO);
+        if (fechaInicio != null || fechaFin != null) {
+            return modificationsRepositoryPort.listByPeriod(
+                    fechaInicio != null ? fechaInicio.toString() : null,
+                    fechaFin != null ? fechaFin.toString() : null,
+                    pageable
+            ).map(modificationsMapper::toResponseDTO);
+        }
+        return modificationsRepositoryPort.list(pageable).map(modificationsMapper::toResponseDTO);
     }
 }

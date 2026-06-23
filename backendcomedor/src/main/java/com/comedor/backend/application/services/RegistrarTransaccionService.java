@@ -5,9 +5,11 @@ import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +29,9 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
     public TransaccionResponseDTO registrarTransaccion(TransaccionRequestDTO transaccionRequestDTO) {
         Transactions transaccion = mapper.toDomain(transaccionRequestDTO);
         System.out.println(transaccion.toString());
-        transaccion.setDateTime(LocalDateTime.now());
+        transaccion.setDateTime(transaccionRequestDTO.getDateTime());
         transaccion.setCurrentStock(productRepository.getProductoById(transaccionRequestDTO.getProductId()).getStock());
+
         TipoMovimiento type = transaccion.getType();
         if (type==TipoMovimiento.ENTRADA)
         {
@@ -37,7 +40,6 @@ public class RegistrarTransaccionService implements RegistrarTransaccionUseCase 
         {
             transaccion.setFinalStock(transaccion.getCurrentStock().subtract(transaccion.getAmount()));
         }
-        System.out.println(transaccion.toString());
         return mapper.toDTO(repository.createTransaccion(transaccion));
     }
 }

@@ -138,4 +138,24 @@ public class MenuReport {
     public void setStatus(EstadoReporteMenu status) {
         this.status = status;
     }
+    public void removeBeneficiaryControl(int controlId) {
+        this.beneficiaryControls.removeIf(c -> c.getId() == controlId);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuReport{" +
+                "id=" + id +
+                ", date=" + date +
+                ", cooks=" + cooks +
+                ", dishMenu=" + dishMenu +
+                ", quantityPrepared=" + quantityPrepared +
+                ", quantityRemaining=" + quantityRemaining +
+                ", stockMovements=" + stockMovements +
+                ", beneficiaryControls=" + beneficiaryControls +
+                ", totalEarned=" + totalEarned +
+                ", totalSpent=" + totalSpent +
+                ", status=" + status +
+                '}';
+    }
 }

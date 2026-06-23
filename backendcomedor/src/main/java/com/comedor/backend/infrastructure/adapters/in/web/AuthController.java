@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
@@ -53,7 +54,6 @@ public class AuthController {
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
         return ResponseEntity.ok(authResponse);
     }
 

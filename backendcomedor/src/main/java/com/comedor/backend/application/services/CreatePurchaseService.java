@@ -4,6 +4,7 @@ import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.CreatePurchaseUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
+import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
@@ -11,6 +12,7 @@ import com.comedor.backend.domain.model.enums.EstadoOrden;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseDetailRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreatePurchaseRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -50,17 +52,8 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
                     item.getQuantity()
                             .multiply(item.getUnitPrice());
 
-            PurchaseDetail detail = new PurchaseDetail();
-
-            detail.setProduct(product);
-
-            detail.setQuantity(item.getQuantity());
-
-            detail.setRemainingQuantity(item.getQuantity());
-
-            detail.setUnitPrice(item.getUnitPrice());
-
-            detail.setSubTotal(subtotal);
+            PurchaseDetail detail = createPurchaseDetail(
+                    product, item, subtotal);
 
             details.add(detail);
 
@@ -69,7 +62,13 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
 
         Purchase purchase = new Purchase();
 
-        purchase.setPurchaseDate(LocalDate.now());
+        //CUEVA refactor fecha
+        //purchase.setPurchaseDate(PeruTime.today());
+        if(request.getDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+        purchase.setPurchaseDate(request.getDate());
 
         purchase.setStatus(EstadoOrden.PENDIENTE);
 
@@ -83,5 +82,17 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
                 purchaseRepository.save(purchase);
 
         return purchaseMapper.toResponse(savedPurchase);
+    }
+
+    public PurchaseDetail createPurchaseDetail(Product product, CreatePurchaseDetailRequestDTO item, BigDecimal subtotal) {
+        PurchaseDetail detail = new PurchaseDetail();
+        detail.setProduct(product);
+
+        detail.setQuantity(item.getQuantity());
+
+        detail.setUnitPrice(item.getUnitPrice());
+
+        detail.setSubTotal(subtotal);
+        return detail;
     }
 }

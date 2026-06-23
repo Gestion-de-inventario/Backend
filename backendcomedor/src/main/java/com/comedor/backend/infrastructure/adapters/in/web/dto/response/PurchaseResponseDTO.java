@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 @Data
 public class PurchaseResponseDTO {
-
     private Integer id;
 
     private LocalDate purchaseDate;
@@ -17,5 +16,4 @@ public class PurchaseResponseDTO {
     private BigDecimal totalSpent;
 
     private List<PurchaseDetailResponseDTO> details;
-
 }

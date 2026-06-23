@@ -26,6 +26,13 @@ public class BeneficiaryEntity {
     @Column(nullable = false, length = 80) // 40 paterno + 40 materno
     private String lastname;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "beneficiary_type_id",
+            nullable = false
+    )
+    private BeneficiaryTypeEntity beneficiaryType;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Estado status = Estado.ACTIVO;

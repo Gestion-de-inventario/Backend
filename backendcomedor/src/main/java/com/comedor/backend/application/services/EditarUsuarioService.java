@@ -6,36 +6,36 @@ import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.domain.exceptions.RoleInactiveException;
 import com.comedor.backend.domain.exceptions.UsuarioExistenteException;
 import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.Role;
 import com.comedor.backend.domain.model.User;
+import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarUsuarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class EditarUsuarioService implements EditarUsuarioUseCase {
 
     private final UserMapper userMapper;
     private final UserRepositoryPort userRepositoryPort;
     private final PersonRepositoryPort personRepositoryPort;
-    private final PasswordEncoder passwordEncoder;
     private final RegistrarModificacionUseCase registrarModificacionUseCase;
     private final RoleRepositoryPort roleRepositoryPort;
 
-    public EditarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, PasswordEncoder passwordEncoder, RegistrarModificacionUseCase registrarModificacionUseCase, RoleRepositoryPort roleRepositoryPort) {
+    public EditarUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, RoleRepositoryPort roleRepositoryPort) {
         this.userMapper = userMapper;
         this.userRepositoryPort = userRepositoryPort;
         this.personRepositoryPort = personRepositoryPort;
-        this.passwordEncoder = passwordEncoder;
         this.registrarModificacionUseCase = registrarModificacionUseCase;
         this.roleRepositoryPort = roleRepositoryPort;
     }
 
     @Override
-    public UsuarioResponseDTO EditarUsuario(Integer id, UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO EditarUsuario(Integer id, EditarUsuarioRequestDTO dto) {
 
         User user = userRepositoryPort.findById(id)
                 .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
@@ -45,7 +45,7 @@ public class EditarUsuarioService implements EditarUsuarioUseCase {
         String newName = dto.getName() != null ? dto.getName() : person.getName();
         String newLastName = dto.getLastname() != null ? dto.getLastname() : person.getLastname();
         String newDni = dto.getDni() != null ? dto.getDni() : person.getDni();
-        int newRoleId= dto.getRole_id() != null ? dto.getRole_id() : user.getRol().getId();
+        int newRoleId = dto.getRole_id() != null ? dto.getRole_id() : user.getRol().getId();
 
         boolean existsFullName = personRepositoryPort
                 .existsByNameAndLastNameAndIdNot(newName.toUpperCase(), newLastName.toUpperCase(), person.getId());
@@ -77,32 +77,23 @@ public class EditarUsuarioService implements EditarUsuarioUseCase {
                     "Usuario", "dni", person.getDni(), newDni
             ));
         }
+
         Role newRole = roleRepositoryPort.findById(newRoleId)
                 .orElseThrow(() -> new RuntimeException("Rol no existe"));
-
-        if(newRoleId != user.getRol().getId())
+        if(newRole.getStatus().equals(Estado.INACTIVO))
         {
+            throw new RoleInactiveException("No se puede asignar un rol inactivo");
+        }
+        if(newRoleId != user.getRol().getId()) {
             registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
                     "Usuario","role",user.getRol().getName(),newRole.getName()));
         }
-
-        if (dto.getPassword() != null) {
-            registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario", "password", "******", "******"
-            ));
-        }
-
 
         person.setName(newName.toUpperCase());
         person.setLastname(newLastName.toUpperCase());
         person.setDni(newDni);
         user.setRole(newRole);
         user.setUsername(newDni);
-
-        if (dto.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        }
-
         user.setPersona(person);
 
         User updated = userRepositoryPort.update(user);

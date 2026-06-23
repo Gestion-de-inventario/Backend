@@ -31,12 +31,13 @@ public class PurchaseDetailEntity {
     private BigDecimal quantity = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal remainingQuantity = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subTotal = BigDecimal.ZERO;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_lot_id")
+    private InventoryLotEntity inventoryLot;
 
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 @Data
 public class RegistroBeneficiarioResponseDTO {
+    private int id;
     private String name;
     private String lastName;
     private int cantidad;

@@ -13,6 +13,13 @@ public enum PermissionCode {
     BENEFICIARY_CHANGE_STATUS,
 
     // =========================
+    // BENEFICIARY_TYPE
+    // =========================
+    BENEFICIARY_TYPE_CREATE,
+    BENEFICIARY_TYPE_EDIT,
+    BENEFICIARY_TYPE_CHANGE_STATUS,
+    BENEFICIARY_TYPE_LIST_BY_STATUS,
+    // =========================
     // CATEGORY
     // =========================
     CATEGORY_LIST_BY_STATUS,
@@ -25,12 +32,14 @@ public enum PermissionCode {
     MENU_REPORT_CREATE_REPORT,
     MENU_REPORT_GET_BY_DATE,
     MENU_REPORT_ADD_PRODUCT,
-    MENU_REPORT_EDIT_PRODUCT,
+    MENU_REPORT_EDIT,
     MENU_REPORT_REMOVE_PRODUCT,
     MENU_REPORT_ADD_BENEFICIARY,
     MENU_REPORT_EDIT_BENEFICIARY,
     MENU_REPORT_REMOVE_BENEFICIARY,
     MENU_REPORT_GET_SUMMARY,
+    MENU_REPORT_EXPORT,
+    MENU_REPORT_LIST_ALL,
 
     // =========================
     // PRODUCT
@@ -84,13 +93,31 @@ public enum PermissionCode {
     PERMISSION_LIST_ALL,
 
     // =========================
+    // ORDER
+    // =========================
+    CREATE_ORDER_IN,
+    ORDER_IN_LIST_ALL,
+    // =========================
     // PURCHASE
     // =========================
-    PURCHASE_CREATE,
+    PURCHASE_LIST_ALL,
+    PURCHASE_CHANGE_STATUS,
+    // =========================
+    // DONATION
+    // =========================
+    DONATION_LIST_ALL,
+    DONATION_CHANGE_STATUS,
 
     // =========================
     // DISH_MENU
     // =========================
-    DISH_MENU_LIST_ALL
+    DISH_MENU_LIST_ALL,
+    DISH_MENU_CREATE,
+    DISH_MENU_EDIT,
+    DISH_MENU_CHANGE_STATUS,
 
+    // =========================
+    // REPORTS
+    // =========================
+    DASHBOARD_VIEW
 }

@@ -23,7 +23,6 @@ public class PurchaseDetailEntityMapper {
                 purchaseMapper.toDomain(entity.getPurchase()),
                 productMapper.toDomain(entity.getProduct()),
                 entity.getQuantity(),
-                entity.getRemainingQuantity(),
                 entity.getUnitPrice(),
                 entity.getSubTotal()
         );
@@ -37,7 +36,6 @@ public class PurchaseDetailEntityMapper {
         entity.setPurchase(purchaseMapper.toEntity(domain.getPurchase()));
         entity.setProduct(productMapper.toEntity(domain.getProduct()));
         entity.setQuantity(domain.getQuantity());
-        entity.setRemainingQuantity(domain.getRemainingQuantity());
         entity.setUnitPrice(domain.getUnitPrice());
         entity.setSubTotal(domain.getSubTotal());
 

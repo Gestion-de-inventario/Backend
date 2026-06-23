@@ -55,6 +55,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         entity.setStatus(user.getStatus());
         entity.setRole(roleEntityMapper.toEntity(user.getRol()));
 
+        entity.setPasswordChanged(user.isPasswordChanged());
 
         if (user.getPersona() != null) {
 
@@ -96,5 +97,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no existe"));
         user.setStatus(Estado.ACTIVO);
         return userEntityMapper.toDomain(userJpaRepository.save(user));
+    }
+
+    @Override
+    public boolean RoleIsAssignedToUser(int id) {
+        return userJpaRepository.existsByRoleIdAndStatus(id, Estado.ACTIVO);
     }
 }

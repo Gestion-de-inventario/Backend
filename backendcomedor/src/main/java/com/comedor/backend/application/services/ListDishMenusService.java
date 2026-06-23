@@ -29,7 +29,7 @@ public class ListDishMenusService
         return repository
                 .findAll()
                 .stream()
-                .map(mapper::toResponse)
+                .map(mapper::toDto)
                 .toList();
     }
 }

@@ -4,7 +4,9 @@ import com.comedor.backend.application.common.mapper.BeneficiaryControlMapper;
 import com.comedor.backend.application.ports.in.EditarRegistroBeneficiarioUseCase;
 import com.comedor.backend.application.ports.in.RecalcularResumenReporteUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class EditarRegistroBeneficiarioService implements EditarRegistroBeneficiarioUseCase {
     private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
     private final BeneficiaryControlMapper beneficiaryControlMapper;
-    private final RecalcularResumenReporteUseCase
-            recalcularResumenReporteUseCase;
-    public EditarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase) {
+    private final RecalcularResumenReporteUseCase recalcularResumenReporteUseCase;
+    private final MenuReportRepositoryPort menuReportRepositoryPort;
+    public EditarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalcularResumenReporteUseCase recalcularResumenReporteUseCase, MenuReportRepositoryPort menuReportRepositoryPort) {
         this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
         this.beneficiaryControlMapper = beneficiaryControlMapper;
         this.recalcularResumenReporteUseCase = recalcularResumenReporteUseCase;
+        this.menuReportRepositoryPort = menuReportRepositoryPort;
     }
 
     @Override
@@ -27,6 +30,8 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
         BeneficiaryControl actual =
                 beneficiaryControlRepositoryPort
                         .findById(controlId);
+
+        System.out.println("Beneficiario control encontrado"+actual.toString());
 
 
         if(dto.getPago() != null)
@@ -44,9 +49,38 @@ public class EditarRegistroBeneficiarioService implements EditarRegistroBenefici
             actual.setPayMethod(dto.getPayMethod());
         }
 
-        if(dto.getMenusAmount() != null)
-        {
-            actual.setMenusAmount(dto.getMenusAmount());
+        if (dto.getMenusAmount() != null) {
+
+            int oldAmount = actual.getMenusAmount();
+            int newAmount = dto.getMenusAmount();
+
+            int difference = newAmount - oldAmount;
+
+            MenuReport report =
+                    menuReportRepositoryPort.findById(reporteId);
+
+            if (difference > 0) {
+
+                if (report.getQuantityRemaining() < difference) {
+                    throw new RuntimeException(
+                            "Solo quedan " + report.getQuantityRemaining()
+                                    + " menus disponibles"
+                    );
+                }
+
+                report.setQuantityRemaining(
+                        report.getQuantityRemaining() - difference
+                );
+            }
+
+            if (difference < 0) {
+                report.setQuantityRemaining(
+                        report.getQuantityRemaining() + Math.abs(difference)
+                );
+            }
+
+            actual.setMenusAmount(newAmount);
+            menuReportRepositoryPort.update(report);
         }
 
         if(dto.getMenuPrice() != null)

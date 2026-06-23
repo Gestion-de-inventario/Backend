@@ -12,4 +12,5 @@ public class AuthResponseDTO {
     private String lastname;
     private String role;
     private List<String> permissions;
+    private boolean passwordChanged;
 }

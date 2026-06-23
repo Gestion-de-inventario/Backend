@@ -1,5 +1,6 @@
 package com.comedor.backend.domain.model;
 
+import com.comedor.backend.domain.model.enums.FuenteTransaccion;
 import com.comedor.backend.domain.model.enums.TipoMovimiento;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ public class Transactions {
     private User user;
     private LocalDateTime dateTime;
     private TipoMovimiento type;
+    private FuenteTransaccion source;
     private BigDecimal amount;
     private BigDecimal currentStock;
     private BigDecimal finalStock;
@@ -21,6 +23,10 @@ public class Transactions {
 
     public void setCurrentStock(BigDecimal currentStock) {
         this.currentStock = currentStock;
+    }
+
+    public void setSource(FuenteTransaccion source) {
+        this.source = source;
     }
 
     public void setFinalStock(BigDecimal finalStock) {
@@ -65,6 +71,10 @@ public class Transactions {
 
     public TipoMovimiento getType() {
         return type;
+    }
+
+    public FuenteTransaccion getSource() {
+        return source;
     }
 
     public BigDecimal getAmount() {

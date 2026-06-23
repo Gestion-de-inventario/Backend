@@ -39,60 +39,8 @@ public class AgregarRegistroProductoService implements AgregarRegistroProductoUs
     public RegistroProductoResponseDTO agregarRegistroProducto( int reporteId, RegistroProductoRequestDTO dto)
         {
 
-            validarDatos(dto);
-
-            Record recordDomain =
-                    productRecordMapper.toDomain(dto);
-
-            System.out.println("Record en el service : "+recordDomain.toString());
-
-            Record recordCreated =
-                    productRecordRepositoryPort
-                            .agregarRegistroProducto(
-                                    reporteId,
-                                    recordDomain
-                            );
-
-            Integer usuarioId = currentUserService.getCurrentUser().getId();
-
-            if (recordCreated.getProductSource() == FuenteProducto.COMPRA) {
-
-                registrarMovimiento(
-                        usuarioId,
-                        dto.getProductoId(),
-                        dto.getAmount(),
-                        TipoMovimiento.ENTRADA
-                );
-
-                actualizarStockUseCase.actualizarStock(
-                        dto.getProductoId(),
-                        dto.getAmount(),
-                        TipoMovimiento.ENTRADA
-                );
-            }else {
-
-                revisarStockUseCase.validarStockDisponible(
-                        dto.getProductoId(),
-                        dto.getAmount()
-                );
-            }
-
-            registrarMovimiento(
-                    usuarioId,
-                    dto.getProductoId(),
-                    dto.getAmount(),
-                    TipoMovimiento.SALIDA
-            );
-
-            actualizarStockUseCase.actualizarStock(
-                    dto.getProductoId(),
-                    dto.getAmount(),
-                    TipoMovimiento.SALIDA
-            );
-
-            recalcularResumenReporteUseCase.recalcular(reporteId);
-
-            return productRecordMapper.toDto(recordCreated);
+            //DEPRECADO
+            return new RegistroProductoResponseDTO();
     }
 
     private void registrarMovimiento(

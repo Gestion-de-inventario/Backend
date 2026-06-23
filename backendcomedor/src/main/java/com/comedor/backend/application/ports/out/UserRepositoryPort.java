@@ -22,4 +22,6 @@ public interface UserRepositoryPort {
     User deactivateById(Integer id);
 
     User activateById(Integer id);
+
+    boolean RoleIsAssignedToUser(int id);
 }

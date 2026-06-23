@@ -1,13 +1,17 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.*;
-import com.comedor.backend.application.services.CrearReporteMenuService;
+import com.comedor.backend.application.services.GetMenuReporByIdService;
+import com.comedor.backend.application.services.ListMenuReportService;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.RegistroProductoRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditMenuReportRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +27,12 @@ public class MenuRecordController {
     private final AgregarRegistroBeneficiarioUseCase agregarRegistroBeneficiarioUseCase;
     private final EliminarRegistroBeneficiarioUseCase eliminarRegistroBeneficiarioUseCase;
     private final EditarRegistroBeneficiarioUseCase editarRegistroBeneficiarioUseCase;
-    private final ObtenerReporteMenuPorFechaUseCase obtenerReporteMenuPorFechaUseCase;
-    private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
+    private final EditMenuReportUseCase editMenuReportUseCase;
+    private final ListMenuReportDetailUseCase listMenuReportDetailUseCase;
+    private final ListMenuReportUseCase listMenuReportUseCase;
+    private final GetMenuReportByIdUseCase getMenuReportByIdUseCase;
+    private final ExportarReportePDFUseCase exportarReportePDFUseCase;
+    private final ExportarReporteExcelUseCase exportarReporteExcelUseCase;
 
     @PreAuthorize("hasAuthority('MENU_REPORT_CREATE_REPORT')")
     @PostMapping("/create")
@@ -33,11 +41,54 @@ public class MenuRecordController {
     }
 
     @PreAuthorize("hasAuthority('MENU_REPORT_GET_BY_DATE')")
-    @GetMapping("/date/{fecha}")
-    public DetalleReporteMenuResponseDTO obtenerPorFecha(
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
-        return obtenerReporteMenuPorFechaUseCase.obtenerPorFecha(fecha);
+    @GetMapping("/detail/list")
+    public ListMenuReportDetailResponseDTO obtenerPorFecha(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
+        return listMenuReportDetailUseCase.list(startDate, endDate);
     }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_LIST_ALL')")
+    @GetMapping("/list")
+    public Page<ReporteMenuResponseDTO> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate
+    ) {
+        return listMenuReportUseCase.list(
+                page,
+                size,
+                startDate,
+                endDate
+        );
+    }
+    @PreAuthorize("hasAuthority('MENU_REPORT_LIST_ALL')")
+    @GetMapping("/{id}")
+    public ReporteMenuResponseDTO getById( @PathVariable int id)
+    {
+        return getMenuReportByIdUseCase.getMenuReportById(id);
+    }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EDIT')")
+    @PutMapping("/{id}/edit")
+    public ReporteMenuResponseDTO edit(
+            @PathVariable int id,
+            @RequestBody EditMenuReportRequestDTO request
+    ) {
+        return editMenuReportUseCase.editMenuReport(id, request);
+    }
+
+
+
 
     @PreAuthorize("hasAuthority('MENU_REPORT_ADD_BENEFICIARY')")
     @PostMapping("/{id}/beneficiaries")
@@ -65,9 +116,46 @@ public class MenuRecordController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAuthority('MENU_REPORT_GET_SUMMARY')")
-    @GetMapping("/{id}/summary")
-    public ResumenReporteMenuResponseDTO obtenerResumen(@PathVariable int id) {
-        return obtenerResumenReporteMenuUseCase.obtenerResumen(id);
+
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/{id}/export/pdf")
+    public ResponseEntity<byte[]> exportarPDF(@PathVariable int id) {
+        byte[] pdf = exportarReportePDFUseCase.exportar(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/export/pdf")
+    public ResponseEntity<byte[]> exportarRangoPDF(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate
+    ) {
+        byte[] pdf = exportarReportePDFUseCase.exportar(startDate, endDate);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=reporte-" + startDate + "-" + endDate + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/{id}/export/excel")
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable int id) {
+        byte[] excel = exportarReporteExcelUseCase.exportar(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + id + ".xlsx")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(excel);
     }
 }

@@ -8,5 +8,5 @@ public class EditarBeneficiarioRequestDTO {
     private String dni;
     private String name;
     private String lastname;
-    private Estado status;
+    private Integer beneficiaryTypeId;
 }

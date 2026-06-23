@@ -68,4 +68,17 @@ public class BeneficiaryControl {
     public BigDecimal getMenuPrice() {
         return menuPrice;
     }
+
+    @Override
+    public String toString() {
+        return "BeneficiaryControl{" +
+                "id=" + id +
+                ", beneficiary=" + beneficiary.toString() +
+                ", received=" + received +
+                ", paid=" + paid +
+                ", payMethod=" + payMethod +
+                ", menusAmount=" + menusAmount +
+                ", menuPrice=" + menuPrice +
+                '}';
+    }
 }

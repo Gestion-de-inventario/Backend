@@ -2,6 +2,7 @@ package com.comedor.backend.domain.model.enums;
 
 public enum ModuleCode {
     BENEFICIARY,
+    BENEFICIARY_TYPE,
     CATEGORY,
     MENU_RECORD,
     PRODUCT,
@@ -11,5 +12,9 @@ public enum ModuleCode {
     ROLE,
     PERMISSION,
     MODIFICATION,
-    DISH_MENU
+    DISH_MENU,
+    PURCHASE,
+    DONATION,
+    REPORTS,
+    ORDER
 }

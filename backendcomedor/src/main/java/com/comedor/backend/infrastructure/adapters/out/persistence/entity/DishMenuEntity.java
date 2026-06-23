@@ -22,7 +22,7 @@ public class DishMenuEntity {
     @Column(nullable = false)
     private Estado status = Estado.ACTIVO;
 
-    @OneToMany(mappedBy = "dishMenu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dishMenu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishSupplyEntity> supplies = new ArrayList<>();
 
     public DishMenuEntity() {
