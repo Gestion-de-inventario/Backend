@@ -1,12 +1,12 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.ActivarCategoriaUseCase;
-import com.comedor.backend.application.ports.in.CrearCategoriaUseCase;
-import com.comedor.backend.application.ports.in.DesactivarCategoriaUseCase;
-import com.comedor.backend.application.ports.in.ListarCategoriasPorEstadoUseCase;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoriaRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoriaResponseDTO;
+import com.comedor.backend.application.ports.in.ActivateCategoryUseCase;
+import com.comedor.backend.application.ports.in.CreateCategoryUseCase;
+import com.comedor.backend.application.ports.in.DeactivateCategoryUseCase;
+import com.comedor.backend.application.ports.in.ListCategoriesByStatusUseCase;
+import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoryRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,37 +17,37 @@ import java.util.List;
 @RequestMapping("/category")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final ListarCategoriasPorEstadoUseCase listarCategoriasPorEstadoUseCase;
-    private final CrearCategoriaUseCase crearCategoriaUseCase;
-    private final ActivarCategoriaUseCase activarCategoriaUseCase;
-    private final DesactivarCategoriaUseCase desactivarCategoriaUseCase;
+    private final ListCategoriesByStatusUseCase listCategoriesByStatusUseCase;
+    private final CreateCategoryUseCase createCategoryUseCase;
+    private final ActivateCategoryUseCase activateCategoryUseCase;
+    private final DeactivateCategoryUseCase deactivateCategoryUseCase;
 
     @PreAuthorize("hasAuthority('CATEGORY_LIST_BY_STATUS')")
     @GetMapping("/list")
-    public List<CategoriaResponseDTO> listarCategorias(@RequestParam(required = false) Estado estado)
+    public List<CategoryResponseDTO> listarCategorias(@RequestParam(required = false) Status status)
     {
-        return listarCategoriasPorEstadoUseCase.listarCategorias(estado);
+        return listCategoriesByStatusUseCase.listarCategorias(status);
     }
 
     @PreAuthorize("hasAuthority('CATEGORY_CREATE')")
     @PostMapping("/create")
-    public CategoriaResponseDTO crearCategoria(@RequestBody CategoriaRequestDTO categoriaRequestDTO)
+    public CategoryResponseDTO crearCategoria(@RequestBody CategoryRequestDTO categoryRequestDTO)
     {
-        return crearCategoriaUseCase.crearCategoria(categoriaRequestDTO);
+        return createCategoryUseCase.crearCategoria(categoryRequestDTO);
     }
 
     @PreAuthorize("hasAuthority('CATEGORY_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
-    public CategoriaResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
+    public CategoryResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Status status)
     {
 
-        if (estado == null) {
+        if (status == null) {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
 
-        return switch (estado) {
-            case ACTIVO -> activarCategoriaUseCase.activarCategoriaPorId(id);
-            case INACTIVO -> desactivarCategoriaUseCase.desactivarCategoriaPorId(id);
+        return switch (status) {
+            case ACTIVO -> activateCategoryUseCase.activarCategoriaPorId(id);
+            case INACTIVO -> deactivateCategoryUseCase.desactivarCategoriaPorId(id);
         };
     }
 

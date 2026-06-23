@@ -4,7 +4,7 @@ import com.comedor.backend.application.common.mapper.RoleMapper;
 import com.comedor.backend.application.ports.in.AssignPermissionsUseCase;
 import com.comedor.backend.application.ports.out.PermissionRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
-import com.comedor.backend.domain.exceptions.RolNoEncontradoException;
+import com.comedor.backend.domain.exceptions.RoleNotFoundException;
 import com.comedor.backend.domain.model.Permission;
 import com.comedor.backend.domain.model.Role;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.PermissionsAsigmentRequestDTO;
@@ -31,7 +31,7 @@ public class AssignPermissionesService implements AssignPermissionsUseCase {
 
         Role existingRole = roleRepository
                 .findById(id)
-                .orElseThrow(RolNoEncontradoException::new);
+                .orElseThrow(RoleNotFoundException::new);
 
         Set<Permission> finalPermissions;
 

@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class RoleEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Estado status;
+    private Status status;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

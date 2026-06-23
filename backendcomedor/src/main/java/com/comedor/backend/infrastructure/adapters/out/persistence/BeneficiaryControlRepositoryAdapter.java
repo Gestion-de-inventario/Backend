@@ -1,16 +1,14 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
-import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
-import com.comedor.backend.domain.exceptions.BeneficiarioYaRegistradoException;
-import com.comedor.backend.domain.exceptions.ControlBeneficiarioNoEncontradoException;
+import com.comedor.backend.domain.exceptions.BeneficiaryAlreadyRegisteredException;
+import com.comedor.backend.domain.exceptions.BeneficiaryControlNotFoundException;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryControlEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryControlEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.BeneficiaryTypeEntityMapper;
-import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.MenuReportEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryControlJpaRepository;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.BeneficiaryJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -46,7 +44,7 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
                         );
 
         if (exists) {
-            throw new BeneficiarioYaRegistradoException(
+            throw new BeneficiaryAlreadyRegisteredException(
                     "Este beneficiario ya fue registrado en el reporte"
             );
         }
@@ -84,7 +82,7 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
                 beneficiaryControlJpaRepository
                         .findById(controlId)
                         .orElseThrow(
-                                () -> new ControlBeneficiarioNoEncontradoException(
+                                () -> new BeneficiaryControlNotFoundException(
                                         "Control no encontrado"
                                 )
                         );
@@ -117,7 +115,7 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
     @Override
     public void eliminarBeneficiario(int reporteId,int controlId) {
         BeneficiaryControlEntity entity = beneficiaryControlJpaRepository.findById(controlId)
-                .orElseThrow(()-> new ControlBeneficiarioNoEncontradoException("Control no encontrado")) ;
+                .orElseThrow(()-> new BeneficiaryControlNotFoundException("Control no encontrado")) ;
 
         if(entity.getReport().getId() != reporteId)
         {
@@ -140,7 +138,7 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
                 beneficiaryControlJpaRepository
                         .findById(controlId)
                         .orElseThrow(
-                                () -> new ControlBeneficiarioNoEncontradoException(
+                                () -> new BeneficiaryControlNotFoundException(
                                         "Control no encontrado"
                                 )
                         )

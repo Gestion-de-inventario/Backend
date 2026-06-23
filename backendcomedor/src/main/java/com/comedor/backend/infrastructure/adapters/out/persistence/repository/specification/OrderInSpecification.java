@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.OrderInViewEntity;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -37,7 +37,7 @@ public class OrderInSpecification {
 
 
     public static Specification<OrderInViewEntity> hasSource(
-            FuenteProducto source
+            ProductSource source
     ) {
         return (root, query, cb) ->
                 cb.equal(
@@ -49,7 +49,7 @@ public class OrderInSpecification {
 
 
     public static Specification<OrderInViewEntity> hasStatus(
-            EstadoOrden status
+            StatusOrder status
     ) {
         return (root, query, cb) ->
                 cb.equal(

@@ -3,8 +3,8 @@ package com.comedor.backend.application.common.mapper;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Transactions;
 import com.comedor.backend.domain.model.User;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransaccionResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class TransactionMapper {
 
-    public Transactions toDomain(TransaccionRequestDTO dto) {
+    public Transactions toDomain(TransactionRequestDTO dto) {
         Transactions transaccion = new Transactions();
         transaccion.setType(dto.getType());
         transaccion.setSource(dto.getSource());
@@ -30,8 +30,8 @@ public class TransactionMapper {
         return transaccion;
     }
 
-    public TransaccionResponseDTO toDTO(Transactions transaccion) {
-        TransaccionResponseDTO dto = new TransaccionResponseDTO();
+    public TransactionResponseDTO toDTO(Transactions transaccion) {
+        TransactionResponseDTO dto = new TransactionResponseDTO();
         dto.setId(transaccion.getId());
         dto.setDateTime(transaccion.getDateTime());
         dto.setType(transaccion.getType());
@@ -49,7 +49,7 @@ public class TransactionMapper {
         return dto;
     }
 
-    public List<TransaccionResponseDTO> toListDto(List<Transactions> transacciones) {
+    public List<TransactionResponseDTO> toListDto(List<Transactions> transacciones) {
         return transacciones.stream().map(this::toDTO).toList();
     }
 }

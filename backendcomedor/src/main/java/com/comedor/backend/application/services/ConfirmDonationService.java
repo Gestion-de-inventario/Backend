@@ -2,16 +2,16 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.DonationMapper;
 import com.comedor.backend.application.ports.in.ConfirmDonationUseCase;
-import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
+import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.DonationRepositoryPort;
 import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.*;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DonationResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 
@@ -22,15 +22,15 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
     private final DonationRepositoryPort repository;
     private final DonationMapper mapper;
     private final ProductRepositoryPort productRepository;
-    private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
+    private final RegisterTransactionUseCase registerTransactionUseCase;
     private final CurrentUserService currentUserService;
     private final InventoryLotRepositoryPort inventoryLotRepository;
 
-    public ConfirmDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
+    public ConfirmDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.productRepository = productRepository;
-        this.registrarTransaccionUseCase = registrarTransaccionUseCase;
+        this.registerTransactionUseCase = registerTransactionUseCase;
         this.currentUserService = currentUserService;
         this.inventoryLotRepository = inventoryLotRepository;
     }
@@ -45,7 +45,7 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
             throw new DateException("Error al confirmar orden : No se puede marcar como recibido una orden de donacion futura");
         }
 
-        if (donation.getStatus() == EstadoOrden.RECIBIDO) {
+        if (donation.getStatus() == StatusOrder.RECIBIDO) {
             throw new RuntimeException(
                     "La orden ya fue confirmada"
             );
@@ -86,15 +86,15 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
                     usuarioId,
                     product.getId(),
                     detail.getQuantity(),
-                    TipoMovimiento.ENTRADA,
-                    FuenteTransaccion.DONACION,
+                    MovementType.ENTRADA,
+                    TransactionSource.DONACION,
                     PeruTime.now()
             );
 
             productRepository.updateStock(product);
 
         }
-        Donation updatedDonation = repository.changeStatus(donationId, EstadoOrden.RECIBIDO);
+        Donation updatedDonation = repository.changeStatus(donationId, StatusOrder.RECIBIDO);
 
         return mapper.toResponse(updatedDonation);
     }
@@ -104,11 +104,11 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
             Integer usuarioId,
             Integer productoId,
             BigDecimal amount,
-            TipoMovimiento tipo,
-            FuenteTransaccion source,
+            MovementType tipo,
+            TransactionSource source,
             LocalDateTime localDateTime
     ) {
-        TransaccionRequestDTO dto = new TransaccionRequestDTO();
+        TransactionRequestDTO dto = new TransactionRequestDTO();
 
         dto.setAmount(amount);
         dto.setProductId(productoId);
@@ -117,6 +117,6 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
         dto.setSource(source);
         dto.setDateTime(localDateTime);
 
-        registrarTransaccionUseCase.registrarTransaccion(dto);
+        registerTransactionUseCase.registrarTransaccion(dto);
     }
 }

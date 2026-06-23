@@ -1,12 +1,11 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.ChangeStatusBeneficiaryTypeUseCase;
 import com.comedor.backend.application.ports.in.CreateBeneficiaryTypeUseCase;
 import com.comedor.backend.application.ports.in.EditBeneficiaryTypeUseCase;
 import com.comedor.backend.application.ports.in.ListBeneficiariesTypesByStatusUseCase;
-import com.comedor.backend.domain.model.enums.CambioEstado;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.ChangeStatus;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryTypeRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
 import jakarta.validation.Valid;
@@ -40,7 +39,7 @@ public class BeneficiaryTypeController {
     @PreAuthorize("hasAuthority('BENEFICIARY_TYPE_LIST_BY_STATUS')")
     public ResponseEntity<List<BeneficiaryTypeResponseDTO>>
     listBeneficiariesTypesByStatus(
-            @RequestParam(required = false) Estado status) {
+            @RequestParam(required = false) Status status) {
 
         return ResponseEntity.ok(
                 listBeneficiariesTypesByStatusUseCase
@@ -52,7 +51,7 @@ public class BeneficiaryTypeController {
     @PreAuthorize("hasAuthority('BENEFICIARY_TYPE_CHANGE_STATUS')")
     public ResponseEntity<BeneficiaryTypeResponseDTO> changeStatus(
             @PathVariable Integer id,
-            @RequestParam() CambioEstado status) {
+            @RequestParam() ChangeStatus status) {
 
         return ResponseEntity.ok(
                 changeStatusBeneficiaryTypeUseCase.changeStatus(id, status)

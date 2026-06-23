@@ -1,9 +1,8 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Transactions;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -15,8 +14,8 @@ public interface TransactionRepositoryPort {
     Page<Transactions> showTransacciones(
             LocalDate startDate,
             LocalDate endDate,
-            TipoMovimiento type,
-            FuenteTransaccion source,
+            MovementType type,
+            TransactionSource source,
             String productName,
             Pageable pageable
 

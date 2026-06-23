@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface ProductJpaRepository extends JpaRepository<ProductEntity, Integer> {
     @Query("SELECT p FROM ProductEntity p " +
-            "WHERE p.status = com.comedor.backend.domain.model.enums.Estado.INACTIVO")
+            "WHERE p.status = com.comedor.backend.domain.model.enums.Status.INACTIVO")
     List<ProductEntity> getAllProductosInactivos();
     @Query("SELECT p FROM ProductEntity p " +
-            "WHERE p.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+            "WHERE p.status = com.comedor.backend.domain.model.enums.Status.ACTIVO")
     List<ProductEntity> getAllProductosActivos();
 
     boolean existsByName(String name);
@@ -20,6 +20,6 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Integ
 
     @Query("SELECT p FROM ProductEntity p " +
             "WHERE p.stock <= p.reorderPoint " +
-            "AND p.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+            "AND p.status = com.comedor.backend.domain.model.enums.Status.ACTIVO")
     List<ProductEntity> getProductosBajoStockMinimo();
 }

@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.math.BigDecimal;
 
@@ -10,7 +10,7 @@ public class Product {
     private Category category;
     private Tag tag;
     private String unit;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
     private BigDecimal stock;
     private BigDecimal reorderPoint;
 
@@ -34,7 +34,7 @@ public class Product {
         this.unit = unit != null ? unit.toUpperCase() : null;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -65,7 +65,7 @@ public class Product {
         return unit;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 

@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class Donation {
 
     LocalDate donationDate;
 
-    EstadoOrden status;
+    StatusOrder status;
 
     private List<DonationDetail> details = new ArrayList<>();
 
@@ -22,11 +22,11 @@ public class Donation {
         return id;
     }
 
-    public EstadoOrden getStatus() {
+    public StatusOrder getStatus() {
         return status;
     }
 
-    public void setStatus(EstadoOrden status) {
+    public void setStatus(StatusOrder status) {
         this.status = status;
     }
 

@@ -1,8 +1,8 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Category;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoriaRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoriaResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CategoryRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.CategoryResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,26 +11,26 @@ import java.util.List;
 @Component
 public class CategoryMapper {
 
-    public Category toDomain(CategoriaRequestDTO categoriaRequestDTO)
+    public Category toDomain(CategoryRequestDTO categoryRequestDTO)
     {
-        if(categoriaRequestDTO == null) return null;
+        if(categoryRequestDTO == null) return null;
         Category category = new Category();
-        category.setName(categoriaRequestDTO.getName());
+        category.setName(categoryRequestDTO.getName());
         return category;
     }
 
-    public CategoriaResponseDTO toCategoriaResponseDTO(Category category)
+    public CategoryResponseDTO toCategoriaResponseDTO(Category category)
     {
         if(category == null) return null;
-        CategoriaResponseDTO categoriaResponseDTO = new CategoriaResponseDTO();
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
 
-        categoriaResponseDTO.setId(category.getId());
-        categoriaResponseDTO.setName(category.getName());
-        categoriaResponseDTO.setStatus(category.getStatus());
-        return categoriaResponseDTO;
+        categoryResponseDTO.setId(category.getId());
+        categoryResponseDTO.setName(category.getName());
+        categoryResponseDTO.setStatus(category.getStatus());
+        return categoryResponseDTO;
     }
 
-    public List<CategoriaResponseDTO> toListCategoriaResponseDTO (List<Category> categories)
+    public List<CategoryResponseDTO> toListCategoriaResponseDTO (List<Category> categories)
     {
         if(categories == null) return null;
         return categories.stream().map(this::toCategoriaResponseDTO).toList();

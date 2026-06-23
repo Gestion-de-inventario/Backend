@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.in.web.exceptions;
 
-import com.comedor.backend.domain.exceptions.CredencialesInvalidasException;
-import com.comedor.backend.domain.exceptions.StockInsuficienteException;
-import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockInsuficienteResponseDTO;
+import com.comedor.backend.domain.exceptions.InvalidCredentialsException;
+import com.comedor.backend.domain.exceptions.InsufficientStockException;
+import com.comedor.backend.domain.exceptions.UserNotFoundException;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.InsufficientStockResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,21 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UsuarioNoEncontradoException.class)
-    public ResponseEntity<CustomErrorResponse> handleUserNotFound(UsuarioNoEncontradoException ex) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> handleUserNotFound(UserNotFoundException ex) {
         return ResponseEntity.status(404)
                 .body(new CustomErrorResponse(PeruTime.now(), ex.getMessage(), ""));
     }
 
-    @ExceptionHandler(CredencialesInvalidasException.class)
-    public ResponseEntity<CustomErrorResponse> handleBadCredentials(CredencialesInvalidasException ex) {
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<CustomErrorResponse> handleBadCredentials(InvalidCredentialsException ex) {
         return ResponseEntity.status(401)
                 .body(new CustomErrorResponse(PeruTime.now(), ex.getMessage(), ""));
     }
@@ -42,14 +41,14 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(StockInsuficienteException.class)
-    public ResponseEntity<StockInsuficienteResponseDTO> handleStockInsuficiente(
-            StockInsuficienteException ex
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<InsufficientStockResponseDTO> handleStockInsuficiente(
+            InsufficientStockException ex
     ) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(
-                        new StockInsuficienteResponseDTO(
+                        new InsufficientStockResponseDTO(
                                 ex.getFaltantes()
                         )
                 );

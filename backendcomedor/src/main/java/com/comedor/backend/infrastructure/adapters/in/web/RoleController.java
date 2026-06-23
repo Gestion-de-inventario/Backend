@@ -1,8 +1,8 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.*;
-import com.comedor.backend.domain.model.enums.CambioEstado;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.ChangeStatus;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.PermissionsAsigmentRequestDTO;
@@ -57,7 +57,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('ROLE_CHANGE_STATUS')")
     public ResponseEntity<RolResponseDTO> changeStatus(
             @PathVariable int id,
-            @RequestParam() CambioEstado status) {
+            @RequestParam() ChangeStatus status) {
 
         return ResponseEntity.ok(
                 roleChangeStatusUseCase.changeStatusById(id, status)
@@ -79,7 +79,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('ROLE_LIST_BY_STATUS')")
     public ResponseEntity<List<RolResponseDTO>>
     listRolesByStatus(
-            @RequestParam(required = false)  Estado status) {
+            @RequestParam(required = false) Status status) {
 
         return ResponseEntity.ok(
                 listRoleByStatusUseCase

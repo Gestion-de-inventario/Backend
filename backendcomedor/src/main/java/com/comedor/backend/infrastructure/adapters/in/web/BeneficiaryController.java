@@ -2,15 +2,14 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.common.mapper.BeneficiaryMapper;
 import com.comedor.backend.application.ports.in.*;
-import com.comedor.backend.domain.exceptions.BeneficiarioNoEncontradoException;
-import com.comedor.backend.domain.exceptions.DniYaRegistradoException;
+import com.comedor.backend.domain.exceptions.BeneficiaryNotFoundException;
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.PersonalDataReniec;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DatosPersonalesResponseDTO;
+import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditBeneficiaryRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PersonalDataResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,39 +28,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BeneficiaryController {
 
-    private final RegistrarBeneficiarioUseCase registrarBeneficiarioUseCase;
+    private final RegisterBeneficiaryUseCase registerBeneficiaryUseCase;
     private final BeneficiaryMapper beneficiaryMapper;
 
-    private final ConsultarDatosPorDniUseCase consultarDatosPorDniUseCase;
-    private final ConsultarYRegistrarReniecUseCase consultarYRegistrarReniecUseCase;
+    private final GetDataByDniUseCase getDataByDniUseCase;
+    private final GetAndRegisterByReniecUseCase getAndRegisterByReniecUseCase;
 
-    private final EditarBeneficiarioUseCase editarBeneficiarioUseCase;
-    private final ListarBeneficiariosPorEstadoUseCase listarBeneficiariosPorEstadoUseCase;
+    private final EditBeneficiaryUseCase editBeneficiaryUseCase;
+    private final ListBeneficiariesByStatusUseCase listBeneficiariesByStatusUseCase;
 
-    private final ActivarBeneficiarioUseCase activarBeneficiarioUseCase;
-    private final DesactivarBeneficiarioUseCase desactivarBeneficiarioUseCase;
+    private final ActivateBeneficiaryUseCase activateBeneficiaryUseCase;
+    private final DeactivateBeneficiaryUseCase deactivateBeneficiaryUseCase;
 
     @PreAuthorize("hasAuthority('BENEFICIARY_CREATE')")
     @PostMapping("/create")
-    public ResponseEntity<BeneficiarioResponseDTO> registrar(@Valid @RequestBody BeneficiarioRequestDTO beneficiarioRequestDTO) {
+    public ResponseEntity<BeneficiaryResponseDTO> registrar(@Valid @RequestBody BeneficiaryRequestDTO beneficiaryRequestDTO) {
 
 
-        Beneficiary beneficiaryRegistered = registrarBeneficiarioUseCase.registrarBeneficiario(beneficiarioRequestDTO);
+        Beneficiary beneficiaryRegistered = registerBeneficiaryUseCase.registrarBeneficiario(beneficiaryRequestDTO);
 
-        BeneficiarioResponseDTO beneficiarioResponseDTO = beneficiaryMapper.convertToDTO(beneficiaryRegistered);
+        BeneficiaryResponseDTO beneficiaryResponseDTO = beneficiaryMapper.convertToDTO(beneficiaryRegistered);
 
-        return new ResponseEntity<>(beneficiarioResponseDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(beneficiaryResponseDTO, HttpStatus.CREATED);
 
     }
     @PreAuthorize("hasAuthority('BENEFICIARY_SEARCH_BY_DNI')")
     @GetMapping("/reniec/{dni}")
     public ResponseEntity<?> consultaPorDni(@PathVariable String dni) {
         try {
-            PersonalDataReniec personalDataReniec = consultarDatosPorDniUseCase.consultar(dni);
+            PersonalDataReniec personalDataReniec = getDataByDniUseCase.consultar(dni);
 
-            DatosPersonalesResponseDTO datosPersonalesResponseDTO = beneficiaryMapper.convertDatosPersonalesToDTO(personalDataReniec);
+            PersonalDataResponseDTO personalDataResponseDTO = beneficiaryMapper.convertDatosPersonalesToDTO(personalDataReniec);
 
-            return ResponseEntity.ok(datosPersonalesResponseDTO);
+            return ResponseEntity.ok(personalDataResponseDTO);
 
         } catch (IllegalArgumentException e) {
 
@@ -76,9 +75,9 @@ public class BeneficiaryController {
     @GetMapping("/{dni}")
     public ResponseEntity<?> searchBeneficiary(@PathVariable String dni) {
         try {
-            Beneficiary beneficiary = consultarDatosPorDniUseCase.consultarBeneficiary(dni);
+            Beneficiary beneficiary = getDataByDniUseCase.consultarBeneficiary(dni);
 
-            BeneficiarioResponseDTO beneficiaryResponseDTO = beneficiaryMapper.convertToDTO(beneficiary);
+            BeneficiaryResponseDTO beneficiaryResponseDTO = beneficiaryMapper.convertToDTO(beneficiary);
 
             return ResponseEntity.ok(beneficiaryResponseDTO);
 
@@ -95,7 +94,7 @@ public class BeneficiaryController {
     @PostMapping("/reniec/{dni}")
     public ResponseEntity<?> consultarYRegistrar(@PathVariable String dni) {
         try {
-            Beneficiary beneficiary = consultarYRegistrarReniecUseCase.consultarYRegistrar(dni);
+            Beneficiary beneficiary = getAndRegisterByReniecUseCase.consultarYRegistrar(dni);
 
             return new ResponseEntity<>(beneficiaryMapper.convertToDTO(beneficiary),HttpStatus.CREATED);
 
@@ -108,30 +107,30 @@ public class BeneficiaryController {
 
     @PreAuthorize("hasAuthority('BENEFICIARY_EDIT')")
     @PutMapping("edit/{id}")
-    public ResponseEntity<?> editar(@PathVariable int id, @Valid @RequestBody EditarBeneficiarioRequestDTO editarBeneficiarioRequest) {
+    public ResponseEntity<?> editar(@PathVariable int id, @Valid @RequestBody EditBeneficiaryRequestDTO editarBeneficiarioRequest) {
 
-            Beneficiary beneficiaryUpdated = editarBeneficiarioUseCase.editar(id, editarBeneficiarioRequest);
-            BeneficiarioResponseDTO responseDTO = beneficiaryMapper.convertToDTO(beneficiaryUpdated);
+            Beneficiary beneficiaryUpdated = editBeneficiaryUseCase.editar(id, editarBeneficiarioRequest);
+            BeneficiaryResponseDTO responseDTO = beneficiaryMapper.convertToDTO(beneficiaryUpdated);
             return ResponseEntity.ok(responseDTO);
     }
 
     @PreAuthorize("hasAuthority('BENEFICIARY_LIST_BY_STATUS')")
     @GetMapping("/list")
-    public List<BeneficiarioResponseDTO> listarBeneficiaros(@RequestParam(required = false) Estado estado)
+    public List<BeneficiaryResponseDTO> listarBeneficiaros(@RequestParam(required = false) Status status)
     {
-        return listarBeneficiariosPorEstadoUseCase.listarBeneficiarioPorEstado(estado);
+        return listBeneficiariesByStatusUseCase.listarBeneficiarioPorEstado(status);
     }
 
     @PreAuthorize("hasAuthority('BENEFICIARY_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
-    public ResponseEntity<?> cambiarEstado(@PathVariable int id, @RequestParam Estado estado) {
+    public ResponseEntity<?> cambiarEstado(@PathVariable int id, @RequestParam Status status) {
         try {
-            Beneficiary beneficiary = switch (estado) {
-                case ACTIVO -> activarBeneficiarioUseCase.activar(id);
-                case INACTIVO -> desactivarBeneficiarioUseCase.desactivar(id);
+            Beneficiary beneficiary = switch (status) {
+                case ACTIVO -> activateBeneficiaryUseCase.activar(id);
+                case INACTIVO -> deactivateBeneficiaryUseCase.desactivar(id);
             };
             return ResponseEntity.ok(beneficiaryMapper.convertToDTO(beneficiary));
-        } catch (BeneficiarioNoEncontradoException e) {
+        } catch (BeneficiaryNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cambiar estado");

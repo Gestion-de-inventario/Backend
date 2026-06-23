@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.DonationRepositoryPort;
-import com.comedor.backend.domain.exceptions.OrdenDeDonacionNoEncontrada;
+import com.comedor.backend.domain.exceptions.DonationOrderNotFoundException;
 import com.comedor.backend.domain.model.Donation;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.DonationEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.DonationEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.DonationJpaRepository;
@@ -33,7 +33,7 @@ public class DonationRepositoryAdapter implements DonationRepositoryPort {
     @Override
     public Page<Donation> showDonation(LocalDate startDate,
                                        LocalDate endDate,
-                                       EstadoOrden status,
+                                       StatusOrder status,
                                        Pageable pageable)
     {
         if (
@@ -75,15 +75,15 @@ public class DonationRepositoryAdapter implements DonationRepositoryPort {
     @Override
     public Donation findById(Integer id) {
         DonationEntity entity = repository.findById(id).orElseThrow(
-                ()-> new OrdenDeDonacionNoEncontrada("Orden de donación no encontrada")
+                ()-> new DonationOrderNotFoundException("Orden de donación no encontrada")
         );
         return mapper.toDomain(entity);
     }
 
     @Override
-    public Donation changeStatus(Integer id, EstadoOrden status) {
+    public Donation changeStatus(Integer id, StatusOrder status) {
         DonationEntity entity = repository.findById(id).orElseThrow(
-                ()-> new OrdenDeDonacionNoEncontrada("Orden de donación no encontrada")
+                ()-> new DonationOrderNotFoundException("Orden de donación no encontrada")
         );
         entity.setStatus(status);
 

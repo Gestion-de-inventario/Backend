@@ -2,30 +2,21 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.ListMenuReportDetailUseCase;
-import com.comedor.backend.application.ports.in.ObtenerResumenReporteMenuUseCase;
+import com.comedor.backend.application.ports.in.GetSummaryMenuReportUseCase;
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
-import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.Person;
-import com.comedor.backend.domain.model.StockMovement; // <-- Importación actualizada (antes Record)
 import com.comedor.backend.domain.model.MenuReport;
-import com.comedor.backend.domain.model.enums.MetodoPago;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;
+import com.comedor.backend.domain.model.enums.PaymentMethod;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportDetailResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ListMenuReportDetailResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RegistroBeneficiarioResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Map.Entry.comparingByValue;
@@ -38,16 +29,16 @@ public class ListMenuReportDetailService implements ListMenuReportDetailUseCase 
     private final MenuReportRepositoryPort menuReportRepositoryPort;
     private final MenuReportMapper menuReportMapper;
     private final PersonRepositoryPort personRepositoryPort;
-    private final ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase;
+    private final GetSummaryMenuReportUseCase getSummaryMenuReportUseCase;
 
     public ListMenuReportDetailService(MenuReportRepositoryPort menuReportRepositoryPort,
                                        MenuReportMapper menuReportMapper,
                                        PersonRepositoryPort personRepositoryPort,
-                                       ObtenerResumenReporteMenuUseCase obtenerResumenReporteMenuUseCase) {
+                                       GetSummaryMenuReportUseCase getSummaryMenuReportUseCase) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.menuReportMapper = menuReportMapper;
         this.personRepositoryPort = personRepositoryPort;
-        this.obtenerResumenReporteMenuUseCase = obtenerResumenReporteMenuUseCase;
+        this.getSummaryMenuReportUseCase = getSummaryMenuReportUseCase;
     }
 
 
@@ -63,7 +54,7 @@ public class ListMenuReportDetailService implements ListMenuReportDetailUseCase 
                         endDate
                 );
 
-        List<DetalleReporteMenuResponseDTO> details =
+        List<MenuReportDetailResponseDTO> details =
                 reports.stream()
                         .map(reporte -> {
 
@@ -78,7 +69,7 @@ public class ListMenuReportDetailService implements ListMenuReportDetailUseCase 
                                     );
 
                             ResumenReporteMenuResponseDTO resumen =
-                                    obtenerResumenReporteMenuUseCase
+                                    getSummaryMenuReportUseCase
                                             .obtenerResumen(
                                                     reporte.getId()
                                             );
@@ -115,7 +106,7 @@ public class ListMenuReportDetailService implements ListMenuReportDetailUseCase 
                         .collect(Collectors.toSet())
                         .size();
 
-        MetodoPago mostUsed =
+        PaymentMethod mostUsed =
                 details.stream()
                         .map(d -> d.getResumenReporteMenu().getMostUsedPaymentMethod())
                         .filter(Objects::nonNull)

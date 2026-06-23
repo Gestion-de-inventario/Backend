@@ -2,13 +2,13 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 
 import com.comedor.backend.application.ports.in.*;
-import com.comedor.backend.domain.exceptions.ProductoConTransaccionesException;
-import com.comedor.backend.domain.exceptions.ProductoNoEncontradoException;
-import com.comedor.backend.domain.exceptions.ProductoYaExisteException;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarProductoRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
+import com.comedor.backend.domain.exceptions.ProductWithTransactionsException;
+import com.comedor.backend.domain.exceptions.ProductNotFoundException;
+import com.comedor.backend.domain.exceptions.ProductAlreadyExistsException;
+import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditProductRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,51 +22,51 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final CrearProductoUseCase crearProductoUseCase;
-    private final ListarProductosPorEstadoUseCase listarProductosPorEstadoUseCase;
-    private final ActivarProductoUseCase activarProductoUseCase;
-    private final DesactivarProductoUseCase desactivarProductoUseCase;
-    private final EditarProductoUseCase editarProductoUseCase;
+    private final CreateProductUseCase createProductUseCase;
+    private final ListProductsByStatusUseCase listProductsByStatusUseCase;
+    private final ActivateProductUseCase activateProductUseCase;
+    private final DeactivateProductUseCase deactivateProductUseCase;
+    private final EditProductUseCase editProductUseCase;
 
     @PreAuthorize("hasAuthority('PRODUCT_LIST_BY_STATUS')")
     @GetMapping("/list")
-    public List<ProductoResponseDTO> listarProductos(@RequestParam(required = false) Estado estado)
+    public List<ProductResponseDTO> listarProductos(@RequestParam(required = false) Status status)
     {
-        return listarProductosPorEstadoUseCase.listarProductosPorEstado(estado);
+        return listProductsByStatusUseCase.listarProductosPorEstado(status);
     }
 
     @PreAuthorize("hasAuthority('PRODUCT_CREATE')")
     @PostMapping("/create")
-    public ProductoResponseDTO crearProducto(@RequestBody ProductoRequestDTO productoRequestDTO)
+    public ProductResponseDTO crearProducto(@RequestBody ProductRequestDTO productRequestDTO)
     {
-        return crearProductoUseCase.crearProducto(productoRequestDTO);
+        return createProductUseCase.crearProducto(productRequestDTO);
     }
 
     @PreAuthorize("hasAuthority('PRODUCT_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
-    public ProductoResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
+    public ProductResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Status status)
     {
 
-        if (estado == null) {
+        if (status == null) {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
 
-        return switch (estado) {
-            case ACTIVO -> activarProductoUseCase.activarProductoPorId(id);
-            case INACTIVO -> desactivarProductoUseCase.desactivarProductoPorId(id);
+        return switch (status) {
+            case ACTIVO -> activateProductUseCase.activarProductoPorId(id);
+            case INACTIVO -> deactivateProductUseCase.desactivarProductoPorId(id);
         };
     }
 
     @PreAuthorize("hasAuthority('PRODUCT_EDIT')")
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> editarProducto(@PathVariable int id, @RequestBody EditarProductoRequestDTO request) {
+    public ResponseEntity<?> editarProducto(@PathVariable int id, @RequestBody EditProductRequestDTO request) {
         try {
-            return ResponseEntity.ok(editarProductoUseCase.editar(id, request));
-        } catch (ProductoNoEncontradoException e) {
+            return ResponseEntity.ok(editProductUseCase.editar(id, request));
+        } catch (ProductNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (ProductoConTransaccionesException e) {
+        } catch (ProductWithTransactionsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (ProductoYaExisteException e) {
+        } catch (ProductAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el producto");

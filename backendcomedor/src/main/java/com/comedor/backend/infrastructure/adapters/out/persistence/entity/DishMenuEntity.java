@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class DishMenuEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
     @OneToMany(mappedBy = "dishMenu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishSupplyEntity> supplies = new ArrayList<>();
@@ -44,11 +44,11 @@ public class DishMenuEntity {
         this.name = name;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -4,11 +4,11 @@ import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.StockMovement;
 import com.comedor.backend.domain.model.MenuReport;
-import com.comedor.backend.domain.model.enums.MetodoPago;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ReporteMenuRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DetalleReporteMenuResponseDTO;
+import com.comedor.backend.domain.model.enums.PaymentMethod;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.MenuReportRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportDetailResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ListMenuReportDetailResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ResumenReporteMenuResponseDTO;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ public class MenuReportMapper {
         this.beneficiaryControlMapper = beneficiaryControlMapper;
     }
 
-    public MenuReport toDomain(ReporteMenuRequestDTO dto) {
+    public MenuReport toDomain(MenuReportRequestDTO dto) {
         MenuReport menuReport = new MenuReport();
 
         // Seteamos la lista de IDs de las cocineras
@@ -46,10 +46,10 @@ public class MenuReportMapper {
         return menuReport;
     }
 
-    public ReporteMenuResponseDTO toDto(MenuReport menuReport) {
+    public MenuReportResponseDTO toDto(MenuReport menuReport) {
         if (menuReport == null) return null;
 
-        ReporteMenuResponseDTO responseDTO = new ReporteMenuResponseDTO();
+        MenuReportResponseDTO responseDTO = new MenuReportResponseDTO();
 
         responseDTO.setId(menuReport.getId());
         responseDTO.setDate(menuReport.getDate());
@@ -95,17 +95,17 @@ public class MenuReportMapper {
         return responseDTO;
     }
 
-    public List<ReporteMenuResponseDTO> toListDto(List<MenuReport> menuReports) {
+    public List<MenuReportResponseDTO> toListDto(List<MenuReport> menuReports) {
         return menuReports.stream().map(this::toDto).toList();
     }
 
-    public DetalleReporteMenuResponseDTO toDetalleDto(MenuReport reporte,
-                                                      String menu,
-                                                      List<Person> cocineras,
-                                                      List<StockMovement> stockMovements,
-                                                      List<BeneficiaryControl> beneficiarios,
-                                                      ResumenReporteMenuResponseDTO resumen) {
-        DetalleReporteMenuResponseDTO dto = new DetalleReporteMenuResponseDTO();
+    public MenuReportDetailResponseDTO toDetalleDto(MenuReport reporte,
+                                                    String menu,
+                                                    List<Person> cocineras,
+                                                    List<StockMovement> stockMovements,
+                                                    List<BeneficiaryControl> beneficiarios,
+                                                    ResumenReporteMenuResponseDTO resumen) {
+        MenuReportDetailResponseDTO dto = new MenuReportDetailResponseDTO();
 
         dto.setId(reporte.getId());
         dto.setDate(reporte.getDate());
@@ -127,12 +127,12 @@ public class MenuReportMapper {
 
     public ListMenuReportDetailResponseDTO
     listMenuReportDetailResponseDTO(
-            List<DetalleReporteMenuResponseDTO> reports,
+            List<MenuReportDetailResponseDTO> reports,
             BigDecimal totalEarned,
             BigDecimal totalSpent,
             BigDecimal net,
             int uniqueBeneficiaryCount,
-            MetodoPago mostUsedPaymentMethod
+            PaymentMethod mostUsedPaymentMethod
     ) {
 
         ListMenuReportDetailResponseDTO dto =

@@ -2,8 +2,8 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.OrderInRepositoryPort;
 import com.comedor.backend.domain.model.OrderIn;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.OrderInViewEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.OrderInEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.OrderInJpaRepository;
@@ -25,8 +25,8 @@ public class OrderInRepositoryAdapter implements OrderInRepositoryPort {
     public Page<OrderIn> showOrderIns(
             LocalDate startDate,
             LocalDate endDate,
-            FuenteProducto source,
-            EstadoOrden status,
+            ProductSource source,
+            StatusOrder status,
             Pageable pageable
     ) {
         Specification<OrderInViewEntity> spec =

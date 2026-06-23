@@ -1,0 +1,9 @@
+package com.comedor.backend.application.ports.in;
+
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TagRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TagResponseDTO;
+
+public interface CreateTagUseCase {
+
+    TagResponseDTO crearEtiqueta(TagRequestDTO tagRequestDTO);
+}

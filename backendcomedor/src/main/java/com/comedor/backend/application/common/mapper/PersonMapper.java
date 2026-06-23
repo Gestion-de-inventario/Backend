@@ -1,23 +1,23 @@
 package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Person;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PersonaResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PersonResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class PersonMapper {
-    public PersonaResponseDTO toResponseDTO(Person person) {
-        PersonaResponseDTO personaResponseDTO = new PersonaResponseDTO();
-        personaResponseDTO.setId(person.getId());
-        personaResponseDTO.setDni(person.getDni());
-        personaResponseDTO.setName(person.getName());
-        personaResponseDTO.setLastname(person.getLastname());
-        return personaResponseDTO;
+    public PersonResponseDTO toResponseDTO(Person person) {
+        PersonResponseDTO personResponseDTO = new PersonResponseDTO();
+        personResponseDTO.setId(person.getId());
+        personResponseDTO.setDni(person.getDni());
+        personResponseDTO.setName(person.getName());
+        personResponseDTO.setLastname(person.getLastname());
+        return personResponseDTO;
     }
 
-    public List<PersonaResponseDTO> toListPersonaResponseDTO(List<Person> people) {
+    public List<PersonResponseDTO> toListPersonaResponseDTO(List<Person> people) {
         return people.stream()
                 .map(this::toResponseDTO).toList();
     }

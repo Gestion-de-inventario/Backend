@@ -1,7 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.ProductRecordRepositoryPort;
-import com.comedor.backend.domain.exceptions.RegistroNoEncontradoException;
+import com.comedor.backend.domain.exceptions.RegisterNotFoundException;
 import com.comedor.backend.domain.model.Record;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ProductEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.RecordEntity;
@@ -46,7 +46,7 @@ public class ProductRecordRepositoryAdapter implements ProductRecordRepositoryPo
     {
         RecordEntity entity = productRecordJpaRepository
                 .findById(registroId)
-                .orElseThrow(() -> new RegistroNoEncontradoException("Registro no encontrado"));
+                .orElseThrow(() -> new RegisterNotFoundException("Registro no encontrado"));
 
         if(entity.getReport().getId() != reporteId){
             throw new IllegalArgumentException(
@@ -79,7 +79,7 @@ public class ProductRecordRepositoryAdapter implements ProductRecordRepositoryPo
         RecordEntity entity = productRecordJpaRepository
                 .findById(registroId)
                 .orElseThrow(() ->
-                        new RegistroNoEncontradoException("Registro no encontrado"));
+                        new RegisterNotFoundException("Registro no encontrado"));
 
         if(entity.getReport().getId() != reporteId){
             throw new IllegalArgumentException(
@@ -101,7 +101,7 @@ public class ProductRecordRepositoryAdapter implements ProductRecordRepositoryPo
         return recordEntityMapper.toDomain(
                 productRecordJpaRepository.findById(id)
                         .orElseThrow(
-                                () -> new RegistroNoEncontradoException(
+                                () -> new RegisterNotFoundException(
                                         "Registro no encontrado"
                                 )
                         )

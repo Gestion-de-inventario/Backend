@@ -3,11 +3,10 @@ package com.comedor.backend.application.common.mapper;
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.domain.model.PersonalDataReniec;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditarBeneficiarioRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiarioResponseDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DatosPersonalesResponseDTO;
+import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PersonalDataResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 @Component
 public class BeneficiaryMapper {
 
-    public Beneficiary convertToDomain(BeneficiarioRequestDTO requestDTO) {
+    public Beneficiary convertToDomain(BeneficiaryRequestDTO requestDTO) {
         BeneficiaryType type = new BeneficiaryType();
         type.setId(requestDTO.getBeneficiaryTypeId());
         Beneficiary domain = new  Beneficiary(
@@ -23,7 +22,7 @@ public class BeneficiaryMapper {
                 requestDTO.getDni(),
                 requestDTO.getName(),
                 requestDTO.getLastname(),
-                Estado.ACTIVO,
+                Status.ACTIVO,
                 type
 
        );
@@ -31,28 +30,28 @@ public class BeneficiaryMapper {
         return domain;
     }
 
-    public BeneficiarioResponseDTO convertToDTO(Beneficiary beneficiary) {
-        BeneficiarioResponseDTO beneficiarioResponseDTO = new BeneficiarioResponseDTO();
+    public BeneficiaryResponseDTO convertToDTO(Beneficiary beneficiary) {
+        BeneficiaryResponseDTO beneficiaryResponseDTO = new BeneficiaryResponseDTO();
 
-        beneficiarioResponseDTO.setId(beneficiary.getId());
-        beneficiarioResponseDTO.setDni(beneficiary.getDni());
-        beneficiarioResponseDTO.setName(beneficiary.getName());
-        beneficiarioResponseDTO.setLastname(beneficiary.getLastname());
-        beneficiarioResponseDTO.setStatus(beneficiary.getStatus());
-        beneficiarioResponseDTO.setBeneficiaryType(beneficiary.getBeneficiaryType().getName());
-        beneficiarioResponseDTO.setBeneficiaryTypeId(beneficiary.getBeneficiaryType().getId());
-        beneficiarioResponseDTO.setMenu_cost(beneficiary.getBeneficiaryType().getMenu_cost());
-        return beneficiarioResponseDTO;
+        beneficiaryResponseDTO.setId(beneficiary.getId());
+        beneficiaryResponseDTO.setDni(beneficiary.getDni());
+        beneficiaryResponseDTO.setName(beneficiary.getName());
+        beneficiaryResponseDTO.setLastname(beneficiary.getLastname());
+        beneficiaryResponseDTO.setStatus(beneficiary.getStatus());
+        beneficiaryResponseDTO.setBeneficiaryType(beneficiary.getBeneficiaryType().getName());
+        beneficiaryResponseDTO.setBeneficiaryTypeId(beneficiary.getBeneficiaryType().getId());
+        beneficiaryResponseDTO.setMenu_cost(beneficiary.getBeneficiaryType().getMenu_cost());
+        return beneficiaryResponseDTO;
     }
 
-    public List<BeneficiarioResponseDTO> convertToListDTO(List<Beneficiary> beneficiaries) {
+    public List<BeneficiaryResponseDTO> convertToListDTO(List<Beneficiary> beneficiaries) {
         return beneficiaries.stream()
                 .map(this::convertToDTO)
                 .toList();
     }
 
-    public DatosPersonalesResponseDTO convertDatosPersonalesToDTO(PersonalDataReniec personalDataReniec) {
-        return new DatosPersonalesResponseDTO(
+    public PersonalDataResponseDTO convertDatosPersonalesToDTO(PersonalDataReniec personalDataReniec) {
+        return new PersonalDataResponseDTO(
                 personalDataReniec.getDni(),
                 personalDataReniec.getNames(),
                 personalDataReniec.getLastnames()

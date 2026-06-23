@@ -1,12 +1,12 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.ActivarEtiquetaUseCase;
-import com.comedor.backend.application.ports.in.CrearEtiquetaUseCase;
-import com.comedor.backend.application.ports.in.DesactivarEtiquetaUseCase;
-import com.comedor.backend.application.ports.in.ListarEtiquetasPorEstadoUseCase;
-import com.comedor.backend.domain.model.enums.Estado;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EtiquetaRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.EtiquetaResponseDTO;
+import com.comedor.backend.application.ports.in.ActivateTagUseCase;
+import com.comedor.backend.application.ports.in.CreateTagUseCase;
+import com.comedor.backend.application.ports.in.DeactivateTagUseCase;
+import com.comedor.backend.application.ports.in.ListTagsByStatusUseCase;
+import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TagRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TagResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,37 +17,37 @@ import java.util.List;
 @RequestMapping("/tag")
 @RequiredArgsConstructor
 public class TagController {
-    private final CrearEtiquetaUseCase crearEtiquetaUseCase;
-    private final ListarEtiquetasPorEstadoUseCase listarEtiquetasPorEstadoUseCase;
-    private final ActivarEtiquetaUseCase activarEtiquetaUseCase;
-    private final DesactivarEtiquetaUseCase desactivarEtiquetaUseCase;
+    private final CreateTagUseCase createTagUseCase;
+    private final ListTagsByStatusUseCase listTagsByStatusUseCase;
+    private final ActivateTagUseCase activateTagUseCase;
+    private final DeactivateTagUseCase deactivateTagUseCase;
 
     @PreAuthorize("hasAuthority('TAG_LIST_BY_STATUS')")
     @GetMapping("/list")
-    public List<EtiquetaResponseDTO> listarEtiquetas(@RequestParam(required = false) Estado estado)
+    public List<TagResponseDTO> listarEtiquetas(@RequestParam(required = false) Status status)
     {
-        return listarEtiquetasPorEstadoUseCase.listarEtiquetas(estado);
+        return listTagsByStatusUseCase.listarEtiquetas(status);
     }
 
     @PreAuthorize("hasAuthority('TAG_CREATE')")
     @PostMapping("/create")
-    public EtiquetaResponseDTO crearEtiqueta(@RequestBody EtiquetaRequestDTO etiquetaRequestDTO)
+    public TagResponseDTO crearEtiqueta(@RequestBody TagRequestDTO tagRequestDTO)
     {
-        return crearEtiquetaUseCase.crearEtiqueta(etiquetaRequestDTO);
+        return createTagUseCase.crearEtiqueta(tagRequestDTO);
     }
 
     @PreAuthorize("hasAuthority('TAG_CHANGE_STATUS')")
     @PostMapping("/changeStatus/{id}")
-    public EtiquetaResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Estado estado)
+    public TagResponseDTO cambiarEstado(@PathVariable int id, @RequestParam Status status)
     {
 
-        if (estado == null) {
+        if (status == null) {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
 
-        return switch (estado) {
-            case ACTIVO -> activarEtiquetaUseCase.activarEtiquetaPorId(id);
-            case INACTIVO -> desactivarEtiquetaUseCase.desactivarEtiquetaPorId(id);
+        return switch (status) {
+            case ACTIVO -> activateTagUseCase.activarEtiquetaPorId(id);
+            case INACTIVO -> deactivateTagUseCase.desactivarEtiquetaPorId(id);
         };
     }
 }

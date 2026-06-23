@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 public class Beneficiary {
     private int id;
@@ -8,13 +8,13 @@ public class Beneficiary {
     private String name;
     private String lastname;
     private BeneficiaryType beneficiaryType;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
     public Beneficiary() {
         return;
     }
 
-    public Beneficiary(int id, String dni, String name, String lastname, Estado status,BeneficiaryType beneficiaryType){
+    public Beneficiary(int id, String dni, String name, String lastname, Status status, BeneficiaryType beneficiaryType){
         this.id = id;
         this.dni = dni;
         this.name = name;
@@ -27,18 +27,18 @@ public class Beneficiary {
     public String getDni() { return dni; }
     public String getName() { return name; }
     public String getLastname() { return lastname;}
-    public Estado getStatus() { return status;}
+    public Status getStatus() { return status;}
 
-    public Beneficiary update(String dni, String name, String lastname, Estado status ,BeneficiaryType beneficiaryType) {
+    public Beneficiary update(String dni, String name, String lastname, Status status , BeneficiaryType beneficiaryType) {
         return new Beneficiary(this.id, dni, name, lastname, status,beneficiaryType);
     }
 
     public void marcarComoInactivo(){
-        this.status = Estado.INACTIVO;
+        this.status = Status.INACTIVO;
     }
 
     public void marcarComoActivo(){
-        this.status = Estado.ACTIVO;
+        this.status = Status.ACTIVO;
     }
 
     public void setId(int id) {
@@ -57,7 +57,7 @@ public class Beneficiary {
         this.lastname = lastname;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

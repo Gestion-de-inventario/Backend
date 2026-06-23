@@ -3,7 +3,7 @@ package com.comedor.backend.application.common.mapper;
 
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.User;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UsuarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UserRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class UserMapper {
-    public User toDomain(UsuarioRequestDTO dto) {
+    public User toDomain(UserRequestDTO dto) {
 
         if (dto == null) return null;
 

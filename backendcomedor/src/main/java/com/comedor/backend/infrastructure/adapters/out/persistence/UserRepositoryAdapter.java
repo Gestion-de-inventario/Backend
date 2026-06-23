@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
-import com.comedor.backend.domain.exceptions.UsuarioNoEncontradoException;
+import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.User;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.UserEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.RoleEntityMapper;
@@ -48,7 +48,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     public User update(User user) {
 
         UserEntity entity = userJpaRepository.findById(user.getId())
-                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no existe"));
+                .orElseThrow(() -> new UserNotFoundException("Usuario no existe"));
 
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
@@ -87,20 +87,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User deactivateById(Integer id) {
-        UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no existe"));
-        user.setStatus(Estado.INACTIVO);
+        UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario no existe"));
+        user.setStatus(Status.INACTIVO);
         return userEntityMapper.toDomain(userJpaRepository.save(user));
     }
 
     @Override
     public User activateById(Integer id) {
-        UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no existe"));
-        user.setStatus(Estado.ACTIVO);
+        UserEntity user = userJpaRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario no existe"));
+        user.setStatus(Status.ACTIVO);
         return userEntityMapper.toDomain(userJpaRepository.save(user));
     }
 
     @Override
     public boolean RoleIsAssignedToUser(int id) {
-        return userJpaRepository.existsByRoleIdAndStatus(id, Estado.ACTIVO);
+        return userJpaRepository.existsByRoleIdAndStatus(id, Status.ACTIVO);
     }
 }

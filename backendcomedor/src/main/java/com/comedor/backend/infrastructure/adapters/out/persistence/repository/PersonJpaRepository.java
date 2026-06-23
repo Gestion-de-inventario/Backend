@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository;
 
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioBasicoDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BasicUserResponseDTO;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,9 +22,9 @@ public interface PersonJpaRepository extends JpaRepository<PersonEntity, Integer
 
     boolean existsByNameAndLastNameAndIdNot(String name, String last_name,int user_id);
 
-    @Query("SELECT new com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioBasicoDTO(p.id, p.name, p.user.username) " +
+    @Query("SELECT new com.comedor.backend.infrastructure.adapters.in.web.dto.response.BasicUserResponseDTO(p.id, p.name, p.user.username) " +
             "FROM PersonEntity p WHERE p.user.id = :id")
-    Optional<UsuarioBasicoDTO> findUsuarioBasicoDtoById(@Param("id") Integer id);
+    Optional<BasicUserResponseDTO> findUsuarioBasicoDtoById(@Param("id") Integer id);
 
     List<PersonEntity> findAllById(Iterable<Integer> ids);
 

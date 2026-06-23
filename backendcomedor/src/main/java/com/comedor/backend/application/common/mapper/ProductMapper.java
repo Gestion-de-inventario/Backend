@@ -4,15 +4,15 @@ package com.comedor.backend.application.common.mapper;
 import com.comedor.backend.domain.model.Category;
 import com.comedor.backend.domain.model.Tag;
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductoResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class ProductMapper {
-    public Product toDomain(ProductoRequestDTO dto) {
+    public Product toDomain(ProductRequestDTO dto) {
 
         Product product = new Product();
 
@@ -37,29 +37,29 @@ public class ProductMapper {
         return product;
     }
 
-    public ProductoResponseDTO productoResponseDTO(Product product)
+    public ProductResponseDTO productoResponseDTO(Product product)
     {
         if (product == null)
             return null;
-        ProductoResponseDTO productoResponseDTO = new ProductoResponseDTO();
-        productoResponseDTO.setId(product.getId());
-        productoResponseDTO.setName(product.getName());
-        productoResponseDTO.setStatus(product.getStatus());
-        productoResponseDTO.setCategoryId(product.getCategory().getId());
-        productoResponseDTO.setCategoryName(product.getCategory().getName());
-        productoResponseDTO.setCategoryState(product.getCategory().getStatus());
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        productResponseDTO.setId(product.getId());
+        productResponseDTO.setName(product.getName());
+        productResponseDTO.setStatus(product.getStatus());
+        productResponseDTO.setCategoryId(product.getCategory().getId());
+        productResponseDTO.setCategoryName(product.getCategory().getName());
+        productResponseDTO.setCategoryState(product.getCategory().getStatus());
         if (product.getTag()!=null){
-            productoResponseDTO.setTagId(product.getTag().getId());
-            productoResponseDTO.setTagName(product.getTag().getName());
-            productoResponseDTO.setTagState(product.getTag().getStatus());
+            productResponseDTO.setTagId(product.getTag().getId());
+            productResponseDTO.setTagName(product.getTag().getName());
+            productResponseDTO.setTagState(product.getTag().getStatus());
         }
-        productoResponseDTO.setUnit(product.getUnit());
-        productoResponseDTO.setStock(product.getStock());
-        productoResponseDTO.setReorderPoint(product.getReorderPoint());
-        return productoResponseDTO;
+        productResponseDTO.setUnit(product.getUnit());
+        productResponseDTO.setStock(product.getStock());
+        productResponseDTO.setReorderPoint(product.getReorderPoint());
+        return productResponseDTO;
     }
 
-    public List<ProductoResponseDTO> toListProductoResponseDTO (List<Product> products)
+    public List<ProductResponseDTO> toListProductoResponseDTO (List<Product> products)
     {
         if (products == null)
             return null;

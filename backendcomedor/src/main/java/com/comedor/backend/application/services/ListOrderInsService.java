@@ -3,8 +3,8 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.OrderInMapper;
 import com.comedor.backend.application.ports.in.ListOrderInsUseCase;
 import com.comedor.backend.application.ports.out.OrderInRepositoryPort;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.OrderInResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +32,8 @@ public class ListOrderInsService implements ListOrderInsUseCase {
             int size,
             LocalDate startDate,
             LocalDate endDate,
-            FuenteProducto source,
-            EstadoOrden status
+            ProductSource source,
+            StatusOrder status
     ) {
         if (
                 startDate != null &&

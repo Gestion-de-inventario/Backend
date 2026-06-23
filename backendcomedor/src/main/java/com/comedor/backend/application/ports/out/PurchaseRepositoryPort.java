@@ -1,8 +1,7 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Purchase;
-import com.comedor.backend.domain.model.PurchaseDetail;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +12,9 @@ public interface PurchaseRepositoryPort {
     Page<Purchase> showPurchase(
             LocalDate startDate,
             LocalDate endDate,
-            EstadoOrden status,
+            StatusOrder status,
             Pageable pageable
     );
     Purchase findById(Integer id);
-    Purchase updateStatus(Integer purchaseId,EstadoOrden status);
+    Purchase updateStatus(Integer purchaseId, StatusOrder status);
 }

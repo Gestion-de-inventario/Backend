@@ -2,13 +2,13 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.ChangeStatusBeneficiaryTypeUseCase;
-import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
+import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
 import com.comedor.backend.domain.exceptions.BeneficiaryTypeInUseException;
 import com.comedor.backend.domain.model.BeneficiaryType;
-import com.comedor.backend.domain.model.enums.CambioEstado;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.ChangeStatus;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
 
@@ -17,27 +17,27 @@ public class ChangeStatusBeneficiaryTypeService implements ChangeStatusBeneficia
     private final BeneficiaryTypeRepositoryPort repository;
     private final BeneficiaryRepositoryPort beneficiaryRepository;
     private final BeneficiaryTypeMapper mapper;
-    private final RegistrarModificacionUseCase registrarModificacionUseCase;
+    private final RegisterModificationUseCase registerModificationUseCase;
 
-    public ChangeStatusBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryRepositoryPort beneficiaryRepository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+    public ChangeStatusBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryRepositoryPort beneficiaryRepository, BeneficiaryTypeMapper mapper, RegisterModificationUseCase registerModificationUseCase) {
         this.repository = repository;
         this.beneficiaryRepository = beneficiaryRepository;
         this.mapper = mapper;
-        this.registrarModificacionUseCase = registrarModificacionUseCase;
+        this.registerModificationUseCase = registerModificationUseCase;
     }
 
     @Override
-    public BeneficiaryTypeResponseDTO changeStatus(Integer id, CambioEstado status) {
+    public BeneficiaryTypeResponseDTO changeStatus(Integer id, ChangeStatus status) {
 
         BeneficiaryType domain = repository.findById(id);
 
-        Estado nuevoEstado = status.toEstado();
+        Status newStatus = status.toEstado();
 
-        if(domain.getStatus() == nuevoEstado){
+        if(domain.getStatus() == newStatus){
             return mapper.convertToDTO(domain);
         }
 
-        if(nuevoEstado == Estado.INACTIVO &&
+        if(newStatus == Status.INACTIVO &&
                 beneficiaryRepository.CategoryisItAssignedToBeneficiary(id)) {
 
             throw new BeneficiaryTypeInUseException(
@@ -45,16 +45,16 @@ public class ChangeStatusBeneficiaryTypeService implements ChangeStatusBeneficia
             );
         }
 
-        registrarModificacionUseCase.registrar(
+        registerModificationUseCase.registrar(
                 new ModificationsRequestDTO(
                         "Tipo Beneficiario",
                         "estado",
                         domain.getStatus().toString(),
-                        nuevoEstado.toString()
+                        newStatus.toString()
                 )
         );
 
-        domain.setStatus(nuevoEstado);
+        domain.setStatus(newStatus);
 
         return mapper.convertToDTO(
                 repository.update(domain)

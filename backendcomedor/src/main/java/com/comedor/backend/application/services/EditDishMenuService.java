@@ -2,7 +2,7 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.DishMenuMapper;
 import com.comedor.backend.application.ports.in.EditDishMenuUseCase;
-import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
+import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
 import com.comedor.backend.application.ports.out.DishMenuRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.model.DishMenu;
@@ -17,13 +17,13 @@ import java.util.List;
 public class EditDishMenuService implements EditDishMenuUseCase {
     private final DishMenuRepositoryPort dishMenuRepositoryPort;
     private final ProductRepositoryPort productRepositoryPort;
-    private final RegistrarModificacionUseCase registrarModificacionUseCase;
+    private final RegisterModificationUseCase registerModificationUseCase;
     private final DishMenuMapper dishMenuMapper;
 
-    public EditDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegistrarModificacionUseCase registrarModificacionUseCase, DishMenuMapper dishMenuMapper) {
+    public EditDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase, DishMenuMapper dishMenuMapper) {
         this.dishMenuRepositoryPort = dishMenuRepositoryPort;
         this.productRepositoryPort = productRepositoryPort;
-        this.registrarModificacionUseCase = registrarModificacionUseCase;
+        this.registerModificationUseCase = registerModificationUseCase;
         this.dishMenuMapper = dishMenuMapper;
     }
 
@@ -35,7 +35,7 @@ public class EditDishMenuService implements EditDishMenuUseCase {
             if (dishMenuRepositoryPort.existsByNameAndIdNot(request.getName(), id)) {
                 throw new RuntimeException("Ya existe un plato con ese nombre: " + request.getName());
             }
-            registrarModificacionUseCase.registrar(new ModificationsRequestDTO(
+            registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "DishMenu", "name", dishMenu.getName(), request.getName().toUpperCase()
             ));
             dishMenu.setName(request.getName().toUpperCase());

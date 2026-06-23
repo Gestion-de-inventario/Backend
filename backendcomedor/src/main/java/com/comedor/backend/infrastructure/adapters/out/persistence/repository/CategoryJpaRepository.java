@@ -10,10 +10,10 @@ import java.util.Optional;
 public interface CategoryJpaRepository extends JpaRepository<CategoryEntity,Integer> {
 
     @Query("SELECT c FROM CategoryEntity c " +
-            "WHERE c.status = com.comedor.backend.domain.model.enums.Estado.INACTIVO")
+            "WHERE c.status = com.comedor.backend.domain.model.enums.Status.INACTIVO")
     List<CategoryEntity> getAllCategoriasInactivas();
     @Query("SELECT c FROM CategoryEntity c " +
-            "WHERE c.status = com.comedor.backend.domain.model.enums.Estado.ACTIVO")
+            "WHERE c.status = com.comedor.backend.domain.model.enums.Status.ACTIVO")
     List<CategoryEntity> getAllCategoriasActivas();
     Optional<CategoryEntity> findById(int id);
     boolean existsByName(String name);

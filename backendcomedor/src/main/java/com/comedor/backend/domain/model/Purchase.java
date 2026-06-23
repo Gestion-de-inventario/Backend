@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
+import com.comedor.backend.domain.model.enums.StatusOrder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public class Purchase {
 
     private BigDecimal totalSpent = BigDecimal.ZERO;
 
-    private EstadoOrden status;
+    private StatusOrder status;
 
     private LocalDate purchaseDate;
 
@@ -24,7 +24,7 @@ public class Purchase {
 
     public Purchase(Integer id,
                     BigDecimal totalSpent,
-                    EstadoOrden status,
+                    StatusOrder status,
                     LocalDate purchaseDate,
                     List<PurchaseDetail> details) {
 
@@ -51,11 +51,11 @@ public class Purchase {
         this.totalSpent = totalSpent;
     }
 
-    public EstadoOrden getStatus() {
+    public StatusOrder getStatus() {
         return status;
     }
 
-    public void setStatus(EstadoOrden status) {
+    public void setStatus(StatusOrder status) {
         this.status = status;
     }
 

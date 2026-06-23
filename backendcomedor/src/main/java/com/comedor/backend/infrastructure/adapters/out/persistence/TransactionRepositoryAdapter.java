@@ -2,8 +2,8 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.Transactions;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ProductEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TransactionsEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.UserEntity;
@@ -45,8 +45,8 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
     @Override
     public Page<Transactions> showTransacciones(LocalDate startDate,
                                                 LocalDate endDate,
-                                                TipoMovimiento type,
-                                                FuenteTransaccion source,
+                                                MovementType type,
+                                                TransactionSource source,
                                                 String productName,
                                                 Pageable pageable) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {

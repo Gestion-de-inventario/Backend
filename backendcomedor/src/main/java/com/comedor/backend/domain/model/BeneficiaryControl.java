@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.MetodoPago;
+import com.comedor.backend.domain.model.enums.PaymentMethod;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ public class BeneficiaryControl {
     private Beneficiary beneficiary;
     private boolean received = false;
     private boolean paid = false;
-    private MetodoPago payMethod;
+    private PaymentMethod payMethod;
     private int menusAmount;
     private BigDecimal menuPrice;
 
@@ -29,7 +29,7 @@ public class BeneficiaryControl {
         this.paid = paid;
     }
 
-    public void setPayMethod(MetodoPago payMethod) {
+    public void setPayMethod(PaymentMethod payMethod) {
         this.payMethod = payMethod;
     }
 
@@ -57,7 +57,7 @@ public class BeneficiaryControl {
         return paid;
     }
 
-    public MetodoPago getPayMethod() {
+    public PaymentMethod getPayMethod() {
         return payMethod;
     }
 

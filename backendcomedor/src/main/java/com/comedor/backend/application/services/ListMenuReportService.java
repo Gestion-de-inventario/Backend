@@ -3,7 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.MenuReportMapper;
 import com.comedor.backend.application.ports.in.ListMenuReportUseCase;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ReporteMenuResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public class ListMenuReportService implements ListMenuReportUseCase {
 
 
     @Override
-    public Page<ReporteMenuResponseDTO> list(int page, int size, LocalDate startDate, LocalDate endDate) {
+    public Page<MenuReportResponseDTO> list(int page, int size, LocalDate startDate, LocalDate endDate) {
 
         Pageable pageable = PageRequest.of(
                 page,

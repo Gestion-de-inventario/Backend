@@ -2,7 +2,7 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.PurchaseMapper;
 import com.comedor.backend.application.ports.in.ConfirmPurchaseUseCase;
-import com.comedor.backend.application.ports.in.RegistrarTransaccionUseCase;
+import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.InventoryLotRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.PurchaseRepositoryPort;
@@ -11,15 +11,14 @@ import com.comedor.backend.domain.model.InventoryLot;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteTransaccion;
-import com.comedor.backend.domain.model.enums.TipoMovimiento;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransaccionRequestDTO;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.TransactionSource;
+import com.comedor.backend.domain.model.enums.MovementType;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.PurchaseResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
@@ -27,15 +26,15 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
     private final PurchaseRepositoryPort purchaseRepository;
     private final ProductRepositoryPort productRepository;
     private final PurchaseMapper mapper;
-    private final RegistrarTransaccionUseCase registrarTransaccionUseCase;
+    private final RegisterTransactionUseCase registerTransactionUseCase;
     private final CurrentUserService currentUserService;
     private final InventoryLotRepositoryPort inventoryLotRepository;
 
-    public ConfirmPurchaseService(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegistrarTransaccionUseCase registrarTransaccionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
+    public ConfirmPurchaseService(PurchaseRepositoryPort purchaseRepository, ProductRepositoryPort productRepository, PurchaseMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, InventoryLotRepositoryPort inventoryLotRepository) {
         this.purchaseRepository = purchaseRepository;
         this.productRepository = productRepository;
         this.mapper = mapper;
-        this.registrarTransaccionUseCase = registrarTransaccionUseCase;
+        this.registerTransactionUseCase = registerTransactionUseCase;
         this.currentUserService = currentUserService;
         this.inventoryLotRepository = inventoryLotRepository;
     }
@@ -50,7 +49,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             throw new DateException("Error al confirmar orden : No se puede marcar como recibido una orden de compra futura");
         }
 
-        if (purchase.getStatus() == EstadoOrden.RECIBIDO) {
+        if (purchase.getStatus() == StatusOrder.RECIBIDO) {
             throw new RuntimeException(
                     "La orden ya fue confirmada"
             );
@@ -91,8 +90,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                     usuarioId,
                     product.getId(),
                     detail.getQuantity(),
-                    TipoMovimiento.ENTRADA,
-                    FuenteTransaccion.COMPRA,
+                    MovementType.ENTRADA,
+                    TransactionSource.COMPRA,
                     PeruTime.now()
             );
 
@@ -101,7 +100,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
         }
 
         Purchase updated =
-                purchaseRepository.updateStatus(purchaseId,EstadoOrden.RECIBIDO);
+                purchaseRepository.updateStatus(purchaseId, StatusOrder.RECIBIDO);
 
         return mapper.toResponse(updated);
     }
@@ -112,11 +111,11 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             Integer usuarioId,
             Integer productoId,
             BigDecimal amount,
-            TipoMovimiento tipo,
-            FuenteTransaccion source,
+            MovementType tipo,
+            TransactionSource source,
             LocalDateTime dateTime
     ) {
-        TransaccionRequestDTO dto = new TransaccionRequestDTO();
+        TransactionRequestDTO dto = new TransactionRequestDTO();
 
         dto.setAmount(amount);
         dto.setProductId(productoId);
@@ -125,7 +124,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
         dto.setSource(source);
         dto.setDateTime(dateTime);
 
-        registrarTransaccionUseCase.registrarTransaccion(dto);
+        registerTransactionUseCase.registrarTransaccion(dto);
     }
 
 }

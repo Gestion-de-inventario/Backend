@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
-import com.comedor.backend.domain.exceptions.ProductoNoEncontradoException;
+import com.comedor.backend.domain.exceptions.ProductNotFoundException;
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TagEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ProductEntity;
@@ -53,14 +53,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
-    public List<Product> getProductosByStatus(Estado estado) {
-        if(estado == null)
+    public List<Product> getProductosByStatus(Status status) {
+        if(status == null)
         {   return productEntityMapper.toListDomain(productJpaRepository.findAll());
-        } else if (estado == Estado.ACTIVO)
+        } else if (status == Status.ACTIVO)
         {
             return productEntityMapper.toListDomain(productJpaRepository.getAllProductosActivos());
         }
-        else if (estado == Estado.INACTIVO)
+        else if (status == Status.INACTIVO)
         {
         return productEntityMapper.toListDomain(productJpaRepository.getAllProductosInactivos());
         }
@@ -74,28 +74,28 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     @Override
     public Product deactivateById(int id) {
-        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
-        productEntity.setStatus(Estado.INACTIVO);
+        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
+        productEntity.setStatus(Status.INACTIVO);
         return productEntityMapper.toDomain(productJpaRepository.save(productEntity));
     }
 
     @Override
     public Product activateById(int id) {
-        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
-        productEntity.setStatus(Estado.ACTIVO);
+        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
+        productEntity.setStatus(Status.ACTIVO);
         return productEntityMapper.toDomain(productJpaRepository.save(productEntity));
     }
 
     @Override
     public Product getProductoById(int id) {
-        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductoNoEncontradoException("Producto no encontrado"));
+        ProductEntity productEntity = productJpaRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Producto no encontrado"));
         return productEntityMapper.toDomain(productEntity);
     }
 
     @Override
     public Product updateProducto(Product product) {
         ProductEntity entity = productJpaRepository.findById(product.getId())
-                .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado"));
 
         entity.setName(product.getName());
         entity.setUnit(product.getUnit());
@@ -114,7 +114,7 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public Product updateStock(Product product) {
 
         ProductEntity entity = productJpaRepository.findById(product.getId())
-                .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado"));
 
         entity.setStock(product.getStock());
 

@@ -1,13 +1,13 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductoRotacionDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRotationDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class DashboardResponseDTO {
 
-    private List<ProductoRotacionDTO> topProductos;
+    private List<ProductRotationDTO> topProductos;
     private BigDecimal totalIngresos;
     private BigDecimal totalEgresos;
     private BigDecimal balanceNeto;
@@ -15,7 +15,7 @@ public class DashboardResponseDTO {
 
     public DashboardResponseDTO(){}
 
-    public DashboardResponseDTO(List<ProductoRotacionDTO> topProductos, BigDecimal totalIngresos, BigDecimal totalEgresos, BigDecimal balanceNeto, List<ResumenMensualDTO> resumenMensual) {
+    public DashboardResponseDTO(List<ProductRotationDTO> topProductos, BigDecimal totalIngresos, BigDecimal totalEgresos, BigDecimal balanceNeto, List<ResumenMensualDTO> resumenMensual) {
         this.topProductos = topProductos;
         this.totalIngresos = totalIngresos;
         this.totalEgresos = totalEgresos;
@@ -23,11 +23,11 @@ public class DashboardResponseDTO {
         this.resumenMensual = resumenMensual;
     }
 
-    public List<ProductoRotacionDTO> getTopProductos() {
+    public List<ProductRotationDTO> getTopProductos() {
         return topProductos;
     }
 
-    public void setTopProductos(List<ProductoRotacionDTO> topProductos) {
+    public void setTopProductos(List<ProductRotationDTO> topProductos) {
         this.topProductos = topProductos;
     }
 

@@ -1,13 +1,12 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
-import com.comedor.backend.domain.exceptions.ReporteMenuNoEncontradoException;
+import com.comedor.backend.domain.exceptions.MenuReportNotFoundException;
 import com.comedor.backend.domain.model.MenuReport;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.MenuReportEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.MenuReportJpaRepository;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.MenuReportSpecification;
-import com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification.PurchaseSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -135,7 +134,7 @@ public class MenuReportRepositoryAdapter implements MenuReportRepositoryPort {
                 menuReportJpaRepository
                         .findById(id)
                         .orElseThrow(() ->
-                                new ReporteMenuNoEncontradoException(
+                                new MenuReportNotFoundException(
                                         "No existe el reporte con id: " + id
                                 )
                         );

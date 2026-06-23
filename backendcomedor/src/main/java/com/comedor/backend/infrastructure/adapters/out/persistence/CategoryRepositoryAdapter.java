@@ -1,9 +1,9 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
-import com.comedor.backend.domain.exceptions.CategoriaNoEncontradaException;
+import com.comedor.backend.domain.exceptions.CategoryNotFoundException;
 import com.comedor.backend.domain.model.Category;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.CategoryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.CategoryEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.CategoryJpaRepository;
@@ -29,25 +29,25 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
     @Override
     public Category deactivateById(int id) {
 
-        CategoryEntity entity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
-        entity.setStatus(Estado.INACTIVO);
+        CategoryEntity entity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Categoria no encontrada"));
+        entity.setStatus(Status.INACTIVO);
         return categoryEntityMapper.toDomain(categoryJpaRepository.save(entity));
     }
 
     @Override
     public Category activateById(int id) {
-        CategoryEntity entity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
-        entity.setStatus(Estado.ACTIVO);
+        CategoryEntity entity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Categoria no encontrada"));
+        entity.setStatus(Status.ACTIVO);
         return categoryEntityMapper.toDomain(categoryJpaRepository.save(entity));
     }
 
     @Override
-    public List<Category> getCategorys(Estado estado) {
-            if (estado == null) {
+    public List<Category> getCategorys(Status status) {
+            if (status == null) {
                 return categoryEntityMapper.toListDomain(
                         categoryJpaRepository.findAll()
                 );
-            } else if (estado == Estado.ACTIVO) {
+            } else if (status == Status.ACTIVO) {
                 return categoryEntityMapper.toListDomain(
                         categoryJpaRepository.getAllCategoriasActivas());
             }
@@ -64,7 +64,7 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
     @Override
     public Category getCategoryById(int id) {
 
-        CategoryEntity categoryEntity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoriaNoEncontradaException("Categoria no encontrada"));
+        CategoryEntity categoryEntity = categoryJpaRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Categoria no encontrada"));
         return categoryEntityMapper.toDomain(categoryEntity);
     }
 

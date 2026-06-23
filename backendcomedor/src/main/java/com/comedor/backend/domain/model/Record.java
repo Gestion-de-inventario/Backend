@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.ProductSource;
 
 import java.math.BigDecimal;
 
@@ -8,7 +8,7 @@ public class Record {
     private int id;
     private Product product;
     private BigDecimal amount;
-    private FuenteProducto productSource;
+    private ProductSource productSource;
     private BigDecimal unitPrice = BigDecimal.ZERO;
 
     public int getId() {
@@ -23,7 +23,7 @@ public class Record {
         return amount;
     }
 
-    public FuenteProducto getProductSource() {
+    public ProductSource getProductSource() {
         return productSource;
     }
 
@@ -43,7 +43,7 @@ public class Record {
         this.amount = amount;
     }
 
-    public void setProductSource(FuenteProducto productSource) {
+    public void setProductSource(ProductSource productSource) {
         this.productSource = productSource;
     }
 

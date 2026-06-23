@@ -1,6 +1,6 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class DishMenu {
 
     private String name;
 
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
     private List<DishSupply> supplies = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class DishMenu {
 
     public DishMenu(Integer id,
                     String name,
-                    Estado status,
+                    Status status,
                     List<DishSupply> supplies) {
 
         this.id = id;
@@ -45,11 +45,11 @@ public class DishMenu {
         this.name = name;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

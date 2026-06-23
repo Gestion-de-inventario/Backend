@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +9,6 @@ import java.util.List;
 public class RolResponseDTO {
     int role_id;
     String name;
-    Estado status;
+    Status status;
     private List<String> permissions;
 }

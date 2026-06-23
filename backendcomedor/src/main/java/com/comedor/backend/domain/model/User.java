@@ -1,17 +1,17 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 public class User {
     private Integer id;
     private String username;
     private String password;
     private Role role;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
     private Person person;
     private boolean passwordChanged = false;
 
-    public User(Integer id, String username, String password, Role role, Estado status, Person person, Boolean passwordChanged) {
+    public User(Integer id, String username, String password, Role role, Status status, Person person, Boolean passwordChanged) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -36,7 +36,7 @@ public class User {
         return username;
     }
 
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -56,7 +56,7 @@ public class User {
         this.role = role;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

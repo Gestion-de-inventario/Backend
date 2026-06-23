@@ -1,7 +1,7 @@
 package com.comedor.backend.domain.model;
 
-import com.comedor.backend.domain.model.enums.EstadoOrden;
-import com.comedor.backend.domain.model.enums.FuenteProducto;
+import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.ProductSource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,11 +12,11 @@ public class OrderIn {
 
     private Integer id;
 
-    private FuenteProducto source;
+    private ProductSource source;
 
     private LocalDate date;
 
-    private EstadoOrden status;
+    private StatusOrder status;
 
     private BigDecimal totalSpent;
 
@@ -39,11 +39,11 @@ public class OrderIn {
         this.id = id;
     }
 
-    public FuenteProducto getSource() {
+    public ProductSource getSource() {
         return source;
     }
 
-    public void setSource(FuenteProducto source) {
+    public void setSource(ProductSource source) {
         this.source = source;
     }
 
@@ -55,11 +55,11 @@ public class OrderIn {
         this.date = date;
     }
 
-    public EstadoOrden getStatus() {
+    public StatusOrder getStatus() {
         return status;
     }
 
-    public void setStatus(EstadoOrden status) {
+    public void setStatus(StatusOrder status) {
         this.status = status;
     }
 

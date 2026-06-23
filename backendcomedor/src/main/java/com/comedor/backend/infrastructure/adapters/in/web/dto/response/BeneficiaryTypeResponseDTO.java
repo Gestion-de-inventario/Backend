@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,5 +15,5 @@ public class BeneficiaryTypeResponseDTO {
 
     private BigDecimal menu_cost;
 
-    private Estado status;
+    private Status status;
 }

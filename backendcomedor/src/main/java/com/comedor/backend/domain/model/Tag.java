@@ -1,10 +1,10 @@
 package com.comedor.backend.domain.model;
-import com.comedor.backend.domain.model.enums.Estado;
+import com.comedor.backend.domain.model.enums.Status;
 
 public class Tag {
     private int id;
     private String name;
-    private Estado status = Estado.ACTIVO;
+    private Status status = Status.ACTIVO;
 
     public void setName(String name) {
         this.name = name.toUpperCase();
@@ -13,14 +13,14 @@ public class Tag {
         this.id = id;
     }
 
-    public void setStatus(Estado status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
     public String getName() {
         return name;
     }
-    public Estado getStatus() {
+    public Status getStatus() {
         return status;
     }
     public int getId() {

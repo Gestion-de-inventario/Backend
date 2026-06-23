@@ -2,9 +2,9 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.EditBeneficiaryTypeUseCase;
-import com.comedor.backend.application.ports.in.RegistrarModificacionUseCase;
+import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
-import com.comedor.backend.domain.exceptions.TipoDeBeneficiarioYaExiste;
+import com.comedor.backend.domain.exceptions.BeneficiaryTypeAlreadyExistsException;
 import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryTypeRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
@@ -16,12 +16,12 @@ import java.util.Objects;
 public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
     private final BeneficiaryTypeRepositoryPort repository;
     private final BeneficiaryTypeMapper mapper;
-    private final RegistrarModificacionUseCase registrarModificacionUseCase;
+    private final RegisterModificationUseCase registerModificationUseCase;
 
-    public EditBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegistrarModificacionUseCase registrarModificacionUseCase) {
+    public EditBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegisterModificationUseCase registerModificationUseCase) {
         this.repository = repository;
         this.mapper = mapper;
-        this.registrarModificacionUseCase = registrarModificacionUseCase;
+        this.registerModificationUseCase = registerModificationUseCase;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         if (!beneficiaryType.getName().equalsIgnoreCase(normalizedName)
                 && repository.existsByNameAndIdNot(normalizedName, id)
         ) {
-            throw new TipoDeBeneficiarioYaExiste(
+            throw new BeneficiaryTypeAlreadyExistsException(
                     "Ya existe un tipo de beneficiario con el nombre : " + normalizedName
             );
         }
@@ -104,7 +104,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
             String valorAnterior,
             String valorNuevo
     ) {
-        registrarModificacionUseCase.registrar(
+        registerModificationUseCase.registrar(
                 new ModificationsRequestDTO(
                         "Tipo Beneficiario",
                         campo,
