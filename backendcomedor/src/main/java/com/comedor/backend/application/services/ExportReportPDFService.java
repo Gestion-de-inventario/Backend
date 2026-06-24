@@ -2,9 +2,11 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ExportReportPDFUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
+import com.comedor.backend.application.ports.out.EmpresaConfigRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.DishSupply;
+import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.domain.model.MenuReport;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -25,16 +27,19 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 
 public class ExportReportPDFService implements ExportReportPDFUseCase {
 
     private final MenuReportRepositoryPort menuReportRepositoryPort;
     private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
+    private final EmpresaConfigRepositoryPort empresaConfigRepositoryPort;
 
-    public ExportReportPDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
+    public ExportReportPDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
+        this.empresaConfigRepositoryPort = empresaConfigRepositoryPort;
     }
 
     @Override
@@ -49,24 +54,30 @@ public class ExportReportPDFService implements ExportReportPDFUseCase {
             doc.setMargins(40, 40, 40, 40);
 
             // ── LOGO ──
-            try {
-                ClassPathResource logoResource = new ClassPathResource("static/logo.jpg");
-                ImageData imageData = ImageDataFactory.create(logoResource.getInputStream().readAllBytes());
-                Image logo = new Image(imageData).setWidth(70).setHeight(70);
+            EmpresaConfig config = empresaConfigRepositoryPort.obtener();
 
-                // Header con logo + título
+            try {
+                byte[] logoBytes;
+                if (config.getLogoBase64() != null && !config.getLogoBase64().isBlank()) {
+                    logoBytes = Base64.getDecoder().decode(config.getLogoBase64());
+                } else {
+                    ClassPathResource logoResource = new ClassPathResource("static/logo.jpg");
+                    logoBytes = logoResource.getInputStream().readAllBytes();
+                }
+
+                ImageData imageData = ImageDataFactory.create(logoBytes);
+                Image logo = new Image(imageData).setWidth(60).setHeight(60);
                 Table header = new Table(UnitValue.createPercentArray(new float[]{1, 4})).useAllAvailableWidth();
                 header.addCell(new Cell().add(logo).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
                 header.addCell(new Cell()
-                        .add(new Paragraph("COMEDOR MUNICIPAL\nMUNICIPALIDAD PROVINCIAL DE TRUJILLO")
-                                .setBold().setFontSize(14).setFontColor(new DeviceRgb(48, 63, 159)))
-                        .add(new Paragraph("REPORTE DIARIO DE MENÚ")
+                        .add(new Paragraph(config.getNombre())
+                                .setBold().setFontSize(13).setFontColor(new DeviceRgb(48, 63, 159)))
+                        .add(new Paragraph(config.getDescripcion() != null ? config.getDescripcion() : "")
                                 .setFontSize(11).setFontColor(new DeviceRgb(100, 100, 100)))
-                        .setBorder(Border.NO_BORDER)
-                        .setVerticalAlignment(VerticalAlignment.MIDDLE));
+                        .setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
                 doc.add(header);
             } catch (Exception e) {
-                doc.add(new Paragraph("REPORTE DIARIO DE MENÚ").setBold().setFontSize(16));
+                doc.add(new Paragraph(config.getNombre()).setBold().setFontSize(16));
             }
 
             // Línea separadora

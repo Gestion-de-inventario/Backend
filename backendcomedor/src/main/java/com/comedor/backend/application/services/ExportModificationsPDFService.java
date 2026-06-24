@@ -2,7 +2,9 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.ModificationsMapper;
 import com.comedor.backend.application.ports.in.ExportModificationsPDFUseCase;
+import com.comedor.backend.application.ports.out.EmpresaConfigRepositoryPort;
 import com.comedor.backend.application.ports.out.ModificationsRepositoryPort;
+import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.domain.model.Modifications;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ModificationsResponseDTO;
 import com.itextpdf.io.image.ImageData;
@@ -22,16 +24,20 @@ import com.itextpdf.layout.properties.VerticalAlignment;
 import org.springframework.core.io.ClassPathResource;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 
 public class ExportModificationsPDFService implements ExportModificationsPDFUseCase {
 
     private final ModificationsRepositoryPort repository;
     private final ModificationsMapper mapper;
+    private final EmpresaConfigRepositoryPort empresaConfigRepositoryPort;
 
-    public ExportModificationsPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper) {
+
+    public ExportModificationsPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort) {
         this.repository = repository;
         this.mapper = mapper;
+        this.empresaConfigRepositoryPort = empresaConfigRepositoryPort;
     }
 
     @Override
@@ -48,21 +54,30 @@ public class ExportModificationsPDFService implements ExportModificationsPDFUseC
             doc.setMargins(40, 40, 40, 40);
 
             // Header
+            EmpresaConfig config = empresaConfigRepositoryPort.obtener();
+
             try {
-                ClassPathResource logoResource = new ClassPathResource("static/logo.jpg");
-                ImageData imageData = ImageDataFactory.create(logoResource.getInputStream().readAllBytes());
+                byte[] logoBytes;
+                if (config.getLogoBase64() != null && !config.getLogoBase64().isBlank()) {
+                    logoBytes = Base64.getDecoder().decode(config.getLogoBase64());
+                } else {
+                    ClassPathResource logoResource = new ClassPathResource("static/logo.jpg");
+                    logoBytes = logoResource.getInputStream().readAllBytes();
+                }
+
+                ImageData imageData = ImageDataFactory.create(logoBytes);
                 Image logo = new Image(imageData).setWidth(60).setHeight(60);
                 Table header = new Table(UnitValue.createPercentArray(new float[]{1, 4})).useAllAvailableWidth();
                 header.addCell(new Cell().add(logo).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
                 header.addCell(new Cell()
-                        .add(new Paragraph("COMEDOR MUNICIPAL\nMUNICIPALIDAD PROVINCIAL DE TRUJILLO")
+                        .add(new Paragraph(config.getNombre())
                                 .setBold().setFontSize(13).setFontColor(new DeviceRgb(48, 63, 159)))
-                        .add(new Paragraph("HISTORIAL DE MODIFICACIONES")
+                        .add(new Paragraph(config.getDescripcion() != null ? config.getDescripcion() : "")
                                 .setFontSize(11).setFontColor(new DeviceRgb(100, 100, 100)))
                         .setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
                 doc.add(header);
             } catch (Exception e) {
-                doc.add(new Paragraph("HISTORIAL DE MODIFICACIONES").setBold().setFontSize(16));
+                doc.add(new Paragraph(config.getNombre()).setBold().setFontSize(16));
             }
 
             String periodo = (fechaInicio != null ? fechaInicio.toString() : "Inicio") +

@@ -16,5 +16,6 @@ public enum ModuleCode {
     PURCHASE,
     DONATION,
     REPORTS,
-    ORDER
+    ORDER,
+    EMPRESA_CONFIG
 }
