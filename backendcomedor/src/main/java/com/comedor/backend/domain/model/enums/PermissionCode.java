@@ -77,6 +77,7 @@ public enum PermissionCode {
     USER_DEACTIVATE,
     USER_ACTIVATE,
 
+
     // =========================
     // ROLE
     // =========================
@@ -119,5 +120,11 @@ public enum PermissionCode {
     // =========================
     // REPORTS
     // =========================
-    DASHBOARD_VIEW
+    DASHBOARD_VIEW,
+
+    // =========================
+    // EMPRESA
+    // =========================
+    EMPRESA_CONFIG_VIEW,
+    EMPRESA_CONFIG_EDIT,
 }

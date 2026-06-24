@@ -453,8 +453,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ExportReportPDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort){
-        return new ExportReportPDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    ExportReportPDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
+        return new ExportReportPDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, empresaConfigRepositoryPort);
     }
 
     @Bean
@@ -468,13 +468,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ExportTransactionsPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper){
-        return new ExportTransactionsPDFService(repository, mapper);
+    ExportTransactionsPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
+        return new ExportTransactionsPDFService(repository, mapper, empresaConfigRepositoryPort);
     }
 
     @Bean
-    ExportModificationsPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper){
-        return new ExportModificationsPDFService(repository, mapper);
+    ExportModificationsPDFService exportarModificacionesPDFService(ModificationsRepositoryPort repository, ModificationsMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
+        return new ExportModificationsPDFService(repository, mapper, empresaConfigRepositoryPort);
     }
 
     @Bean
@@ -524,6 +524,16 @@ public class UseCaseConfig {
     @Bean
     GetDonationByIdService getDonationByIdService(DonationRepositoryPort repository, DonationMapper mapper){
         return new GetDonationByIdService(repository,mapper);
+    }
+
+    @Bean
+    ObtenerEmpresaConfigService obtenerEmpresaConfigService(EmpresaConfigRepositoryPort repository) {
+        return new ObtenerEmpresaConfigService(repository);
+    }
+
+    @Bean
+    ActualizarEmpresaConfigService actualizarEmpresaConfigService(EmpresaConfigRepositoryPort repository) {
+        return new ActualizarEmpresaConfigService(repository);
     }
 }
 
