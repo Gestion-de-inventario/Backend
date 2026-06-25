@@ -532,8 +532,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ActualizarEmpresaConfigService actualizarEmpresaConfigService(EmpresaConfigRepositoryPort repository) {
-        return new ActualizarEmpresaConfigService(repository);
+    UpdateCompanyConfigService actualizarEmpresaConfigService(EmpresaConfigRepositoryPort repository) {
+        return new UpdateCompanyConfigService(repository);
     }
 }
 

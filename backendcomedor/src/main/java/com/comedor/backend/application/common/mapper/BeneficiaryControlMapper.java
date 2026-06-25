@@ -50,6 +50,8 @@ public class BeneficiaryControlMapper {
 
         dto.setId(control.getId());
 
+        dto.setBeneficiaryId(control.getBeneficiario().getId());
+
         dto.setName(
                 control.getBeneficiario().getName()
         );
