@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class BeneficiaryRecordResponseDTO {
     private int id;
+    private Integer beneficiaryId;
     private String name;
     private String lastName;
     private int cantidad;

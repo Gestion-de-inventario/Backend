@@ -1,6 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
-import com.comedor.backend.application.ports.in.ActualizarEmpresaConfigUseCase;
+import com.comedor.backend.application.ports.in.UpdateCompanyConfigUseCase;
 import com.comedor.backend.application.ports.in.ObtenerEmpresaConfigUseCase;
 import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EmpresaConfigRequestDTO;
@@ -19,7 +19,7 @@ import java.util.Base64;
 public class EmpresaConfigController {
 
     private final ObtenerEmpresaConfigUseCase obtenerEmpresaConfigUseCase;
-    private final ActualizarEmpresaConfigUseCase actualizarEmpresaConfigUseCase;
+    private final UpdateCompanyConfigUseCase updateCompanyConfigUseCase;
 
     @PreAuthorize("hasAuthority('EMPRESA_CONFIG_VIEW')")
     @GetMapping
@@ -48,7 +48,7 @@ public class EmpresaConfigController {
             }
         }
 
-        return actualizarEmpresaConfigUseCase.actualizar(request);
+        return updateCompanyConfigUseCase.actualizar(request);
     }
 
 }
