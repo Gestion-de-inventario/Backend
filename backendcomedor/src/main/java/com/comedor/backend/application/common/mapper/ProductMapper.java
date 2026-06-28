@@ -31,7 +31,6 @@ public class ProductMapper {
         }
 
         product.setUnit(dto.getUnit());
-        product.setStock(dto.getStock());
         product.setReorderPoint(dto.getReorderPoint());
 
         return product;

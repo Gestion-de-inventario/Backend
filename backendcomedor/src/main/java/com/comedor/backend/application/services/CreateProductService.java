@@ -12,6 +12,8 @@ import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 
+import java.math.BigDecimal;
+
 public class CreateProductService implements CreateProductUseCase {
 
     private final ProductRepositoryPort productRepositoryPort;
@@ -44,6 +46,7 @@ public class CreateProductService implements CreateProductUseCase {
         }
 
         Product product = productMapper.toDomain(productRequestDTO);
+        product.setStock(BigDecimal.ZERO);
         product.setCategory(category);
         product.setTag(tag);
         return  productMapper.productoResponseDTO(productRepositoryPort.createProducto(product));
