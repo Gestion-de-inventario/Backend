@@ -10,6 +10,5 @@ public class ProductRequestDTO {
     private Integer  categoryId;
     private Integer  tagId;
     private String unit;
-    private BigDecimal stock;
     private BigDecimal reorderPoint;
 }

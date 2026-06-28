@@ -10,6 +10,7 @@ public class AuthResponseDTO {
     private String token;
     private String name;
     private String lastname;
+    private String dni;
     private String role;
     private List<String> permissions;
     private boolean passwordChanged;

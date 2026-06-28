@@ -28,6 +28,7 @@ public class AuthMapper {
             dto.setId(user.getId());
             dto.setName(user.getPersona().getName());
             dto.setLastname(user.getPersona().getLastname());
+            dto.setDni(user.getPersona().getDni());
             dto.setRole(user.getRol().getName());
             dto.setPermissions(
                     user.getRol()
