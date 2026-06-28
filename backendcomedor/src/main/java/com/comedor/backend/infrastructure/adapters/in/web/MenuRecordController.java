@@ -156,4 +156,21 @@ public class MenuRecordController {
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(excel);
     }
+
+    @PreAuthorize("hasAuthority('MENU_REPORT_EXPORT')")
+    @GetMapping("/export/excel")
+    public ResponseEntity<byte[]> exportarRangoExcel(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
+        byte[] excel = exportReportExcelUseCase.exportar(startDate, endDate);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + startDate + "-" + endDate +".xlsx")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(excel);
+    }
 }

@@ -4,5 +4,5 @@ import java.time.LocalDate;
 
 public interface ExportReportPDFUseCase {
     byte[] exportar(int reporteId);
-    public byte[] exportar(LocalDate startDate, LocalDate endDate);
+    byte[] exportar(LocalDate startDate, LocalDate endDate);
 }
