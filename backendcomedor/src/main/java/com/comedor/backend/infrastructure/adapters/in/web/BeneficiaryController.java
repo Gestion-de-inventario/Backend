@@ -92,26 +92,21 @@ public class BeneficiaryController {
 
     @PreAuthorize("hasAuthority('BENEFICIARY_CREATE_BY_DNI')")
     @PostMapping("/reniec/{dni}")
-    public ResponseEntity<?> consultarYRegistrar(@PathVariable String dni) {
-        try {
-            Beneficiary beneficiary = getAndRegisterByReniecUseCase.consultarYRegistrar(dni);
+    @ResponseStatus(HttpStatus.CREATED)
+    public BeneficiaryResponseDTO consultarYRegistrar(@PathVariable String dni) {
 
-            return new ResponseEntity<>(beneficiaryMapper.convertToDTO(beneficiary),HttpStatus.CREATED);
+        Beneficiary beneficiary =
+                getAndRegisterByReniecUseCase.consultarYRegistrar(dni);
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar Beneficiario");
-        }
+        return beneficiaryMapper.convertToDTO(beneficiary);
     }
 
     @PreAuthorize("hasAuthority('BENEFICIARY_EDIT')")
     @PutMapping("edit/{id}")
-    public ResponseEntity<?> editar(@PathVariable int id, @Valid @RequestBody EditBeneficiaryRequestDTO editarBeneficiarioRequest) {
+    public BeneficiaryResponseDTO editar(@PathVariable int id, @Valid @RequestBody EditBeneficiaryRequestDTO editarBeneficiarioRequest) {
 
             Beneficiary beneficiaryUpdated = editBeneficiaryUseCase.editar(id, editarBeneficiarioRequest);
-            BeneficiaryResponseDTO responseDTO = beneficiaryMapper.convertToDTO(beneficiaryUpdated);
-            return ResponseEntity.ok(responseDTO);
+            return beneficiaryMapper.convertToDTO(beneficiaryUpdated);
     }
 
     @PreAuthorize("hasAuthority('BENEFICIARY_LIST_BY_STATUS')")

@@ -5,6 +5,7 @@ import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.domain.exceptions.ProductWithTransactionsException;
 import com.comedor.backend.domain.exceptions.ProductNotFoundException;
 import com.comedor.backend.domain.exceptions.ProductAlreadyExistsException;
+import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditProductRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRequestDTO;
@@ -59,18 +60,10 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('PRODUCT_EDIT')")
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> editarProducto(@PathVariable int id, @RequestBody EditProductRequestDTO request) {
-        try {
-            return ResponseEntity.ok(editProductUseCase.editar(id, request));
-        } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (ProductWithTransactionsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (ProductAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al editar el producto");
-        }
+    public Product editarProducto(@PathVariable int id, @RequestBody EditProductRequestDTO request) {
+
+            return editProductUseCase.editar(id, request);
+
     }
 
 }
