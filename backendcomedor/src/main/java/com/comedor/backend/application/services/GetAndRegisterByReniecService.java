@@ -4,6 +4,8 @@ import com.comedor.backend.application.ports.in.GetDataByDniUseCase;
 import com.comedor.backend.application.ports.in.GetAndRegisterByReniecUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryRepositoryPort;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
+import com.comedor.backend.domain.exceptions.BeneficiaryAlreadyRegisteredException;
+import com.comedor.backend.domain.exceptions.BeneficiaryNotFoundException;
 import com.comedor.backend.domain.model.Beneficiary;
 import com.comedor.backend.domain.model.BeneficiaryType;
 import com.comedor.backend.domain.model.PersonalDataReniec;
@@ -24,19 +26,27 @@ public class GetAndRegisterByReniecService implements GetAndRegisterByReniecUseC
 
     @Override
     public Beneficiary consultarYRegistrar(String dni) {
-        PersonalDataReniec personalDataReniec = getDataByDniUseCase.consultar(dni);
-        BeneficiaryType defaulType = beneficiaryTypeRepositoryPort.findById(1);
-        return beneficiaryRepositoryPort.buscarPorDni(dni)
-                .orElseGet(() -> beneficiaryRepositoryPort.guardar(
-                        new Beneficiary(
-                                0,
-                                personalDataReniec.getDni(),
-                                personalDataReniec.getNames(),
-                                personalDataReniec.getLastnames(),
-                                Status.ACTIVO,
-                                defaulType
+        if (beneficiaryRepositoryPort.existePorDni(dni)) {
+            throw new BeneficiaryAlreadyRegisteredException(
+                    "Ya existe un beneficiario registrado con el DNI " + dni
+            );
+        }
 
-                        )
-                ));
+        PersonalDataReniec personalDataReniec =
+                getDataByDniUseCase.consultar(dni);
+
+        BeneficiaryType defaultType =
+                beneficiaryTypeRepositoryPort.findById(1);
+
+        Beneficiary beneficiary = new Beneficiary(
+                0,
+                personalDataReniec.getDni(),
+                personalDataReniec.getNames(),
+                personalDataReniec.getLastnames(),
+                Status.ACTIVO,
+                defaultType
+        );
+
+        return beneficiaryRepositoryPort.guardar(beneficiary);
     }
 }
