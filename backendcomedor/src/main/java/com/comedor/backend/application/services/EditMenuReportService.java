@@ -6,7 +6,11 @@ import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.domain.exceptions.InsufficientStockException;
 import com.comedor.backend.domain.model.*;
+import com.comedor.backend.domain.model.enums.MovementType;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
+import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditMenuReportRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MissingProductResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MenuReportResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.StockConsumptionResultResponseDTO;
@@ -14,6 +18,7 @@ import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,8 +54,11 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             EditMenuReportRequestDTO request
     ) {
 
+
         MenuReport reporte =
                 menuReportRepositoryPort.findById(id);
+
+
 
         boolean menuChanged =
                 !Objects.equals(
@@ -97,6 +105,8 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             );
         }
 
+        Integer actualQuantity = reporte.getQuantityPrepared();
+
         // =========================
         // MENÚ FINAL
         // =========================
@@ -130,7 +140,9 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         // =========================
         // REVERTIR STOCK Y LOTES
         // =========================
-        revertirStock(reporte);
+        Integer userId = currentUserService.getCurrentUser().getId();
+
+        revertirStock(reporte,userId);
 
         // =========================
         // APLICAR NUEVO CONSUMO
@@ -138,7 +150,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         StockConsumptionResultResponseDTO resultado =
                 aplicarNuevoStock(
                         finalDishMenu,
-                        newQty
+                        newQty,userId
                 );
 
         // =========================
@@ -166,8 +178,16 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                 resultado.getTotalSpent()
         );
 
-        // pendiente:
-        // registrar transacción MODIFICACION
+        registrarMovimiento(
+                userId,
+                null,
+                finalDishMenu.getName(),
+                BigDecimal.valueOf(request.getQuantityPrepared()),
+                BigDecimal.valueOf(actualQuantity),
+                PeruTime.now(),
+                TransactionReferenceType.MENU,
+                MovementType.ENTRADA
+        );
 
         return mapper.toDto(
                 menuReportRepositoryPort.save(reporte)
@@ -239,7 +259,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             throw new InsufficientStockException(faltantes);
         }
     }
-    private void revertirStock(MenuReport reporte) {
+    private void revertirStock(MenuReport reporte,Integer userId) {
 
         BigDecimal qty =
                 BigDecimal.valueOf(reporte.getQuantityPrepared());
@@ -266,13 +286,25 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                     product.getStock().add(total)
             );
 
+            registrarMovimiento(
+                    userId,
+                    product.getId(),
+                    product.getName(),
+                    total,
+                    product.getStock(),
+                    PeruTime.now(),
+                    TransactionReferenceType.INGREDIENTE,
+                    MovementType.ENTRADA
+                    );
+
             productRepository.updateStock(product);
         }
     }
 
     private StockConsumptionResultResponseDTO aplicarNuevoStock(
             DishMenu menu,
-            BigDecimal qty
+            BigDecimal qty,
+            Integer userId
     ) {
 
         List<StockMovement> movimientos = new ArrayList<>();
@@ -340,6 +372,18 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                     product.getStock().subtract(requerido)
             );
 
+            registrarMovimiento(
+                    userId,
+                    product.getId(),
+                    product.getName(),
+                    requerido,
+                    product.getStock(),
+                    PeruTime.now(),
+                    TransactionReferenceType.INGREDIENTE,
+                    MovementType.SALIDA
+            );
+
+
             productRepository.updateStock(product);
         }
 
@@ -350,21 +394,30 @@ public class EditMenuReportService implements EditMenuReportUseCase {
     }
 
 
-  /*  private void registrarMovimiento(
-            Integer usuarioId,
-            Integer productoId,
+    private void registrarMovimiento(
+            Integer userId,
+            Integer referenceId,
+            String itemName,
             BigDecimal amount,
-            TipoMovimiento tipo,
-            FuenteTransaccion source
+            BigDecimal currentStock,
+            LocalDateTime localDateTime,
+            TransactionReferenceType referenceType,
+            MovementType movementType
     ) {
-        TransaccionRequestDTO dto = new TransaccionRequestDTO();
+        TransactionRequestDTO dto = new TransactionRequestDTO();
 
+        dto.setReferenceType(referenceType);
+        if(referenceId != null)
+        {
+            dto.setReferenceId(referenceId);
+        }
+        dto.setItemName(itemName);
+        dto.setType(movementType);
         dto.setAmount(amount);
-        dto.setProductId(productoId);
-        dto.setUserId(usuarioId);
-        dto.setType(tipo);
-        dto.setSource(source);
-
-        registrarTransaccionUseCase.registrarTransaccion(dto);
-    }*/
+        dto.setCurrentStock(currentStock);
+        dto.setSource(TransactionSource.INVENTARIO);
+        dto.setUserId(userId);
+        dto.setDateTime(localDateTime);
+        registerTransactionUseCase.registrarTransaccion(dto);
+    }
 }

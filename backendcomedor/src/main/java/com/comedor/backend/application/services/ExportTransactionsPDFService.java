@@ -89,7 +89,7 @@ public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCas
 
             // Tabla
             Table table = new Table(UnitValue.createPercentArray(new float[]{1.5f, 1, 1, 1, 1, 2})).useAllAvailableWidth();
-            String[] headers = {"Fecha", "Producto", "Tipo", "Cantidad", "Stock Final", "Usuario"};
+            String[] headers = {"Fecha", "Producto","Tipo Producto", "Tipo de transaccion","Fuente", "Cantidad", "Stock Final", "Usuario"};
             for (String h : headers) {
                 table.addHeaderCell(new Cell().add(new Paragraph(h).setBold())
                         .setBackgroundColor(new DeviceRgb(48, 63, 159))
@@ -99,8 +99,10 @@ public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCas
             for (Transactions t : transacciones) {
                 TransactionResponseDTO dto = mapper.toDTO(t);
                 table.addCell(new Cell().add(new Paragraph(dto.getDateTime().toString())));
-                table.addCell(new Cell().add(new Paragraph(dto.getProductName())));
+                table.addCell(new Cell().add(new Paragraph(dto.getItemName())));
+                table.addCell(new Cell().add(new Paragraph(dto.getReferenceType().toString())));
                 table.addCell(new Cell().add(new Paragraph(dto.getType().name())));
+                table.addCell(new Cell().add(new Paragraph(dto.getSource().toString())));
                 table.addCell(new Cell().add(new Paragraph(dto.getAmount().toString())));
                 table.addCell(new Cell().add(new Paragraph(dto.getFinalStock().toString())));
                 table.addCell(new Cell().add(new Paragraph(dto.getPersonaName() + " " + dto.getPersonaLastName())));

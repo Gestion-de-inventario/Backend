@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface TransactionJpaRepository extends JpaRepository<TransactionsEntity, Integer> ,
         JpaSpecificationExecutor<TransactionsEntity> {
-    boolean existsByProductId(int productoId);
+    boolean existsByReferenceId(int productoId);
 
     @Query(value = "SELECT * FROM transactions t WHERE " +
             "(?1::date IS NULL OR t.date_time::date >= ?1::date) AND " +

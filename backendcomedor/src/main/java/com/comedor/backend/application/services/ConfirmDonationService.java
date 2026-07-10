@@ -9,6 +9,7 @@ import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
@@ -85,9 +86,9 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
             registrarMovimiento(
                     usuarioId,
                     product.getId(),
+                    product.getName(),
                     detail.getQuantity(),
-                    MovementType.ENTRADA,
-                    TransactionSource.DONACION,
+                    product.getStock(),
                     PeruTime.now()
             );
 
@@ -102,19 +103,22 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
 
     private void registrarMovimiento(
             Integer usuarioId,
-            Integer productoId,
+            Integer referenceId,
+            String itemName,
             BigDecimal amount,
-            MovementType tipo,
-            TransactionSource source,
+            BigDecimal currentStock,
             LocalDateTime localDateTime
     ) {
         TransactionRequestDTO dto = new TransactionRequestDTO();
 
+        dto.setReferenceType(TransactionReferenceType.INGREDIENTE);
+        dto.setReferenceId(referenceId);
+        dto.setItemName(itemName);
+        dto.setType(MovementType.ENTRADA);
         dto.setAmount(amount);
-        dto.setProductId(productoId);
+        dto.setCurrentStock(currentStock);
+        dto.setSource(TransactionSource.DONACION);
         dto.setUserId(usuarioId);
-        dto.setType(tipo);
-        dto.setSource(source);
         dto.setDateTime(localDateTime);
 
         registerTransactionUseCase.registrarTransaccion(dto);

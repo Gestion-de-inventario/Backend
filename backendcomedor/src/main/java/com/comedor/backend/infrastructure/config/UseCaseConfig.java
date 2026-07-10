@@ -218,9 +218,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    RegisterTransactionService registrarTransaccionService(TransactionRepositoryPort repository, ProductRepositoryPort productRepository , TransactionMapper mapper)
+    RegisterTransactionService registrarTransaccionService(TransactionRepositoryPort repository , TransactionMapper mapper)
     {
-        return new RegisterTransactionService(repository,productRepository,mapper);
+        return new RegisterTransactionService(repository,mapper);
     }
 
     @Bean
@@ -259,32 +259,22 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditBeneficiaryRecordService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort)
+    EditBeneficiaryRecordService editarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort,RegisterTransactionUseCase registerTransactionUseCase,CurrentUserService currentUserService)
     {
-        return new EditBeneficiaryRecordService(beneficiaryControlRepositoryPort, beneficiaryControlMapper, recalculateSummaryReportUseCase,menuReportRepositoryPort);
+        return new EditBeneficiaryRecordService(beneficiaryControlRepositoryPort, beneficiaryControlMapper, recalculateSummaryReportUseCase,menuReportRepositoryPort,registerTransactionUseCase,currentUserService);
     }
 
     @Bean
     AddRecordBeneficiaryService agregarRegistroBeneficiarioService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,
                                                                    BeneficiaryControlMapper beneficiaryControlMapper, BeneficiaryRepositoryPort beneficiaryRepositoryPort,
-                                                                   RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort)
+                                                                   RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort,RegisterTransactionUseCase registerTransactionUseCase,CurrentUserService currentUserService)
     {
-        return new AddRecordBeneficiaryService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,beneficiaryRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort);
+        return new AddRecordBeneficiaryService(beneficiaryControlRepositoryPort, beneficiaryControlMapper,beneficiaryRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort,registerTransactionUseCase,currentUserService);
     }
 
     @Bean
-    DeleteBeneficiaryRecordService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort){
-        return new DeleteBeneficiaryRecordService(beneficiaryControlRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort);
-    }
-
-    @Bean
-    EditProductRegistryService editarRegistroProductoService (ProductRecordRepositoryPort productRecordRepositoryPort,
-                                                              ProductRecordMapper productRecordMapper,
-                                                              UpdateStockUseCase updateStockUseCase,
-                                                              RegisterTransactionUseCase registerTransactionUseCase,
-                                                              RecalculateSummaryReportUseCase recalculateSummaryReportUseCase,
-                                                              CurrentUserService currentUserService){
-        return new EditProductRegistryService(productRecordRepositoryPort, productRecordMapper, updateStockUseCase, registerTransactionUseCase, recalculateSummaryReportUseCase,currentUserService);
+    DeleteBeneficiaryRecordService eliminarRegistroBeneficiarioService (BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RecalculateSummaryReportUseCase recalculateSummaryReportUseCase, MenuReportRepositoryPort menuReportRepositoryPort,RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
+        return new DeleteBeneficiaryRecordService(beneficiaryControlRepositoryPort, recalculateSummaryReportUseCase,menuReportRepositoryPort,registerTransactionUseCase,currentUserService);
     }
 
     @Bean

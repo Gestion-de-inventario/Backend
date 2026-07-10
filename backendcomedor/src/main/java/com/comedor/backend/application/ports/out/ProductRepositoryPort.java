@@ -15,7 +15,7 @@ public interface ProductRepositoryPort {
 
     Product updateProducto(Product product);
     Product updateStock(Product product);
-    boolean tieneTransaccionesVinculadas(int id);
+    boolean tieneTransaccionesVinculadas(Integer id);
     boolean existByNameAndIdNot(String nombre, int id);
 
     List<Product> getProductosBajoStockMinimo();

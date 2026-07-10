@@ -3,13 +3,22 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.BeneficiaryControlMapper;
 import com.comedor.backend.application.ports.in.EditBeneficiaryRecordUseCase;
 import com.comedor.backend.application.ports.in.RecalculateSummaryReportUseCase;
+import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.MenuReport;
+import com.comedor.backend.domain.model.enums.MovementType;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
+import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ControlBeneficiarioRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryRecordResponseDTO;
+import com.comedor.backend.infrastructure.config.PeruTime;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Transactional
 public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCase {
@@ -17,11 +26,15 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
     private final BeneficiaryControlMapper beneficiaryControlMapper;
     private final RecalculateSummaryReportUseCase recalcularResumenReporteUseCase;
     private final MenuReportRepositoryPort menuReportRepositoryPort;
-    public EditBeneficiaryRecordService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalculateSummaryReportUseCase recalcularResumenReporteUseCase, MenuReportRepositoryPort menuReportRepositoryPort) {
+    private final RegisterTransactionUseCase registerTransactionUseCase;
+    private final CurrentUserService currentUserService;
+    public EditBeneficiaryRecordService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, BeneficiaryControlMapper beneficiaryControlMapper, RecalculateSummaryReportUseCase recalcularResumenReporteUseCase, MenuReportRepositoryPort menuReportRepositoryPort, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService) {
         this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
         this.beneficiaryControlMapper = beneficiaryControlMapper;
         this.recalcularResumenReporteUseCase = recalcularResumenReporteUseCase;
         this.menuReportRepositoryPort = menuReportRepositoryPort;
+        this.registerTransactionUseCase = registerTransactionUseCase;
+        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -30,9 +43,6 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
         BeneficiaryControl actual =
                 beneficiaryControlRepositoryPort
                         .findById(controlId);
-
-        System.out.println("Beneficiario control encontrado"+actual.toString());
-
 
         if(dto.getPago() != null)
         {
@@ -80,6 +90,19 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
             }
 
             actual.setMenusAmount(newAmount);
+
+            Integer userId =
+                    currentUserService.getCurrentUser().getId();
+            registrarMovimiento(
+                    userId,
+                    //Ojito con el refactor dinamico ,
+                    // aqui seria consultar el name directamente
+                    report.getDishMenu().getName(),
+                    BigDecimal.valueOf(newAmount),
+                    BigDecimal.valueOf(oldAmount),
+                    PeruTime.now()
+            );
+
             menuReportRepositoryPort.update(report);
         }
 
@@ -100,6 +123,28 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
 
         return beneficiaryControlMapper
                 .toDto(actualizado);
+    }
+
+    private void registrarMovimiento(
+            Integer usuarioId,
+            String itemName,
+            BigDecimal amount,
+            BigDecimal currentStock,
+            LocalDateTime localDateTime
+    ) {
+        TransactionRequestDTO dto = new TransactionRequestDTO();
+
+        dto.setReferenceType(TransactionReferenceType.MENU);
+        dto.setReferenceId(null);
+        dto.setItemName(itemName);
+        dto.setType(MovementType.MODIFICACION);
+        dto.setAmount(amount);
+        dto.setCurrentStock(currentStock);
+        dto.setSource(TransactionSource.INVENTARIO);
+        dto.setUserId(usuarioId);
+        dto.setDateTime(localDateTime);
+
+        registerTransactionUseCase.registrarTransaccion(dto);
     }
 
 }

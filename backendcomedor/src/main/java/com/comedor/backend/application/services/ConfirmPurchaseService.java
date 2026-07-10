@@ -12,6 +12,7 @@ import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Purchase;
 import com.comedor.backend.domain.model.PurchaseDetail;
 import com.comedor.backend.domain.model.enums.StatusOrder;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.TransactionRequestDTO;
@@ -89,9 +90,9 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
             registrarMovimiento(
                     usuarioId,
                     product.getId(),
+                    product.getName(),
                     detail.getQuantity(),
-                    MovementType.ENTRADA,
-                    TransactionSource.COMPRA,
+                    product.getStock(),
                     PeruTime.now()
             );
 
@@ -109,24 +110,29 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
 
     private void registrarMovimiento(
             Integer usuarioId,
-            Integer productoId,
+            Integer referenceId,
+            String itemName,
             BigDecimal amount,
-            MovementType tipo,
-            TransactionSource source,
-            LocalDateTime dateTime
+            BigDecimal currentStock,
+            LocalDateTime localDateTime
     ) {
         TransactionRequestDTO dto = new TransactionRequestDTO();
 
+        dto.setReferenceType(TransactionReferenceType.INGREDIENTE);
+        dto.setReferenceId(referenceId);
+        dto.setItemName(itemName);
+        dto.setType(MovementType.ENTRADA);
         dto.setAmount(amount);
-        dto.setProductId(productoId);
+        dto.setCurrentStock(currentStock);
+        dto.setSource(TransactionSource.COMPRA);
         dto.setUserId(usuarioId);
-        dto.setType(tipo);
-        dto.setSource(source);
-        dto.setDateTime(dateTime);
+        dto.setDateTime(localDateTime);
 
         registerTransactionUseCase.registrarTransaccion(dto);
     }
 
 }
+
+
 
 

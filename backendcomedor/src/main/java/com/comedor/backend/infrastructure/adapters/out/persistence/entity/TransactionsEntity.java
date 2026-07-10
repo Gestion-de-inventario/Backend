@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import jakarta.persistence.*;
@@ -18,10 +19,6 @@ public class TransactionsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -44,4 +41,13 @@ public class TransactionsEntity {
     private BigDecimal currentStock;
     @Column(nullable = false, precision = 10, scale = 3)
     private BigDecimal finalStock;
+
+    private Integer referenceId;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionReferenceType referenceType;
+
+    @Column(nullable = false)
+    private String itemName;
+
 }

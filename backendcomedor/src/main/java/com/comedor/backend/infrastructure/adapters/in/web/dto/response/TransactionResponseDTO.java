@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.in.web.dto.response;
 
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import lombok.Data;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Data
 public class TransactionResponseDTO {
     private int id;
+
     private LocalDateTime dateTime;
     private MovementType type;
     private TransactionSource source;
@@ -16,8 +18,8 @@ public class TransactionResponseDTO {
     private BigDecimal currentStock;
     private BigDecimal finalStock;
 
-    private Integer productId;
-    private String productName;
+    private TransactionReferenceType referenceType;
+    private String itemName;
 
 
     private Integer userId;
