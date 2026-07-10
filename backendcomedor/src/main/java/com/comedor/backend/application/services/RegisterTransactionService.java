@@ -12,12 +12,10 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.Transacti
 public class RegisterTransactionService implements RegisterTransactionUseCase {
 
     private final TransactionRepositoryPort repository;
-    private final ProductRepositoryPort productRepository;
     private final TransactionMapper mapper;
 
-    public RegisterTransactionService(TransactionRepositoryPort repository, ProductRepositoryPort productRepository, TransactionMapper mapper) {
+    public RegisterTransactionService(TransactionRepositoryPort repository, TransactionMapper mapper) {
         this.repository = repository;
-        this.productRepository = productRepository;
         this.mapper = mapper;
     }
 
@@ -26,7 +24,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
         Transactions transaccion = mapper.toDomain(transactionRequestDTO);
         System.out.println(transaccion.toString());
         transaccion.setDateTime(transactionRequestDTO.getDateTime());
-        transaccion.setCurrentStock(productRepository.getProductoById(transactionRequestDTO.getProductId()).getStock());
+        transaccion.setCurrentStock(transactionRequestDTO.getCurrentStock());
 
         MovementType type = transaccion.getType();
         if (type== MovementType.ENTRADA)

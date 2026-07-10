@@ -123,8 +123,8 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         return productEntityMapper.toDomain(saved);
     }
     @Override
-    public boolean tieneTransaccionesVinculadas(int id) {
-        return transactionJpaRepository.existsByProductId(id);
+    public boolean tieneTransaccionesVinculadas(Integer id) {
+        return transactionJpaRepository.existsByReferenceId(id);
     }
 
     @Override

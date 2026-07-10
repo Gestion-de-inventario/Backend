@@ -9,6 +9,7 @@ import com.comedor.backend.domain.exceptions.DateException;
 import com.comedor.backend.domain.exceptions.InsufficientStockException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.StatusMenuReport;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.MenuReportRequestDTO;
@@ -59,7 +60,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
 
         DishMenu dishMenu = dishMenuRepository.findById(request.getDishMenuId());
         List<MissingProductResponseDTO> productosFaltantes = new ArrayList<>();
-
+        Integer usuarioId = currentUserService.getCurrentUser().getId();
         for (DishSupply supply : dishMenu.getSupplies()) {
 
             BigDecimal requerido = supply.getQuantityNeeded()
@@ -91,16 +92,19 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
                     product.getStock().subtract(requerido)
             );
 
-            Integer usuarioId = currentUserService.getCurrentUser().getId();
+
             registrarMovimiento(
                     usuarioId,
                     product.getId(),
+                    product.getName(),
                     requerido,
-                    MovementType.SALIDA,
-                    TransactionSource.INVENTARIO,
+                    product.getStock(),
                     // CUEVA
                     // PeruTime.now()
-                    request.getCreateDate().atStartOfDay()
+                    request.getCreateDate().atStartOfDay(),
+                    TransactionReferenceType.INGREDIENTE,
+                    MovementType.SALIDA
+
             );
             productRepository.updateStock(product);
         }
@@ -207,25 +211,48 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
         reporte.setTotalSpent(totalSpent);
         reporte.setStatus(StatusMenuReport.ABIERTO);
 
+        //Registrando stock de menu (BOM)
+        registrarMovimiento(
+                usuarioId,
+                null,
+                dishMenu.getName(),
+                BigDecimal.valueOf(request.getQuantityPrepared()),
+                BigDecimal.ZERO,
+                //Volver a crear solo hoy
+                // CUEVA
+                // PeruTime.now()
+                request.getCreateDate().atStartOfDay(),
+                TransactionReferenceType.MENU,
+                MovementType.ENTRADA
+                );
+
         return mapper.toDto(repository.create(reporte));
     }
 
     private void registrarMovimiento(
-            Integer usuarioId,
-            Integer productoId,
+            Integer userId,
+            Integer referenceId,
+            String itemName,
             BigDecimal amount,
-            MovementType tipo,
-            TransactionSource source,
-            LocalDateTime dateTime
+            BigDecimal currentStock,
+            LocalDateTime localDateTime,
+            TransactionReferenceType referenceType,
+            MovementType movementType
     ) {
         TransactionRequestDTO dto = new TransactionRequestDTO();
 
+        dto.setReferenceType(referenceType);
+        if(referenceId != null)
+        {
+            dto.setReferenceId(referenceId);
+        }
+        dto.setItemName(itemName);
+        dto.setType(movementType);
         dto.setAmount(amount);
-        dto.setProductId(productoId);
-        dto.setUserId(usuarioId);
-        dto.setType(tipo);
-        dto.setSource(source);
-        dto.setDateTime(dateTime);
+        dto.setCurrentStock(currentStock);
+        dto.setSource(TransactionSource.INVENTARIO);
+        dto.setUserId(userId);
+        dto.setDateTime(localDateTime);
         registerTransactionUseCase.registrarTransaccion(dto);
     }
 }

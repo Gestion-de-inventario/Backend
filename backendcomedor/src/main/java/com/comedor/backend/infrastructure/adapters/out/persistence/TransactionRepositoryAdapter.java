@@ -32,7 +32,6 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
     @Override
     public Transactions createTransaccion(Transactions transaccion) {
         TransactionsEntity transaccionEntity = transactionEntityMapper.toEntity(transaccion);
-        transaccionEntity.setProduct(entityManager.getReference(ProductEntity.class,transaccion.getProduct().getId()));
         transaccionEntity.setUser(entityManager.getReference(UserEntity.class,transaccion.getUser().getId()));
         return transactionEntityMapper.toDomain(transactionJpaRepository.save(transaccionEntity));
     }

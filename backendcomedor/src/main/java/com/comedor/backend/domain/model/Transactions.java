@@ -1,5 +1,6 @@
 package com.comedor.backend.domain.model;
 
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 
@@ -8,7 +9,6 @@ import java.time.LocalDateTime;
 
 public class Transactions {
     private int id;
-    private Product product;
     private User user;
     private LocalDateTime dateTime;
     private MovementType type;
@@ -16,6 +16,9 @@ public class Transactions {
     private BigDecimal amount;
     private BigDecimal currentStock;
     private BigDecimal finalStock;
+    private Integer referenceId;
+    private TransactionReferenceType referenceType;
+    private String itemName;
 
     public void setId(int id) {
         this.id = id;
@@ -31,10 +34,6 @@ public class Transactions {
 
     public void setFinalStock(BigDecimal finalStock) {
         this.finalStock = finalStock;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public void setUser(User user) {
@@ -53,12 +52,20 @@ public class Transactions {
         this.amount = amount;
     }
 
-    public int getId() {
-        return id;
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
-    public Product getProduct() {
-        return product;
+    public void setReferenceType(TransactionReferenceType referenceType) {
+        this.referenceType = referenceType;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public User getUser() {
@@ -89,17 +96,16 @@ public class Transactions {
         return finalStock;
     }
 
-    @Override
-    public String toString() {
-        return "Transactions{" +
-                "id=" + id +
-                ", product=" + product +
-                ", user=" + user +
-                ", dateTime=" + dateTime +
-                ", type=" + type +
-                ", amount=" + amount +
-                ", currentStock=" + currentStock +
-                ", finalStock=" + finalStock +
-                '}';
+    public Integer getReferenceId() {
+        return referenceId;
     }
+
+    public TransactionReferenceType getReferenceType() {
+        return referenceType;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
 }

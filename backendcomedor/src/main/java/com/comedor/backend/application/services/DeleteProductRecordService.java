@@ -72,12 +72,6 @@ public class DeleteProductRecordService implements DeleteProductRecordUseCase {
          => ENTRADA
         */
 
-        registrarMovimiento(
-                usuarioId,
-                record.getProduct().getId(),
-                record.getAmount(),
-                MovementType.ENTRADA
-        );
 
         /*
          SI ERA COMPRA:
@@ -96,12 +90,6 @@ public class DeleteProductRecordService implements DeleteProductRecordUseCase {
         if (record.getProductSource()
                 == ProductSource.COMPRA) {
 
-            registrarMovimiento(
-                    usuarioId,
-                    record.getProduct().getId(),
-                    record.getAmount(),
-                    MovementType.SALIDA
-            );
         }
 
         // ELIMINAR REGISTRO
@@ -116,22 +104,4 @@ public class DeleteProductRecordService implements DeleteProductRecordUseCase {
                 .recalcular(reporteId);
     }
 
-    private void registrarMovimiento(
-            Integer usuarioId,
-            Integer productoId,
-            BigDecimal amount,
-            MovementType tipo
-    ) {
-
-        TransactionRequestDTO dto =
-                new TransactionRequestDTO();
-
-        dto.setUserId(usuarioId);
-        dto.setProductId(productoId);
-        dto.setAmount(amount);
-        dto.setType(tipo);
-
-        registerTransactionUseCase
-                .registrarTransaccion(dto);
-    }
 }

@@ -49,12 +49,6 @@ public class AddRecordProductService implements AddRecordProductUseCase {
     ) {
         TransactionRequestDTO dto = new TransactionRequestDTO();
 
-        dto.setAmount(amount);
-        dto.setProductId(productoId);
-        dto.setUserId(usuarioId);
-        dto.setType(tipo);
-
-        registerTransactionUseCase.registrarTransaccion(dto);
     }
 
     private void validarDatos(ProductRecordRequestDTO dto){

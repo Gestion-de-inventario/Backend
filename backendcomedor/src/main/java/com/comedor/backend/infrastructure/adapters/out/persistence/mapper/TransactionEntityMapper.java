@@ -8,11 +8,9 @@ import java.util.List;
 
 @Component
 public class TransactionEntityMapper {
-    private final ProductEntityMapper productEntityMapper;
     private final UserEntityMapper userEntityMapper;
 
-    public TransactionEntityMapper(ProductEntityMapper productEntityMapper, UserEntityMapper userEntityMapper) {
-        this.productEntityMapper = productEntityMapper;
+    public TransactionEntityMapper(UserEntityMapper userEntityMapper) {
         this.userEntityMapper = userEntityMapper;
     }
 
@@ -20,7 +18,6 @@ public class TransactionEntityMapper {
     {
         Transactions domain = new Transactions();
         domain.setId(entity.getId());
-        domain.setProduct(productEntityMapper.toDomain(entity.getProduct()));
         domain.setUser(userEntityMapper.toDomain(entity.getUser()));
         domain.setDateTime(entity.getDateTime());
         domain.setType(entity.getType());
@@ -28,6 +25,13 @@ public class TransactionEntityMapper {
         domain.setAmount(entity.getAmount());
         domain.setCurrentStock(entity.getCurrentStock());
         domain.setFinalStock(entity.getFinalStock());
+
+        if(entity.getReferenceId() != null)
+        {
+            domain.setReferenceId(entity.getReferenceId());
+        }
+        domain.setReferenceType(entity.getReferenceType());
+        domain.setItemName(entity.getItemName());
         return domain;
     }
 
@@ -41,6 +45,11 @@ public class TransactionEntityMapper {
         entity.setAmount(domain.getAmount());
         entity.setCurrentStock(domain.getCurrentStock());
         entity.setFinalStock(domain.getFinalStock());
+        if(domain.getReferenceId() != null){
+            entity.setReferenceId(domain.getReferenceId());
+        }
+        entity.setReferenceType(domain.getReferenceType());
+        entity.setItemName(domain.getItemName());
         return entity;
     }
 

@@ -20,7 +20,7 @@ public class EditProductService implements EditProductUseCase {
     }
 
     @Override
-    public Product editar(int id, EditProductRequestDTO request) {
+    public Product editar(Integer id, EditProductRequestDTO request) {
         Product product = productRepositoryPort.getProductoById(id);
         boolean tieneTransacciones = productRepositoryPort.tieneTransaccionesVinculadas(id);
 
