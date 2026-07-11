@@ -17,6 +17,7 @@ public class ModificationsEntityMapper {
         mod.setEditedAttribute(entity.getEditedAttribute());
         mod.setPreviousValue(entity.getPreviousValue());
         mod.setNewValue(entity.getNewValue());
+        mod.setName(entity.getName());
         mod.setDateTime(entity.getDateTime());
 
         User user = new User();

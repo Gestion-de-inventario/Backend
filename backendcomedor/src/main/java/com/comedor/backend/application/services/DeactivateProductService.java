@@ -24,6 +24,7 @@ public class DeactivateProductService implements DeactivateProductUseCase {
         ProductResponseDTO resultado = productMapper.productoResponseDTO(productRepositoryPort.deactivateById(id));
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Producto",
+                resultado.getName(),
                 "status",
                 "ACTIVO",
                 "INACTIVO"

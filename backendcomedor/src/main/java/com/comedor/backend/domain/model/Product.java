@@ -76,4 +76,17 @@ public class Product {
     public BigDecimal getReorderPoint() {
         return reorderPoint;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category.getId() +
+                ", unit='" + unit + '\'' +
+                ", status=" + status +
+                ", stock=" + stock +
+                ", reorderPoint=" + reorderPoint +
+                '}';
+    }
 }

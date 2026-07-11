@@ -106,6 +106,16 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
                     entityManager.getReference(CategoryEntity.class, product.getCategory().getId())
             );
         }
+        if (product.getTag() != null) {
+            entity.setTag(
+                    entityManager.getReference(
+                            TagEntity.class,
+                            product.getTag().getId()
+                    )
+            );
+        }else {
+            entity.setTag(null);
+        }
 
         return productEntityMapper.toDomain(productJpaRepository.save(entity));
     }

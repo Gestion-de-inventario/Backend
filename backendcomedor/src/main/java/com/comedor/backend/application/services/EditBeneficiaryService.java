@@ -37,21 +37,27 @@ public class EditBeneficiaryService implements EditBeneficiaryUseCase {
                 throw new DniAlreadyRegisteredException("Ya existe un Beneficiario con el DNI: " + editarBeneficiarioRequest.getDni());
             }
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Beneficiario", "dni", beneficiary.getDni(), editarBeneficiarioRequest.getDni()
+                    "Beneficiario",
+                    beneficiary.getName().concat(" "+beneficiary.getLastname())
+                    , "dni", beneficiary.getDni(), editarBeneficiarioRequest.getDni()
             ));
             beneficiary.setDni(editarBeneficiarioRequest.getDni()); // ✅ Agregar
         }
 
         if (editarBeneficiarioRequest.getName() != null && !editarBeneficiarioRequest.getName().equalsIgnoreCase(beneficiary.getName())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Beneficiario", "name", beneficiary.getName(), editarBeneficiarioRequest.getName()
+                    "Beneficiario",
+                    beneficiary.getName().concat(" "+beneficiary.getLastname())
+                    ,"name", beneficiary.getName(), editarBeneficiarioRequest.getName()
             ));
             beneficiary.setName(editarBeneficiarioRequest.getName()); // ✅ Agregar
         }
 
         if (editarBeneficiarioRequest.getLastname() != null && !editarBeneficiarioRequest.getLastname().equalsIgnoreCase(beneficiary.getLastname())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Beneficiario", "lastname", beneficiary.getLastname(), editarBeneficiarioRequest.getLastname()
+                    "Beneficiario",
+                    beneficiary.getName().concat(" "+beneficiary.getLastname()),
+                    "lastname", beneficiary.getLastname(), editarBeneficiarioRequest.getLastname()
             ));
             beneficiary.setLastname(editarBeneficiarioRequest.getLastname()); // ✅ Agregar
         }
@@ -66,6 +72,7 @@ public class EditBeneficiaryService implements EditBeneficiaryUseCase {
 
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Beneficiario", "Tipo de beneficiario",
+                    beneficiary.getName().concat(" "+beneficiary.getLastname()),
                     beneficiary.getBeneficiaryType().getName(),
                     newBeneciaryType.getName()
             ));

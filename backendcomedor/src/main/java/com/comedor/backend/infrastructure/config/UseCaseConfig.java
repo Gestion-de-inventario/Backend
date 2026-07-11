@@ -122,8 +122,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    EditProductService editarProductoService(ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase){
-        return new EditProductService(productRepositoryPort, registerModificationUseCase);
+    EditProductService editarProductoService(ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase,CategoryRepositoryPort categoryRepositoryPort,TagRepositoryPort tagRepositoryPort,ProductMapper productMapper){
+        return new EditProductService(productRepositoryPort, registerModificationUseCase,categoryRepositoryPort,tagRepositoryPort,productMapper);
     }
 
     @Bean

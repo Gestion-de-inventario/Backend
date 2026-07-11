@@ -54,6 +54,7 @@ public class RoleChangeStatusService implements RoleChangeStatusUseCase {
             registerModificationUseCase.registrar(
                     new ModificationsRequestDTO(
                             "Role",
+                            existingRole.toString(),
                             "status",
                             oldStatus.name(),
                             newStatus.name()

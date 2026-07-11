@@ -25,6 +25,7 @@ public class ActivateCategoryService implements ActivateCategoryUseCase {
 
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Categoria",
+                categoryResponseDTO.getName(),
                 "status",
                 "INACTIVO",
                 "ACTIVO"

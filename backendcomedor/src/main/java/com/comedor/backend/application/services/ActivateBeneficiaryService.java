@@ -19,7 +19,7 @@ public class ActivateBeneficiaryService implements ActivateBeneficiaryUseCase {
     public Beneficiary activar(int id) {
         Beneficiary beneficiary = beneficiaryRepositoryPort.activar(id);
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                "Beneficiario", "status", "INACTIVO", "ACTIVO"
+                "Beneficiario",beneficiary.getName(), "status", "INACTIVO", "ACTIVO"
         ));
         return beneficiary;
     }

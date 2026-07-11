@@ -40,7 +40,7 @@ public class EditRoleService implements EditRoleUseCase {
 
         if (!existingRole.getName().equalsIgnoreCase(dto.getName())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Role", "name", existingRole.getName(), dto.getName().toUpperCase()
+                    "Role",existingRole.getName(), "name", existingRole.getName(), dto.getName().toUpperCase()
             ));
         }
 

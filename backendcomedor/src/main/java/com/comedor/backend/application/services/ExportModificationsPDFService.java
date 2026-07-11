@@ -87,7 +87,7 @@ public class ExportModificationsPDFService implements ExportModificationsPDFUseC
             doc.add(new LineSeparator(new SolidLine()).setMarginTop(6).setMarginBottom(12));
 
             Table table = new Table(UnitValue.createPercentArray(new float[]{1.5f, 1.2f, 1.2f, 1.5f, 1.5f, 1.5f})).useAllAvailableWidth();
-            String[] headers = {"Fecha", "Entidad", "Campo", "Valor anterior", "Valor nuevo", "Usuario"};
+            String[] headers = {"Fecha", "Entidad", "Nombre","Campo", "Valor anterior", "Valor nuevo", "Usuario"};
             for (String h : headers) {
                 table.addHeaderCell(new Cell().add(new Paragraph(h).setBold())
                         .setBackgroundColor(new DeviceRgb(48, 63, 159))
@@ -98,6 +98,7 @@ public class ExportModificationsPDFService implements ExportModificationsPDFUseC
                 ModificationsResponseDTO dto = mapper.toResponseDTO(m);
                 table.addCell(new Cell().add(new Paragraph(dto.getDateTime().toString())));
                 table.addCell(new Cell().add(new Paragraph(dto.getEditedClass())));
+                table.addCell(new Cell().add(new Paragraph(dto.getName())));
                 table.addCell(new Cell().add(new Paragraph(dto.getEditedAttribute())));
                 table.addCell(new Cell().add(new Paragraph(dto.getPreviousValue() != null ? dto.getPreviousValue() : "-")));
                 table.addCell(new Cell().add(new Paragraph(dto.getNewValue() != null ? dto.getNewValue() : "-")));

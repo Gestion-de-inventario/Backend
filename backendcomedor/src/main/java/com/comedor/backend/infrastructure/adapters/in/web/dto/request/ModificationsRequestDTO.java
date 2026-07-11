@@ -9,8 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ModificationsRequestDTO {
     private String editedClass;
+    private String name;
     private String editedAttribute;
     private String previousValue;
     private String newValue;
 
+
+    public String getName() {
+        return name.toUpperCase();
+    }
 }

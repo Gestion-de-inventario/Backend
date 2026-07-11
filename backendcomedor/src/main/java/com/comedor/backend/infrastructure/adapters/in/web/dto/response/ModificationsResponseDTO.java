@@ -13,6 +13,7 @@ public class ModificationsResponseDTO {
     private int id;
     private String username;
     private String editedClass;
+    private String name;
     private String editedAttribute;
     private String previousValue;
     private String newValue;

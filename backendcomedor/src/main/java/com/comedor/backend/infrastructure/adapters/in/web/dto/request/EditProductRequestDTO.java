@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 @Data
 public class EditProductRequestDTO {
     private String name;
-    private Category category;
-    private Tag tag;
+    private Integer categoryId;
+    private Integer tagId;
     private String unit;
     private BigDecimal reorderPoint;
 }

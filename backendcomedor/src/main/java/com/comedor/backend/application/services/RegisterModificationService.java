@@ -28,6 +28,7 @@ public class RegisterModificationService implements RegisterModificationUseCase 
         Modifications mod = new Modifications();
         mod.setUser(user);
         mod.setEditedClass(modificationsRequestDTO.getEditedClass());
+        mod.setName(modificationsRequestDTO.getName());
         mod.setEditedAttribute(modificationsRequestDTO.getEditedAttribute());
         mod.setPreviousValue(modificationsRequestDTO.getPreviousValue());
         mod.setNewValue(modificationsRequestDTO.getNewValue());

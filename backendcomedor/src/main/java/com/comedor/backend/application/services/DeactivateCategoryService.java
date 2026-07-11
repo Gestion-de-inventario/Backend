@@ -24,6 +24,7 @@ public class DeactivateCategoryService implements DeactivateCategoryUseCase {
         CategoryResponseDTO resultado = categoryMapper.toCategoriaResponseDTO(categoryRepositoryPort.deactivateById(id));
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Categoria",
+                resultado.getName(),
                 "status",
                 "ACTIVO",
                 "INACTIVO"

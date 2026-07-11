@@ -25,6 +25,9 @@ public class ModificationsEntity {
     @Column(name = "edited_class", nullable = false, length = 25)
     private String editedClass;
 
+    @Column(name = "name", nullable = false,length = 80)
+    private String name;
+
     @Column(name = "edited_attribute", nullable = false, length = 35)
     private String editedAttribute;
 

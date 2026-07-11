@@ -36,7 +36,8 @@ public class EditDishMenuService implements EditDishMenuUseCase {
                 throw new RuntimeException("Ya existe un plato con ese nombre: " + request.getName());
             }
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "DishMenu", "name", dishMenu.getName(), request.getName().toUpperCase()
+                    "DishMenu",
+                    dishMenu.getName(),"name", dishMenu.getName(), request.getName().toUpperCase()
             ));
             dishMenu.setName(request.getName().toUpperCase());
         }

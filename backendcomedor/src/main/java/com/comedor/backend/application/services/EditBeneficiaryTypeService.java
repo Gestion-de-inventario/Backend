@@ -58,6 +58,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         if(!beneficiaryType.getName().equalsIgnoreCase(normalizedName)) {
 
             registrarCambio(
+                    beneficiaryType.getName(),
                     "nombre",
                     beneficiaryType.getName(),
                     normalizedName
@@ -72,6 +73,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         )) {
 
             registrarCambio(
+                    beneficiaryType.getName(),
                     "descripción",
                     beneficiaryType.getDesc(),
                     desc
@@ -86,7 +88,8 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         ) {
 
             registrarCambio(
-                    "costo menú",
+                    beneficiaryType.getName()
+                    ,"costo menú",
                     beneficiaryType.getMenu_cost().toString(),
                     menuCost.toString()
             );
@@ -100,6 +103,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
     }
 
     private void registrarCambio(
+            String nombre,
             String campo,
             String valorAnterior,
             String valorNuevo
@@ -107,6 +111,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         registerModificationUseCase.registrar(
                 new ModificationsRequestDTO(
                         "Tipo Beneficiario",
+                        nombre,
                         campo,
                         valorAnterior,
                         valorNuevo

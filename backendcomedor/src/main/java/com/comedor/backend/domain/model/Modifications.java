@@ -6,20 +6,12 @@ public class Modifications {
     private int id;
     private User user;
     private String editedClass;
+    private String name;
     private String editedAttribute;
     private String  previousValue;
     private String newValue;
     private LocalDateTime dateTime;
 
-    public Modifications(LocalDateTime dateTime, String newValue, String previousValue, String editedAttribute, String editedClass, User user, int id) {
-        this.dateTime = dateTime;
-        this.newValue = newValue;
-        this.previousValue = previousValue;
-        this.editedAttribute = editedAttribute;
-        this.editedClass = editedClass;
-        this.user = user;
-        this.id = id;
-    }
 
     public Modifications() {
     }
@@ -52,6 +44,10 @@ public class Modifications {
         return dateTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -79,4 +75,9 @@ public class Modifications {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

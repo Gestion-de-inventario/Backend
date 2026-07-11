@@ -14,16 +14,11 @@ public class ModificationsMapper {
         dto.setUsername(modifications.getUser().getPersona().getName().toUpperCase() + " " +
                 modifications.getUser().getPersona().getLastname().toUpperCase());
         dto.setEditedClass(modifications.getEditedClass());
+        dto.setName(modifications.getName());
         dto.setEditedAttribute(modifications.getEditedAttribute());
         dto.setPreviousValue(modifications.getPreviousValue());
         dto.setNewValue(modifications.getNewValue());
         dto.setDateTime(modifications.getDateTime());
         return dto;
-    }
-
-    public List<ModificationsResponseDTO> toResponseDTOList(List<Modifications> modifications) {
-        return modifications.stream()
-                .map(this::toResponseDTO)
-                .collect(java.util.stream.Collectors.toList());
     }
 }

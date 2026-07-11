@@ -48,6 +48,7 @@ public class ChangeStatusBeneficiaryTypeService implements ChangeStatusBeneficia
         registerModificationUseCase.registrar(
                 new ModificationsRequestDTO(
                         "Tipo Beneficiario",
+                        domain.getName(),
                         "estado",
                         domain.getStatus().toString(),
                         newStatus.toString()

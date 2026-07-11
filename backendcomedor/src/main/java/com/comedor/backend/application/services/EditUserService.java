@@ -61,19 +61,19 @@ public class EditUserService implements EditUserUseCase {
         // Auditoría solo de campos que realmente cambian
         if (!newName.toUpperCase().equals(person.getName().toUpperCase())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario", "name", person.getName(), newName
+                    "Usuario",person.getName().concat(" "+person.getLastname()), "name", person.getName(), newName
             ));
         }
 
         if (!newLastName.toUpperCase().equals(person.getLastname().toUpperCase())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario", "lastname", person.getLastname(), newLastName
+                    "Usuario",person.getName().concat(" "+person.getLastname()), "lastname", person.getLastname(), newLastName
             ));
         }
 
         if (!newDni.equals(person.getDni())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario", "dni", person.getDni(), newDni
+                    "Usuario",person.getName().concat(" "+person.getLastname()), "dni", person.getDni(), newDni
             ));
         }
 
@@ -85,7 +85,7 @@ public class EditUserService implements EditUserUseCase {
         }
         if(newRoleId != user.getRol().getId()) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario","role",user.getRol().getName(),newRole.getName()));
+                    "Usuario",person.getName().concat(" "+person.getLastname()),"role",user.getRol().getName(),newRole.getName()));
         }
 
         person.setName(newName.toUpperCase());

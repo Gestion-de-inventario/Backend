@@ -23,6 +23,7 @@ public class DeactivateTagService implements DeactivateTagUseCase {
         TagResponseDTO resultado = tagMapper.toEtiquetaResponseDTO(etiquetaRepository.deactivateById(id));
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Etiqueta",
+                resultado.getName(),
                 "status",
                 "ACTIVO",
                 "INACTIVO"

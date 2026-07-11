@@ -42,6 +42,7 @@ public class ModificationsRepositoryAdapter implements ModificationsRepositoryPo
         entity.setUser(userEntity);
         entity.setEditedClass(modifications.getEditedClass());
         entity.setEditedAttribute(modifications.getEditedAttribute());
+        entity.setName(modifications.getName());
         entity.setPreviousValue(modifications.getPreviousValue());
         entity.setNewValue(modifications.getNewValue());
         entity.setDateTime(modifications.getDateTime());

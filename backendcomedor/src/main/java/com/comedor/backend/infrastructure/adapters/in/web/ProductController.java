@@ -60,7 +60,7 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('PRODUCT_EDIT')")
     @PutMapping("/edit/{id}")
-    public Product editarProducto(@PathVariable int id, @RequestBody EditProductRequestDTO request) {
+    public ProductResponseDTO editarProducto(@PathVariable int id, @RequestBody EditProductRequestDTO request) {
 
             return editProductUseCase.editar(id, request);
 

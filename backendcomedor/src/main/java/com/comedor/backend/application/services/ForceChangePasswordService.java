@@ -32,7 +32,8 @@ public class ForceChangePasswordService implements ForceChangePasswordUseCase {
         }
 
         registrarModificacionService.registrar(new ModificationsRequestDTO(
-                "Usuario", "password", "******", "******"
+                "Usuario",user.getPersona().getName().concat(" "+user.getPersona().getLastname())
+                , "password", "******", "******"
         ));
 
         String hashGenerado = passwordEncoder.encode(dto.getNewPassword());

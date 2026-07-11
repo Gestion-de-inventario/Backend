@@ -24,6 +24,7 @@ public class ActivateProductService implements ActivateProductUseCase {
 
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Producto",
+                resultado.getName(),
                 "status",
                 "INACTIVO",
                 "ACTIVO"

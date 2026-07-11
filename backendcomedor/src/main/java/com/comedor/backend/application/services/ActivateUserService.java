@@ -24,6 +24,7 @@ public class ActivateUserService implements ActivateUserUseCase {
 
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Usuario",
+                resultado.getName(),
                 "status",
                 "INACTIVO",
                 "ACTIVO"

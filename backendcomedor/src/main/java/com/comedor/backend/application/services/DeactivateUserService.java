@@ -23,6 +23,7 @@ public class DeactivateUserService implements DeactivateUserUseCase {
         UsuarioResponseDTO resultado = userMapper.toUsuarioResponseDTO(userRepositoryPort.deactivateById(id));
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Usuario",
+                resultado.getName().concat(" "+resultado.getLastname()),
                 "status",
                 "ACTIVO",
                 "INACTIVO"

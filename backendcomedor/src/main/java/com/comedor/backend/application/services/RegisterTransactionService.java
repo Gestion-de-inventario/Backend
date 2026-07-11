@@ -32,6 +32,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
             transaccion.setFinalStock(transaccion.getCurrentStock().add(transaccion.getAmount()));
         }
         if (type== MovementType.SALIDA) {
+            System.out.println(transaccion.getCurrentStock().subtract(transaccion.getAmount()));
             transaccion.setFinalStock(transaccion.getCurrentStock().subtract(transaccion.getAmount()));
         }
         if(type== MovementType.MODIFICACION)
