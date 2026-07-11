@@ -63,6 +63,8 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                             detail.getProduct().getId()
                     );
 
+            BigDecimal actualStock = product.getStock();
+
             product.setStock(
                     product.getStock()
                             .add(detail.getQuantity())
@@ -92,7 +94,7 @@ public class ConfirmPurchaseService implements ConfirmPurchaseUseCase {
                     product.getId(),
                     product.getName(),
                     detail.getQuantity(),
-                    product.getStock(),
+                    actualStock,
                     PeruTime.now()
             );
 

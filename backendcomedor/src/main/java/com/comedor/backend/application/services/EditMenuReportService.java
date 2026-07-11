@@ -186,7 +186,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                 BigDecimal.valueOf(actualQuantity),
                 PeruTime.now(),
                 TransactionReferenceType.MENU,
-                MovementType.ENTRADA
+                MovementType.MODIFICACION
         );
 
         return mapper.toDto(
@@ -281,6 +281,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                     supply.getQuantityNeeded().multiply(qty);
 
             Product product = supply.getProduct();
+            BigDecimal actualStock = product.getStock();
 
             product.setStock(
                     product.getStock().add(total)
@@ -291,7 +292,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                     product.getId(),
                     product.getName(),
                     total,
-                    product.getStock(),
+                    actualStock,
                     PeruTime.now(),
                     TransactionReferenceType.INGREDIENTE,
                     MovementType.ENTRADA
@@ -367,6 +368,8 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                 pendiente =
                         pendiente.subtract(consumido);
             }
+            BigDecimal actualStock = product.getStock();
+
             // Descontar del stock agregado del producto
             product.setStock(
                     product.getStock().subtract(requerido)
@@ -377,7 +380,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
                     product.getId(),
                     product.getName(),
                     requerido,
-                    product.getStock(),
+                    actualStock,
                     PeruTime.now(),
                     TransactionReferenceType.INGREDIENTE,
                     MovementType.SALIDA

@@ -2,6 +2,7 @@ package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.ports.in.ExportTransactionsPDFUseCase;
 import com.comedor.backend.application.ports.in.ListTransactionsUseCase;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
@@ -35,9 +36,10 @@ public class TransactionController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
             @RequestParam(required = false) MovementType type,
             @RequestParam(required = false) TransactionSource source,
-            @RequestParam(required = false) String productName
+            @RequestParam(required = false) String productName,
+            @RequestParam(required = false) TransactionReferenceType referenceType
     ) {
-        return listTransactionsUseCase.list(page, size, fechaInicio, fechaFin,type, source, productName);
+        return listTransactionsUseCase.list(page, size, fechaInicio, fechaFin,type, source, productName,referenceType);
     }
 
     @PreAuthorize("hasAuthority('TRANSACTION_LIST_ALL')")

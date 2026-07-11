@@ -1,5 +1,6 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.repository.specification;
 
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.TransactionsEntity;
@@ -47,13 +48,25 @@ public class TransactionSpecification {
         };
     }
 
-    public static Specification<TransactionsEntity> productNameLike(String productName) {
+    public static Specification<TransactionsEntity> hasTransactionReferenceType(TransactionReferenceType referenceType) {
         return (root, query, cb) -> {
-            if (productName == null || productName.isBlank()) return null;
+            if (referenceType == null) return null;
+
+            return cb.equal(root.get("referenceType"), referenceType);
+        };
+    }
+
+    public static Specification<TransactionsEntity> itemNameLike(String itemName) {
+        return (root, query, cb) -> {
+            if (itemName == null || itemName.isBlank()) {
+                return null;
+            }
+
+            String itemNameNormalized = itemName.trim().toLowerCase();
 
             return cb.like(
-                    cb.lower(root.get("product").get("name")),
-                    "%" + productName.toLowerCase() + "%"
+                    cb.lower(root.<String>get("itemName")),
+                    "%" + itemNameNormalized + "%"
             );
         };
     }

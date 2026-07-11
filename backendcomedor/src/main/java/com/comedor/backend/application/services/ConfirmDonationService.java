@@ -59,6 +59,8 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
                             detail.getProduct().getId()
                     );
 
+            BigDecimal actualStock = product.getStock();
+
             product.setStock(
                     product.getStock()
                             .add(detail.getQuantity())
@@ -88,7 +90,7 @@ public class ConfirmDonationService implements ConfirmDonationUseCase {
                     product.getId(),
                     product.getName(),
                     detail.getQuantity(),
-                    product.getStock(),
+                    actualStock,
                     PeruTime.now()
             );
 

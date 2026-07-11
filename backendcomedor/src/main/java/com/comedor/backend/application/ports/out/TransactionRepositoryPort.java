@@ -1,6 +1,7 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ public interface TransactionRepositoryPort {
             MovementType type,
             TransactionSource source,
             String productName,
+            TransactionReferenceType referenceType,
             Pageable pageable
 
     );

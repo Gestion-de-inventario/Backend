@@ -1,5 +1,6 @@
 package com.comedor.backend.application.ports.in;
 
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
@@ -13,5 +14,6 @@ public interface ListTransactionsUseCase {
                                       LocalDate endDate,
                                       MovementType type,
                                       TransactionSource source,
-                                      String productName);
+                                      String productName,
+                                      TransactionReferenceType referenceType);
 }

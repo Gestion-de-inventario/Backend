@@ -30,9 +30,13 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
         if (type== MovementType.ENTRADA)
         {
             transaccion.setFinalStock(transaccion.getCurrentStock().add(transaccion.getAmount()));
-        }else
-        {
+        }
+        if (type== MovementType.SALIDA) {
             transaccion.setFinalStock(transaccion.getCurrentStock().subtract(transaccion.getAmount()));
+        }
+        if(type== MovementType.MODIFICACION)
+        {
+            transaccion.setFinalStock(transaccion.getAmount());
         }
         return mapper.toDTO(repository.createTransaccion(transaccion));
     }

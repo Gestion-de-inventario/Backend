@@ -2,6 +2,7 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.ProductEntity;
@@ -46,7 +47,8 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
                                                 LocalDate endDate,
                                                 MovementType type,
                                                 TransactionSource source,
-                                                String productName,
+                                                String itemName,
+                                                TransactionReferenceType referenceType,
                                                 Pageable pageable) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new IllegalArgumentException(
@@ -73,8 +75,12 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
             spec = spec.and(TransactionSpecification.hasSource(source));
         }
 
-        if (productName != null && !productName.isBlank()) {
-            spec = spec.and(TransactionSpecification.productNameLike(productName));
+        if (itemName != null && !itemName.isBlank()) {
+            spec = spec.and(TransactionSpecification.itemNameLike(itemName));
+        }
+
+        if (referenceType != null) {
+            spec = spec.and(TransactionSpecification.hasTransactionReferenceType(referenceType));
         }
 
         return transactionJpaRepository

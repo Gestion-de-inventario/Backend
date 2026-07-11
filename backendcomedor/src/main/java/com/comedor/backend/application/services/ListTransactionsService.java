@@ -3,6 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.TransactionMapper;
 import com.comedor.backend.application.ports.in.ListTransactionsUseCase;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
+import com.comedor.backend.domain.model.enums.TransactionReferenceType;
 import com.comedor.backend.domain.model.enums.TransactionSource;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
@@ -28,7 +29,7 @@ public class ListTransactionsService implements ListTransactionsUseCase {
                                              LocalDate endDate,
                                              MovementType type,
                                              TransactionSource source,
-                                             String productName) {
+                                             String productName, TransactionReferenceType referenceType) {
         Pageable pageable = PageRequest.of(
                 page,
                 size,
@@ -43,6 +44,7 @@ public class ListTransactionsService implements ListTransactionsUseCase {
                 type,
                 source,
                 productName,
+                referenceType,
                 pageable)
                 .map(mapper::toDTO);
     }

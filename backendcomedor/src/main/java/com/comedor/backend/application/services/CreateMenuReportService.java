@@ -87,7 +87,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
                     .multiply(BigDecimal.valueOf(request.getQuantityPrepared()));
 
             Product product = supply.getProduct();
-
+            BigDecimal actualStock = product.getStock();
             product.setStock(
                     product.getStock().subtract(requerido)
             );
@@ -98,7 +98,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
                     product.getId(),
                     product.getName(),
                     requerido,
-                    product.getStock(),
+                    actualStock,
                     // CUEVA
                     // PeruTime.now()
                     request.getCreateDate().atStartOfDay(),
