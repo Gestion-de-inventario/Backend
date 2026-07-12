@@ -5,6 +5,7 @@ import com.comedor.backend.application.ports.in.EditMenuReportUseCase;
 import com.comedor.backend.application.ports.in.RegisterTransactionUseCase;
 import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.domain.exceptions.InsufficientStockException;
+import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.MovementType;
 import com.comedor.backend.domain.model.enums.TransactionReferenceType;
@@ -29,18 +30,23 @@ public class EditMenuReportService implements EditMenuReportUseCase {
     private final DishMenuRepositoryPort dishMenuRepositoryPort;
     private final ProductRepositoryPort productRepository;
     private final InventoryLotRepositoryPort inventoryLotRepository;
-    private final PersonRepositoryPort personRepositoryPort;
+    private final UserRepositoryPort userRepositoryPort;
     private final MenuReportMapper mapper;
 
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final CurrentUserService currentUserService;
 
-    public EditMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService) {
+    public EditMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort,
+                                 DishMenuRepositoryPort dishMenuRepositoryPort,
+                                 ProductRepositoryPort productRepository,
+                                 InventoryLotRepositoryPort inventoryLotRepository,
+                                 UserRepositoryPort userRepositoryPort,
+                                 MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.dishMenuRepositoryPort = dishMenuRepositoryPort;
         this.productRepository = productRepository;
         this.inventoryLotRepository = inventoryLotRepository;
-        this.personRepositoryPort = personRepositoryPort;
+        this.userRepositoryPort = userRepositoryPort;
         this.mapper = mapper;
         this.registerTransactionUseCase = registerTransactionUseCase;
         this.currentUserService = currentUserService;
@@ -54,6 +60,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             EditMenuReportRequestDTO request
     ) {
 
+        validarCocineras(request.getCooks());
 
         MenuReport reporte =
                 menuReportRepositoryPort.findById(id);
@@ -422,5 +429,25 @@ public class EditMenuReportService implements EditMenuReportUseCase {
         dto.setUserId(userId);
         dto.setDateTime(localDateTime);
         registerTransactionUseCase.registrarTransaccion(dto);
+    }
+
+    private void validarCocineras(List<Integer> cooks) {
+        if (cooks == null || cooks.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Debe seleccionar al menos una cocinera"
+            );
+        }
+
+        for (Integer cookId : cooks) {
+            if (cookId == null) {
+                throw new IllegalArgumentException(
+                        "El ID de la cocinera no puede ser nulo"
+                );
+            }
+
+            if (userRepositoryPort.findById(cookId).isEmpty()) {
+                throw new UserNotFoundException("ID " + cookId);
+            }
+        }
     }
 }

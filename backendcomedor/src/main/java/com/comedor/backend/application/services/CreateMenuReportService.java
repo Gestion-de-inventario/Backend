@@ -7,6 +7,7 @@ import com.comedor.backend.application.ports.out.*;
 import com.comedor.backend.domain.exceptions.DateException;
 // Faltará importar tus clases de Excepciones personalizadas y StockMovement
 import com.comedor.backend.domain.exceptions.InsufficientStockException;
+import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.*;
 import com.comedor.backend.domain.model.enums.StatusMenuReport;
 import com.comedor.backend.domain.model.enums.TransactionReferenceType;
@@ -34,12 +35,13 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
 
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final CurrentUserService currentUserService;
+    private final UserRepositoryPort userRepositoryPort;
 
     public CreateMenuReportService(MenuReportRepositoryPort repository,
                                    DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
                                    InventoryLotRepositoryPort inventoryLotRepository,
                                    MenuReportMapper mapper
-                                  , RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService) {
+                                  , RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, UserRepositoryPort userRepositoryPort) {
         this.repository = repository;
         this.dishMenuRepository = dishMenuRepository;
         this.productRepository = productRepository;
@@ -48,6 +50,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
 
         this.registerTransactionUseCase = registerTransactionUseCase;
         this.currentUserService = currentUserService;
+        this.userRepositoryPort = userRepositoryPort;
     }
 
     @Override
@@ -57,6 +60,14 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
         /*if (repository.existByDate(PeruTime.today())) {
             throw new ReporteMenuYaExistente("Ya existe un reporte menu para hoy");
         }*/
+
+        // Esto no iria si es que volvemos a la version de solo crear reportes para hoy
+        if(request.getCreateDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+
+        validarCocineras(request.getCooks());
 
         DishMenu dishMenu = dishMenuRepository.findById(request.getDishMenuId());
         List<MissingProductResponseDTO> productosFaltantes = new ArrayList<>();
@@ -196,10 +207,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
         reporte.setId(null);
         // Refactor de fecha CUEVA
         //reporte.setDate(PeruTime.today());
-        if(request.getCreateDate().isBefore(PeruTime.today())  )
-        {
-            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
-        }
+
 
         reporte.setDate(request.getCreateDate());
         //
@@ -254,5 +262,25 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
         dto.setUserId(userId);
         dto.setDateTime(localDateTime);
         registerTransactionUseCase.registrarTransaccion(dto);
+    }
+
+    private void validarCocineras(List<Integer> cooks) {
+        if (cooks == null || cooks.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Debe seleccionar al menos una cocinera"
+            );
+        }
+
+        for (Integer cookId : cooks) {
+            if (cookId == null) {
+                throw new IllegalArgumentException(
+                        "El ID de la cocinera no puede ser nulo"
+                );
+            }
+
+            if (userRepositoryPort.findById(cookId).isEmpty()) {
+                throw new UserNotFoundException("ID " + cookId);
+            }
+        }
     }
 }
