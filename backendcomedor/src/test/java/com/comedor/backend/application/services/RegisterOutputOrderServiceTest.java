@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("HU-3.4 Registrar orden de salida")
-class RegisterProductionOutputOrderServiceTest {
+class RegisterOutputOrderServiceTest {
 
     @Mock
     private BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;

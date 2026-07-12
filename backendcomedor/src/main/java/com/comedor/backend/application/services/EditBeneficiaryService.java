@@ -30,7 +30,7 @@ public class EditBeneficiaryService implements EditBeneficiaryUseCase {
         Beneficiary beneficiary = beneficiaryRepositoryPort.findById(id)
                 .orElseThrow(() -> new BeneficiaryNotFoundException("Usuario No Encontrado: " + id));
 
-        BeneficiaryType newBeneciaryType = beneficiaryTypeRepositoryPort.findById(editarBeneficiarioRequest.getBeneficiaryTypeId());
+
 
         if (editarBeneficiarioRequest.getDni() != null && !beneficiary.getDni().equals(editarBeneficiarioRequest.getDni())) {
             if (beneficiaryRepositoryPort.existePorDni(editarBeneficiarioRequest.getDni())) {
@@ -41,7 +41,7 @@ public class EditBeneficiaryService implements EditBeneficiaryUseCase {
                     beneficiary.getName().concat(" "+beneficiary.getLastname())
                     , "dni", beneficiary.getDni(), editarBeneficiarioRequest.getDni()
             ));
-            beneficiary.setDni(editarBeneficiarioRequest.getDni()); // ✅ Agregar
+            beneficiary.setDni(editarBeneficiarioRequest.getDni());
         }
 
         if (editarBeneficiarioRequest.getName() != null && !editarBeneficiarioRequest.getName().equalsIgnoreCase(beneficiary.getName())) {
@@ -63,7 +63,7 @@ public class EditBeneficiaryService implements EditBeneficiaryUseCase {
         }
 
         if(editarBeneficiarioRequest.getBeneficiaryTypeId() != null && !editarBeneficiarioRequest.getBeneficiaryTypeId().equals(beneficiary.getBeneficiaryType().getId()))
-        {
+        {   BeneficiaryType newBeneciaryType = beneficiaryTypeRepositoryPort.findById(editarBeneficiarioRequest.getBeneficiaryTypeId());
 
             if(newBeneciaryType.getStatus().equals(Status.INACTIVO))
             {
