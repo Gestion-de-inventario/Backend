@@ -139,7 +139,7 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     @Override
     public boolean existByNameAndIdNot(String nombre, int id) {
-        return productJpaRepository.existsByNameAndIdNot(nombre.toLowerCase(), id);
+        return productJpaRepository.existsByNameAndIdNot(nombre.toUpperCase(), id);
     }
 
     @Override

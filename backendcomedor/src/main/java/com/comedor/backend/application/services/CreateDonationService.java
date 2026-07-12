@@ -30,6 +30,11 @@ public class CreateDonationService implements CreateDonationUseCase {
 
     @Override
     public DonationResponseDTO create(CreateDonationRequestDTO request) {
+        //CUEVA refactor fecha
+        if(request.getDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
 
         List<DonationDetail> details = new ArrayList<>();
 
@@ -45,11 +50,8 @@ public class CreateDonationService implements CreateDonationUseCase {
         Donation donation = new Donation();
         //CUEVA refactor fecha
         //donation.setDonationDate(PeruTime.today());
-        if(request.getDate().isBefore(PeruTime.today())  )
-        {
-            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
-        }
         donation.setDonationDate(request.getDate());
+
         donation.setStatus(StatusOrder.PENDIENTE);
         donation.setDetails(details);
 

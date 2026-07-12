@@ -38,6 +38,12 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
     @Override
     public PurchaseResponseDTO create(CreatePurchaseRequestDTO request) {
 
+        //CUEVA refactor fecha
+        if(request.getDate().isBefore(PeruTime.today())  )
+        {
+            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
+        }
+
         List<PurchaseDetail> details = new ArrayList<>();
 
         BigDecimal totalSpent = BigDecimal.ZERO;
@@ -63,10 +69,7 @@ public class CreatePurchaseService implements CreatePurchaseUseCase {
 
         //CUEVA refactor fecha
         //purchase.setPurchaseDate(PeruTime.today());
-        if(request.getDate().isBefore(PeruTime.today())  )
-        {
-            throw new DateException("Error al crear orden : La fecha de creación no puede ser menor a la actual ");
-        }
+
         purchase.setPurchaseDate(request.getDate());
 
         purchase.setStatus(StatusOrder.PENDIENTE);

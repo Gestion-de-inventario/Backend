@@ -6,6 +6,7 @@ import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
 import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.TagRepositoryPort;
+import com.comedor.backend.domain.exceptions.InvalidProductUnitException;
 import com.comedor.backend.domain.exceptions.ProductWithTransactionsException;
 import com.comedor.backend.domain.exceptions.ProductAlreadyExistsException;
 import com.comedor.backend.domain.model.Category;
@@ -38,29 +39,48 @@ public class EditProductService implements EditProductUseCase {
         Product product = productRepositoryPort.getProductoById(id);
         boolean tieneTransacciones = productRepositoryPort.tieneTransaccionesVinculadas(id);
 
-        System.out.println("Editanto, este es el payload" + request.toString()  +"\nProducto actual"+product.toString());
-        int actualTagId =0;
-        if(product.getTag()!=null)
-        {
-            actualTagId=product.getTag().getId();
+        Integer actualTagId = product.getTag() != null
+                ? product.getTag().getId()
+                : 0;
+
+        String unidadNormalizada = null;
+
+        if (request.getUnit() != null) {
+            unidadNormalizada = normalizarUnidad(request.getUnit());
         }
 
+        boolean nameChanged =
+                request.getName() != null &&
+                        !request.getName().equalsIgnoreCase(product.getName());
+
+        boolean categoryChanged =
+                request.getCategoryId() != null &&
+                        !Objects.equals(request.getCategoryId(), product.getCategory().getId());
+
+        boolean tagChanged =
+                request.getTagId() != null &&
+                        !Objects.equals(request.getTagId(), actualTagId);
+
+        boolean unitChanged =
+                unidadNormalizada != null &&
+                        !unidadNormalizada.equalsIgnoreCase(product.getUnit());
 
         if (tieneTransacciones) {
             boolean intentaCambiarCamposBloqueados =
-                    (request.getName() != null && !request.getName().equalsIgnoreCase(product.getName())) ||
-                            (request.getCategoryId() != product.getCategory().getId()) ||
-                            (request.getTagId() != actualTagId)  ||
-                            (!request.getUnit().equals(product.getUnit()));
+                    nameChanged ||
+                            categoryChanged ||
+                            tagChanged ||
+                            unitChanged;
 
-            System.out.println(intentaCambiarCamposBloqueados);
             if (intentaCambiarCamposBloqueados) {
                 throw new ProductWithTransactionsException(
                         "El producto tiene transacciones vinculadas, solo se puede modificar el punto de reorden"
                 );
             }
 
-            if (request.getReorderPoint() != null && !request.getReorderPoint().equals(product.getReorderPoint())) {
+            if (request.getReorderPoint() != null &&
+                    !request.getReorderPoint().equals(product.getReorderPoint())) {
+
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
                         "Producto",
                         product.getName(),
@@ -68,46 +88,58 @@ public class EditProductService implements EditProductUseCase {
                         product.getReorderPoint().toString(),
                         request.getReorderPoint().toString()
                 ));
+
                 product.setReorderPoint(request.getReorderPoint());
             }
 
-            return productMapper.productoResponseDTO(productRepositoryPort.updateProducto(product));
+            return productMapper.productoResponseDTO(
+                    productRepositoryPort.updateProducto(product)
+            );
         }
 
-        if (request.getName() != null && !request.getName().equalsIgnoreCase(product.getName())) {
-            if (productRepositoryPort.existByNameAndIdNot(request.getName(), id)) {
-                throw new ProductAlreadyExistsException("Ya existe un producto con el nombre: " + request.getName());
+        if (nameChanged) {
+            String nuevoNombre = request.getName().toUpperCase();
+
+            if (productRepositoryPort.existByNameAndIdNot(nuevoNombre, id)) {
+                throw new ProductAlreadyExistsException(
+                        "Ya existe un producto con el nombre: " + request.getName()
+                );
             }
+
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",product.getName(), "name", product.getName(), request.getName()
+                    "Producto",
+                    product.getName(),
+                    "name",
+                    product.getName(),
+                    request.getName()
             ));
+
             product.setName(request.getName());
         }
-        Category newcategory = categoryRepositoryPort.getCategoryById(request.getCategoryId());
 
+        if (categoryChanged) {
+            Category newcategory =
+                    categoryRepositoryPort.getCategoryById(request.getCategoryId());
 
-        if (request.getCategoryId() != null && !request.getCategoryId().equals(product.getCategory().getId())) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",product.getName(), "category",
+                    "Producto",
+                    product.getName(),
+                    "category",
                     product.getCategory().getName(),
                     newcategory.getName()
             ));
+
             product.setCategory(newcategory);
         }
 
-        Integer requestedTagId = request.getTagId();
-        Integer currentTagId = product.getTag() != null
-                ? product.getTag().getId()
-                : 0;
-        System.out.println("currentTagId: "+currentTagId + "requestedTagId: "+requestedTagId);
-        if (requestedTagId != null && !Objects.equals(requestedTagId, currentTagId)) {
+        if (tagChanged) {
+            Integer requestedTagId = request.getTagId();
 
             String oldTagName = product.getTag() != null
                     ? product.getTag().getName()
                     : "Sin etiqueta";
 
             if (requestedTagId == 0) {
-
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
                         "Producto",
                         product.getName(),
@@ -117,9 +149,7 @@ public class EditProductService implements EditProductUseCase {
                 ));
 
                 product.setTag(null);
-
             } else {
-
                 Tag newtag = tagRepositoryPort.getTagById(requestedTagId);
 
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
@@ -134,16 +164,21 @@ public class EditProductService implements EditProductUseCase {
             }
         }
 
-        if (request.getUnit() != null && !request.getUnit().equalsIgnoreCase(product.getUnit())) {
+        if (unitChanged) {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
-                    "unit", product.getUnit(), request.getUnit()
+                    "unit",
+                    product.getUnit(),
+                    unidadNormalizada
             ));
-            product.setUnit(request.getUnit());
+
+            product.setUnit(unidadNormalizada);
         }
 
-        if (request.getReorderPoint() != null && !request.getReorderPoint().equals(product.getReorderPoint())) {
+        if (request.getReorderPoint() != null &&
+                !request.getReorderPoint().equals(product.getReorderPoint())) {
+
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
@@ -151,9 +186,26 @@ public class EditProductService implements EditProductUseCase {
                     product.getReorderPoint().toString(),
                     request.getReorderPoint().toString()
             ));
+
             product.setReorderPoint(request.getReorderPoint());
         }
 
-        return productMapper.productoResponseDTO((productRepositoryPort.updateProducto(product)));
+        return productMapper.productoResponseDTO(
+                productRepositoryPort.updateProducto(product)
+        );
+    }
+
+    private String normalizarUnidad(String unit) {
+        String unidad = unit.trim().toUpperCase();
+
+        return switch (unidad) {
+            case "KILOGRAMO", "KILOGRAMOS", "KILO", "KILOS", "KG" -> "KG";
+            case "LITRO", "LITROS", "L" -> "L";
+            case "UNIDAD", "UNIDADES" -> "UNIDADES";
+            case "SACO", "SACOS" -> "SACOS";
+            case "LATA", "LATAS" -> "LATAS";
+            case "BOLSA", "BOLSAS" -> "BOLSAS";
+            default -> throw new InvalidProductUnitException("Unidad de medida no permitida");
+        };
     }
 }

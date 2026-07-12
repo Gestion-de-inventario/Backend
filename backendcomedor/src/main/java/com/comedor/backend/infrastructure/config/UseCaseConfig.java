@@ -213,8 +213,8 @@ public class UseCaseConfig {
                                                      DishMenuRepositoryPort dishMenuRepository, ProductRepositoryPort productRepository,
                                                      InventoryLotRepositoryPort inventoryLotRepository,
                                                      MenuReportMapper mapper
-            , RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
-        return new CreateMenuReportService(repository,dishMenuRepository,productRepository,inventoryLotRepository,mapper, registerTransactionUseCase,currentUserService);
+            , RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService, UserRepositoryPort userRepositoryPort){
+        return new CreateMenuReportService(repository,dishMenuRepository,productRepository,inventoryLotRepository,mapper, registerTransactionUseCase,currentUserService,userRepositoryPort);
     }
 
     @Bean
@@ -478,8 +478,8 @@ public class UseCaseConfig {
         return new GetMenuReporByIdService(repository,mapper);
     }
     @Bean
-    EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, PersonRepositoryPort personRepositoryPort, MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
-        return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,personRepositoryPort,mapper, registerTransactionUseCase,currentUserService);
+    EditMenuReportService editMenuReportService(MenuReportRepositoryPort menuReportRepositoryPort, DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepository, InventoryLotRepositoryPort inventoryLotRepository, UserRepositoryPort userRepositoryPort, MenuReportMapper mapper, RegisterTransactionUseCase registerTransactionUseCase, CurrentUserService currentUserService){
+        return new EditMenuReportService(menuReportRepositoryPort,dishMenuRepositoryPort,productRepository,inventoryLotRepository,userRepositoryPort,mapper, registerTransactionUseCase,currentUserService);
     }
     @Bean
     CreateDonationService createDonationService(DonationRepositoryPort repository, DonationMapper mapper, ProductRepositoryPort productRepository)

@@ -6,6 +6,7 @@ import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
 import com.comedor.backend.application.ports.out.TagRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.exceptions.ExistingProductException;
+import com.comedor.backend.domain.exceptions.InvalidProductUnitException;
 import com.comedor.backend.domain.model.Category;
 import com.comedor.backend.domain.model.Tag;
 import com.comedor.backend.domain.model.Product;
@@ -13,6 +14,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductReq
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CreateProductService implements CreateProductUseCase {
 
@@ -30,6 +32,10 @@ public class CreateProductService implements CreateProductUseCase {
 
     @Override
     public ProductResponseDTO crearProducto(ProductRequestDTO productRequestDTO) {
+
+        String unidadNormalizada =
+                normalizarUnidad(productRequestDTO.getUnit());
+
         if(productRepositoryPort.existByName(productRequestDTO.getName().toUpperCase()))
         {
             throw new ExistingProductException("Ya existe un producto con ese nombre :"+ productRequestDTO.getName());
@@ -47,8 +53,27 @@ public class CreateProductService implements CreateProductUseCase {
 
         Product product = productMapper.toDomain(productRequestDTO);
         product.setStock(BigDecimal.ZERO);
+        product.setUnit(unidadNormalizada);
         product.setCategory(category);
         product.setTag(tag);
         return  productMapper.productoResponseDTO(productRepositoryPort.createProducto(product));
+    }
+
+    private String normalizarUnidad(String unit) {
+        if (unit == null || unit.isBlank()) {
+            throw new IllegalArgumentException("La unidad de medida es obligatoria");
+        }
+
+        String unidad = unit.trim().toUpperCase();
+
+        return switch (unidad) {
+            case "KILOGRAMO", "KILOGRAMOS", "KILO", "KILOS", "KG" -> "KG";
+            case "LITRO", "LITROS", "L" -> "L";
+            case "UNIDAD", "UNIDADES" -> "UNIDADES";
+            case "SACO", "SACOS" -> "SACOS";
+            case "LATA", "LATAS" -> "LATAS";
+            case "BOLSA", "BOLSAS" -> "BOLSAS";
+            default -> throw new InvalidProductUnitException("Unidad de medida no permitida");
+        };
     }
 }
