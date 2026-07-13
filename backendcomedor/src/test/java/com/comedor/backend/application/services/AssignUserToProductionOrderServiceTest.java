@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-
+//./mvnw.cmd test "-Dtest=*E2ETest" "-Dtest.password=12345678"
 @ExtendWith(MockitoExtension.class)
 @DisplayName("HU-3.3 Asignar encargado a la orden de producción")
 class AssignUserToProductionOrderServiceTest {
