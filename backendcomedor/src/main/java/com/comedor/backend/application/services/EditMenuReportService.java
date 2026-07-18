@@ -60,11 +60,10 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             EditMenuReportRequestDTO request
     ) {
 
-        validarCocineras(request.getCooks());
-
         MenuReport reporte =
                 menuReportRepositoryPort.findById(id);
 
+        validarCocineras(request.getCooks());
 
 
         boolean menuChanged =

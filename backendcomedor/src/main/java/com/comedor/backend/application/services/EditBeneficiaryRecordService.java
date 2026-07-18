@@ -38,31 +38,64 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
     }
 
     @Override
-    public BeneficiaryRecordResponseDTO editarRegistroBeneficiario(int reporteId, int controlId, ControlBeneficiarioRequestDTO dto) {
-
+    public BeneficiaryRecordResponseDTO editarRegistroBeneficiario(
+            int reporteId,
+            int controlId,
+            ControlBeneficiarioRequestDTO dto
+    ) {
         BeneficiaryControl actual =
-                beneficiaryControlRepositoryPort
-                        .findById(controlId);
+                beneficiaryControlRepositoryPort.findById(controlId);
 
-        if(dto.getPago() != null)
-        {
+        boolean huboCambios = false;
+        boolean requiereRecalculoResumen = false;
+
+        if (
+                dto.getPago() != null &&
+                        !dto.getPago().equals(actual.getPaid())
+        ) {
             actual.setPaid(dto.getPago());
+            huboCambios = true;
+            requiereRecalculoResumen = true;
         }
 
-        if(dto.getEntregado() != null)
-        {
+        if (
+                dto.getEntregado() != null &&
+                        !dto.getEntregado().equals(actual.getReceived())
+        ) {
             actual.setReceived(dto.getEntregado());
+            huboCambios = true;
         }
 
-        if(dto.getPayMethod() != null)
-        {
+        if (
+                dto.getPayMethod() != null &&
+                        !dto.getPayMethod().equals(actual.getPayMethod())
+        ) {
             actual.setPayMethod(dto.getPayMethod());
+            huboCambios = true;
+            requiereRecalculoResumen = true;
         }
 
-        if (dto.getMenusAmount() != null) {
+        if (
+                dto.getMenuPrice() != null &&
+                        !dto.getMenuPrice().equals(actual.getMenuPrice())
+        ) {
+            actual.setMenuPrice(dto.getMenuPrice());
+            huboCambios = true;
+            requiereRecalculoResumen = true;
+        }
 
+        if (
+                dto.getMenusAmount() != null &&
+                        !dto.getMenusAmount().equals(actual.getMenusAmount())
+        ) {
             int oldAmount = actual.getMenusAmount();
             int newAmount = dto.getMenusAmount();
+
+            if (newAmount <= 0) {
+                throw new IllegalArgumentException(
+                        "La cantidad de menús debe ser mayor a 0"
+                );
+            }
 
             int difference = newAmount - oldAmount;
 
@@ -70,11 +103,10 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
                     menuReportRepositoryPort.findById(reporteId);
 
             if (difference > 0) {
-
                 if (report.getQuantityRemaining() < difference) {
                     throw new RuntimeException(
                             "Solo quedan " + report.getQuantityRemaining()
-                                    + " menus disponibles"
+                                    + " menús disponibles"
                     );
                 }
 
@@ -93,10 +125,9 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
 
             Integer userId =
                     currentUserService.getCurrentUser().getId();
+
             registrarMovimiento(
                     userId,
-                    //Ojito con el refactor dinamico ,
-                    // aqui seria consultar el name directamente
                     report.getDishMenu().getName(),
                     BigDecimal.valueOf(newAmount),
                     BigDecimal.valueOf(oldAmount),
@@ -104,25 +135,27 @@ public class EditBeneficiaryRecordService implements EditBeneficiaryRecordUseCas
             );
 
             menuReportRepositoryPort.update(report);
+
+            huboCambios = true;
+            requiereRecalculoResumen = true;
         }
 
-        if(dto.getMenuPrice() != null)
-        {
-            actual.setMenuPrice(dto.getMenuPrice());
+        if (!huboCambios) {
+            return beneficiaryControlMapper.toDto(actual);
         }
 
         BeneficiaryControl actualizado =
-                beneficiaryControlRepositoryPort
-                        .actualizarBeneficiario(
-                                reporteId,
-                                controlId,
-                                actual
-                        );
+                beneficiaryControlRepositoryPort.actualizarBeneficiario(
+                        reporteId,
+                        controlId,
+                        actual
+                );
 
-        recalcularResumenReporteUseCase.recalcular(reporteId);
+        if (requiereRecalculoResumen) {
+            recalcularResumenReporteUseCase.recalcular(reporteId);
+        }
 
-        return beneficiaryControlMapper
-                .toDto(actualizado);
+        return beneficiaryControlMapper.toDto(actualizado);
     }
 
     private void registrarMovimiento(
