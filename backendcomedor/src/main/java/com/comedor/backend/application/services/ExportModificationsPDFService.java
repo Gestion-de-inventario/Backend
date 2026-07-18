@@ -50,7 +50,7 @@ public class ExportModificationsPDFService implements ExportModificationsPDFUseC
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument pdf = new PdfDocument(writer);
-            Document doc = new Document(pdf, PageSize.A4);
+            Document doc = new Document(pdf, PageSize.A4.rotate());
             doc.setMargins(40, 40, 40, 40);
 
             // Header
@@ -86,7 +86,7 @@ public class ExportModificationsPDFService implements ExportModificationsPDFUseC
             doc.add(new Paragraph("Período: " + periodo).setFontSize(10).setFontColor(new DeviceRgb(100,100,100)));
             doc.add(new LineSeparator(new SolidLine()).setMarginTop(6).setMarginBottom(12));
 
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1.5f, 1.2f, 1.2f, 1.5f, 1.5f, 1.5f})).useAllAvailableWidth();
+            Table table = new Table(UnitValue.createPercentArray(new float[]{1.5f, 1.2f, 1.2f, 1.5f, 1.5f, 1.5f, 1.5f})).useAllAvailableWidth();
             String[] headers = {"Fecha", "Entidad", "Nombre","Campo", "Valor anterior", "Valor nuevo", "Usuario"};
             for (String h : headers) {
                 table.addHeaderCell(new Cell().add(new Paragraph(h).setBold())

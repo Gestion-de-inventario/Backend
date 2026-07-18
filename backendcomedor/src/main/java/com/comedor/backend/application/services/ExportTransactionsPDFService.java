@@ -50,7 +50,7 @@ public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCas
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument pdf = new PdfDocument(writer);
-            Document doc = new Document(pdf, PageSize.A4);
+            Document doc = new Document(pdf, PageSize.A4.rotate());
             doc.setMargins(40, 40, 40, 40);
 
             // Header
@@ -88,7 +88,10 @@ public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCas
             doc.add(new LineSeparator(new SolidLine()).setMarginTop(6).setMarginBottom(12));
 
             // Tabla
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1.5f, 1, 1, 1, 1, 2})).useAllAvailableWidth();
+            Table table = new Table(UnitValue.createPercentArray(
+                    new float[]{2.2f, 2.2f, 1.6f, 1.8f, 1.5f, 1.2f, 1.4f, 2.4f}
+            )).useAllAvailableWidth();
+
             String[] headers = {"Fecha", "Producto","Tipo Producto", "Tipo de transaccion","Fuente", "Cantidad", "Stock Final", "Usuario"};
             for (String h : headers) {
                 table.addHeaderCell(new Cell().add(new Paragraph(h).setBold())
