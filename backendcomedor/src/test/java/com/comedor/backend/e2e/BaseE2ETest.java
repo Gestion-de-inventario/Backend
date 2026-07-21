@@ -39,7 +39,7 @@ public abstract class BaseE2ETest {
 
     /** Contrasena del usuario admin. Se debe pasar con -Dtest.password=... */
     protected static final String TEST_PASSWORD =
-            System.getProperty("test.password", "CAMBIAME");
+            System.getProperty("test.password", "12345678");
 
     /** El navegador que Selenium controla. */
     protected WebDriver driver;

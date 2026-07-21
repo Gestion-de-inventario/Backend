@@ -32,30 +32,33 @@ class ProductoE2ETest extends BaseE2ETest {
 
         String nombre = textoUnicoLetras("PRUEBA EEE");
 
-        // Abrimos el modal "Nuevo Producto".
+        // Abrimos el modal "Nuevo Producto"
         clickConReintento(By.xpath("//button[contains(normalize-space(.), 'Crear Producto')]"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("createProductModal")));
 
-        // Llenamos el formulario.
+        // Llenamos el nombre
         WebElement inputNombre = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("#createProductModal input[formcontrolname='name']")));
         inputNombre.sendKeys(nombre);
 
-        // Categoria: primera opcion real (indice 1, el 0 es "Seleccione").
-        seleccionarOpcionPorIndice(
-                By.cssSelector("#createProductModal select[formcontrolname='categoryId']"), 1);
-        // Unidad de medida: valor fijo.
-        seleccionarOpcionPorValor(
-                By.cssSelector("#createProductModal select[formcontrolname='unit']"), "UNIDADES");
-        // Punto de reorden.
+        // 1. Esperar a que carguen las opciones de Categoría (más de 1 <option>)
+        By selectCategoria = By.cssSelector("#createProductModal select[formcontrolname='categoryId']");
+        wait.until(d -> d.findElements(By.cssSelector("#createProductModal select[formcontrolname='categoryId'] option")).size() > 1);
+        seleccionarOpcionPorIndice(selectCategoria, 1);
+
+        // 2. Unidad de medida (esperar opciones e interactuar por índice o texto)
+        By selectUnidad = By.cssSelector("#createProductModal select[formcontrolname='unit']");
+        wait.until(d -> d.findElements(By.cssSelector("#createProductModal select[formcontrolname='unit'] option")).size() > 1);
+        seleccionarOpcionPorIndice(selectUnidad, 1); // o seleccionarOpcionPorTexto(...) si cuentas con ese helper
+
+        // Punto de reorden
         driver.findElement(By.cssSelector("#createProductModal input[formcontrolname='reorderPoint']"))
                 .sendKeys("5");
 
-        // Confirmamos la creacion.
+        // Confirmar
         clickConReintento(By.xpath("//button[contains(normalize-space(.), 'Confirmar y Crear')]"));
 
-        // Exito: el modal se cierra solo cuando la creacion fue correcta
-        // (si falla, el modal permanece abierto mostrando el error).
+        // Exito
         boolean creado = wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(By.id("createProductModal")));
         assertTrue(creado, "Tras crear el producto el modal deberia cerrarse");
