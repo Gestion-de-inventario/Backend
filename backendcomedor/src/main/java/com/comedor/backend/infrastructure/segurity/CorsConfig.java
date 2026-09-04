@@ -16,7 +16,7 @@ public class CorsConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:4200","https://comedorpopularluzdeisrael.web.app"));
+        config.setAllowedOrigins(List.of("http://localhost:4200","https://comedorpopularluzdeisrael.web.app","https://comedorpopularluzisrael.site","https://www.comedorpopularluzisrael.site"));
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
