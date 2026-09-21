@@ -1,6 +1,7 @@
 package com.comedor.backend.chatbot.gemini;
 
 import com.comedor.backend.chatbot.service.AiGateway;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -25,8 +26,21 @@ public class GeminiAiGateway implements AiGateway {
             @Value("${chatbot.gemini.model:gemini-2.5-flash-lite}") String model
     ) {
         this.restClient = RestClient.builder().baseUrl(baseUrl).build();
-        this.apiKey = apiKey;
+        this.apiKey = resolveApiKey(apiKey);
         this.model = model;
+    }
+
+    private String resolveApiKey(String environmentApiKey) {
+        if (environmentApiKey != null && !environmentApiKey.isBlank()) {
+            return environmentApiKey;
+        }
+
+        String dotenvApiKey = Dotenv.configure()
+                .ignoreIfMissing()
+                .load()
+                .get("GEMINI_API_KEY");
+
+        return dotenvApiKey == null ? "" : dotenvApiKey;
     }
 
     @Override
