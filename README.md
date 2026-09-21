@@ -14,7 +14,7 @@ $env:GEMINI_API_KEY="tu-clave-de-Google-AI-Studio"
 ```
 
 El modelo se puede cambiar con `GEMINI_MODEL`; el valor predeterminado es
-`gemini-2.5-flash-lite`. Si la clave falta o el proveedor no está disponible, el endpoint
+`gemini-3.5-flash-lite`. Si la clave falta o el proveedor no está disponible, el endpoint
 sigue respondiendo con un cálculo local determinista basado en el inventario y marca la
 respuesta con `generatedBy: "LOCAL"`.
 
