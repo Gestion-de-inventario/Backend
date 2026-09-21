@@ -20,12 +20,11 @@ public class GeminiAiGateway implements AiGateway {
     private final String model;
 
     public GeminiAiGateway(
-            RestClient.Builder restClientBuilder,
             @Value("${chatbot.gemini.base-url:https://generativelanguage.googleapis.com/v1beta}") String baseUrl,
             @Value("${GEMINI_API_KEY:}") String apiKey,
             @Value("${chatbot.gemini.model:gemini-2.5-flash-lite}") String model
     ) {
-        this.restClient = restClientBuilder.baseUrl(baseUrl).build();
+        this.restClient = RestClient.builder().baseUrl(baseUrl).build();
         this.apiKey = apiKey;
         this.model = model;
     }
