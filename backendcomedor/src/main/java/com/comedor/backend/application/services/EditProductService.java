@@ -79,12 +79,12 @@ public class EditProductService implements EditProductUseCase {
             }
 
             if (request.getReorderPoint() != null &&
-                    !request.getReorderPoint().equals(product.getReorderPoint())) {
+                    request.getReorderPoint().compareTo(product.getReorderPoint()) != 0) {
 
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
                         "Producto",
                         product.getName(),
-                        "reorderPoint",
+                        "punto de reorden",
                         product.getReorderPoint().toString(),
                         request.getReorderPoint().toString()
                 ));
@@ -109,7 +109,7 @@ public class EditProductService implements EditProductUseCase {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
-                    "name",
+                    "nombre",
                     product.getName(),
                     request.getName()
             ));
@@ -124,7 +124,7 @@ public class EditProductService implements EditProductUseCase {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
-                    "category",
+                    "categoría",
                     product.getCategory().getName(),
                     newcategory.getName()
             ));
@@ -143,7 +143,7 @@ public class EditProductService implements EditProductUseCase {
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
                         "Producto",
                         product.getName(),
-                        "tag",
+                        "etiqueta",
                         oldTagName,
                         "Sin etiqueta"
                 ));
@@ -155,7 +155,7 @@ public class EditProductService implements EditProductUseCase {
                 registerModificationUseCase.registrar(new ModificationsRequestDTO(
                         "Producto",
                         product.getName(),
-                        "tag",
+                        "etiqueta",
                         oldTagName,
                         newtag.getName()
                 ));
@@ -168,7 +168,7 @@ public class EditProductService implements EditProductUseCase {
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
-                    "unit",
+                    "unidad",
                     product.getUnit(),
                     unidadNormalizada
             ));
@@ -177,12 +177,12 @@ public class EditProductService implements EditProductUseCase {
         }
 
         if (request.getReorderPoint() != null &&
-                !request.getReorderPoint().equals(product.getReorderPoint())) {
+                request.getReorderPoint().compareTo(product.getReorderPoint()) != 0) {
 
             registerModificationUseCase.registrar(new ModificationsRequestDTO(
                     "Producto",
                     product.getName(),
-                    "reorderPoint",
+                    "punto de reorden",
                     product.getReorderPoint().toString(),
                     request.getReorderPoint().toString()
             ));

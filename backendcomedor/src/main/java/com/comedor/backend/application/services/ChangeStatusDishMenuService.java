@@ -26,9 +26,9 @@ public class ChangeStatusDishMenuService implements ChangeStatusDishMenuUseCase 
         DishMenu dishMenu = dishMenuRepositoryPort.findById(id);
 
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                "DishMenu",
+                "Plato",
                 dishMenu.getName(),
-                "status",
+                "estado",
                 dishMenu.getStatus().toString(),
                 status.toString()
         ));

@@ -24,7 +24,7 @@ public class DeactivateTagService implements DeactivateTagUseCase {
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Etiqueta",
                 resultado.getName(),
-                "status",
+                "estado",
                 "ACTIVO",
                 "INACTIVO"
         ));
