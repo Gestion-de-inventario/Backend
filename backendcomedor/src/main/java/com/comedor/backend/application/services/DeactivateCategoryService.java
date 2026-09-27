@@ -25,7 +25,7 @@ public class DeactivateCategoryService implements DeactivateCategoryUseCase {
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Categoria",
                 resultado.getName(),
-                "status",
+                "estado",
                 "ACTIVO",
                 "INACTIVO"
         ));

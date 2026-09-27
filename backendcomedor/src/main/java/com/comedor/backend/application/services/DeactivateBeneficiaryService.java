@@ -21,7 +21,7 @@ public class DeactivateBeneficiaryService implements DeactivateBeneficiaryUseCas
         Beneficiary beneficiary = beneficiaryRepositoryPort.desactivar(id);
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Beneficiario",
-                beneficiary.getName().concat(" "+beneficiary.getLastname()), "status", "ACTIVO", "INACTIVO"
+                beneficiary.getName().concat(" "+beneficiary.getLastname()), "estado", "ACTIVO", "INACTIVO"
         ));
         return beneficiary;
     }

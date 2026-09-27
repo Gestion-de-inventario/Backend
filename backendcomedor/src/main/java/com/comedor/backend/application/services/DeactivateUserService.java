@@ -24,7 +24,7 @@ public class DeactivateUserService implements DeactivateUserUseCase {
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Usuario",
                 resultado.getName().concat(" "+resultado.getLastname()),
-                "status",
+                "estado",
                 "ACTIVO",
                 "INACTIVO"
         ));

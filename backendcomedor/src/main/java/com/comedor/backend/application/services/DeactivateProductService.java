@@ -25,7 +25,7 @@ public class DeactivateProductService implements DeactivateProductUseCase {
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Producto",
                 resultado.getName(),
-                "status",
+                "estado",
                 "ACTIVO",
                 "INACTIVO"
         ));

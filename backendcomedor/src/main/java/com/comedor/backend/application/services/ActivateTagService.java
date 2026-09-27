@@ -26,7 +26,7 @@ public class ActivateTagService implements ActivateTagUseCase {
         registerModificationUseCase.registrar(new ModificationsRequestDTO(
                 "Etiqueta",
                 resultado.getName(),
-                "status",
+                "estado",
                 "INACTIVO",
                 "ACTIVO"
         ));
