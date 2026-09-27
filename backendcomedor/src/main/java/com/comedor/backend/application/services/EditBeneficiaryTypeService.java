@@ -2,26 +2,28 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.BeneficiaryTypeMapper;
 import com.comedor.backend.application.ports.in.EditBeneficiaryTypeUseCase;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryTypeRepositoryPort;
 import com.comedor.backend.domain.exceptions.BeneficiaryTypeAlreadyExistsException;
 import com.comedor.backend.domain.model.BeneficiaryType;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.BeneficiaryTypeRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BeneficiaryTypeResponseDTO;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Objects;
 
 public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
     private final BeneficiaryTypeRepositoryPort repository;
     private final BeneficiaryTypeMapper mapper;
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public EditBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegisterModificationUseCase registerModificationUseCase) {
+    public EditBeneficiaryTypeService(BeneficiaryTypeRepositoryPort repository, BeneficiaryTypeMapper mapper, RegisterAuditUseCase registerAuditUseCase) {
         this.repository = repository;
         this.mapper = mapper;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -58,6 +60,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         if(!beneficiaryType.getName().equalsIgnoreCase(normalizedName)) {
 
             registrarCambio(
+                    beneficiaryType.getId(),
                     beneficiaryType.getName(),
                     "nombre",
                     beneficiaryType.getName(),
@@ -73,6 +76,7 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         )) {
 
             registrarCambio(
+                    beneficiaryType.getId(),
                     beneficiaryType.getName(),
                     "descripción",
                     beneficiaryType.getDesc(),
@@ -88,8 +92,9 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
         ) {
 
             registrarCambio(
-                    beneficiaryType.getName()
-                    ,"costo menú",
+                    beneficiaryType.getId(),
+                    beneficiaryType.getName(),
+                    "costo menú",
                     beneficiaryType.getMenu_cost().toString(),
                     menuCost.toString()
             );
@@ -103,18 +108,25 @@ public class EditBeneficiaryTypeService implements EditBeneficiaryTypeUseCase {
     }
 
     private void registrarCambio(
+            Integer entityId,
             String nombre,
             String campo,
             String valorAnterior,
-            String valorNuevo
-    ) {
-        registerModificationUseCase.registrar(
-                new ModificationsRequestDTO(
-                        "Tipo Beneficiario",
+            String valorNuevo) {
+
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Tipo de beneficiario",
+                        entityId,
                         nombre,
-                        campo,
-                        valorAnterior,
-                        valorNuevo
+                        AuditAction.MODIFICACION,
+                        Map.of(
+                                "attribute", campo,
+                                "previousValue",
+                                valorAnterior != null ? valorAnterior : "-",
+                                "newValue",
+                                valorNuevo != null ? valorNuevo : "-"
+                        )
                 )
         );
     }

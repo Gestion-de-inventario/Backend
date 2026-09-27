@@ -41,6 +41,8 @@ class RegisterBeneficiaryServiceTest {
 
     private RegisterBeneficiaryService service;
 
+    private RegisterAuditService registerAuditService;
+
     @BeforeEach
     void setUp() {
         beneficiaryMapper = new BeneficiaryMapper();
@@ -48,7 +50,7 @@ class RegisterBeneficiaryServiceTest {
         service = new RegisterBeneficiaryService(
                 beneficiaryRepositoryPort,
                 beneficiaryTypeRepositoryPort,
-                beneficiaryMapper
+                beneficiaryMapper,registerAuditService
         );
     }
 

@@ -2,34 +2,43 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.ProductMapper;
 import com.comedor.backend.application.ports.in.ActivateProductUseCase;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
+
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
+
+import java.util.Map;
 
 public class ActivateProductService implements ActivateProductUseCase {
     private final ProductRepositoryPort productRepositoryPort;
     private final ProductMapper productMapper;
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public ActivateProductService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, RegisterModificationUseCase registerModificationUseCase) {
+    public ActivateProductService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper,RegisterAuditUseCase registerAuditUseCase) {
         this.productRepositoryPort = productRepositoryPort;
         this.productMapper = productMapper;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
     public ProductResponseDTO activarProductoPorId(int id) {
         ProductResponseDTO resultado = productMapper.productoResponseDTO(productRepositoryPort.activateById(id));
-
-        registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                "Producto",
-                resultado.getName(),
-                "estado",
-                "INACTIVO",
-                "ACTIVO"
-        ));
-
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Producto",
+                        id,
+                        resultado.getName(),
+                        AuditAction.MODIFICACION,
+                        Map.of(
+                                "attribute", "estado",
+                                "previousValue", "INACTIVO",
+                                "newValue", "ACTIVO"
+                        )
+                )
+        );
         return resultado;
     }
 }

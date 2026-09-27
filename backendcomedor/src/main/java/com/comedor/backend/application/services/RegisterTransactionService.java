@@ -22,7 +22,6 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
     @Override
     public TransactionResponseDTO registrarTransaccion(TransactionRequestDTO transactionRequestDTO) {
         Transactions transaccion = mapper.toDomain(transactionRequestDTO);
-        System.out.println(transaccion.toString());
         transaccion.setDateTime(transactionRequestDTO.getDateTime());
         transaccion.setCurrentStock(transactionRequestDTO.getCurrentStock());
 

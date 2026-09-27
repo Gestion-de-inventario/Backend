@@ -2,7 +2,7 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.UserMapper;
 import com.comedor.backend.application.ports.in.EditUserUseCase;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
@@ -12,24 +12,27 @@ import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.Role;
 import com.comedor.backend.domain.model.User;
+import com.comedor.backend.domain.model.enums.AuditAction;
 import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditUserRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
+
+import java.util.Map;
 
 public class EditUserService implements EditUserUseCase {
 
     private final UserMapper userMapper;
     private final UserRepositoryPort userRepositoryPort;
     private final PersonRepositoryPort personRepositoryPort;
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
     private final RoleRepositoryPort roleRepositoryPort;
 
-    public EditUserService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterModificationUseCase registerModificationUseCase, RoleRepositoryPort roleRepositoryPort) {
+    public EditUserService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterAuditUseCase registerAuditUseCase, RoleRepositoryPort roleRepositoryPort) {
         this.userMapper = userMapper;
         this.userRepositoryPort = userRepositoryPort;
         this.personRepositoryPort = personRepositoryPort;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
         this.roleRepositoryPort = roleRepositoryPort;
     }
 
@@ -60,21 +63,53 @@ public class EditUserService implements EditUserUseCase {
 
         // Auditoría solo de campos que realmente cambian
         if (!newName.toUpperCase().equals(person.getName().toUpperCase())) {
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario",person.getName().concat(" "+person.getLastname()), "nombre", person.getName(), newName
-            ));
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Usuario",
+                            user.getId(),
+                            person.getName().concat(" " + person.getLastname()),
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute", "nombre",
+                                    "previousValue", person.getName(),
+                                    "newValue", newName
+                            )
+                    )
+            );
         }
 
         if (!newLastName.toUpperCase().equals(person.getLastname().toUpperCase())) {
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario",person.getName().concat(" "+person.getLastname()), "apellido", person.getLastname(), newLastName
-            ));
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Usuario",
+                            user.getId(),
+                            person.getName()
+                                    .concat(" " + person.getLastname()),
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute", "apellido",
+                                    "previousValue", person.getLastname(),
+                                    "newValue", newLastName
+                            )
+                    )
+            );
         }
 
         if (!newDni.equals(person.getDni())) {
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario",person.getName().concat(" "+person.getLastname()), "dni", person.getDni(), newDni
-            ));
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Usuario",
+                            user.getId(),
+                            person.getName()
+                                    .concat(" " + person.getLastname()),
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute", "dni",
+                                    "previousValue", person.getDni(),
+                                    "newValue", newDni
+                            )
+                    )
+            );
         }
 
         Role newRole = roleRepositoryPort.findById(newRoleId)
@@ -84,8 +119,20 @@ public class EditUserService implements EditUserUseCase {
             throw new RoleInactiveException("No se puede asignar un rol inactivo");
         }
         if(newRoleId != user.getRol().getId()) {
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Usuario",person.getName().concat(" "+person.getLastname()),"rol",user.getRol().getName(),newRole.getName()));
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Usuario",
+                            user.getId(),
+                            person.getName()
+                                    .concat(" " + person.getLastname()),
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute", "rol",
+                                    "previousValue", user.getRol().getName(),
+                                    "newValue", newRole.getName()
+                            )
+                    )
+            );
         }
 
         person.setName(newName.toUpperCase());

@@ -2,6 +2,7 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.ProductMapper;
 import com.comedor.backend.application.ports.in.CreateProductUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
 import com.comedor.backend.application.ports.out.TagRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
@@ -10,11 +11,14 @@ import com.comedor.backend.domain.exceptions.InvalidProductUnitException;
 import com.comedor.backend.domain.model.Category;
 import com.comedor.backend.domain.model.Tag;
 import com.comedor.backend.domain.model.Product;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ProductRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class CreateProductService implements CreateProductUseCase {
 
@@ -22,12 +26,14 @@ public class CreateProductService implements CreateProductUseCase {
     private final ProductMapper productMapper;
     private final CategoryRepositoryPort categoryRepositoryPort;
     private final TagRepositoryPort tagRepositoryPort;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public CreateProductService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort) {
+    public CreateProductService(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort, RegisterAuditUseCase registerAuditUseCase) {
         this.productRepositoryPort = productRepositoryPort;
         this.productMapper = productMapper;
         this.categoryRepositoryPort = categoryRepositoryPort;
         this.tagRepositoryPort = tagRepositoryPort;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -56,7 +62,40 @@ public class CreateProductService implements CreateProductUseCase {
         product.setUnit(unidadNormalizada);
         product.setCategory(category);
         product.setTag(tag);
-        return  productMapper.productoResponseDTO(productRepositoryPort.createProducto(product));
+        Product savedProduct =
+                productRepositoryPort.createProducto(product);
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Producto",
+                        savedProduct.getId(),
+                        savedProduct.getName(),
+                        AuditAction.CREACION,
+                        Map.of(
+                                "Nombre",
+                                savedProduct.getName(),
+
+                                "Categoría",
+                                savedProduct.getCategory().getName(),
+
+                                "Etiqueta",
+                                savedProduct.getTag() != null
+                                        ? savedProduct.getTag().getName()
+                                        : "Sin etiqueta",
+
+                                "Unidad",
+                                savedProduct.getUnit(),
+
+                                "Estado",
+                                savedProduct.getStatus().toString(),
+
+                                "Punto de reorden",
+                                savedProduct.getReorderPoint() != null
+                                        ? savedProduct.getReorderPoint().toString()
+                                        : "0"
+                        )
+                )
+        );
+        return  productMapper.productoResponseDTO(savedProduct);
     }
 
     private String normalizarUnidad(String unit) {

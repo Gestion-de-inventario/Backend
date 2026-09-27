@@ -63,9 +63,9 @@ public enum PermissionCode {
     TRANSACTION_LIST_ALL,
 
     // =========================
-    // MODIFICATION
+    // AUDIT
     // =========================
-    MODIFICATION_LIST_ALL,
+    AUDIT_LIST_ALL,
     
     // =========================
     // USER
