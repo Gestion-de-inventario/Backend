@@ -2,28 +2,30 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.DishMenuMapper;
 import com.comedor.backend.application.ports.in.EditDishMenuUseCase;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.DishMenuRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.model.DishMenu;
 import com.comedor.backend.domain.model.DishSupply;
 import com.comedor.backend.domain.model.Product;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.DishMenuResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.EditDishMenuRequestDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public class EditDishMenuService implements EditDishMenuUseCase {
     private final DishMenuRepositoryPort dishMenuRepositoryPort;
     private final ProductRepositoryPort productRepositoryPort;
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
     private final DishMenuMapper dishMenuMapper;
 
-    public EditDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase, DishMenuMapper dishMenuMapper) {
+    public EditDishMenuService(DishMenuRepositoryPort dishMenuRepositoryPort, ProductRepositoryPort productRepositoryPort,RegisterAuditUseCase registerAuditUseCase, DishMenuMapper dishMenuMapper) {
         this.dishMenuRepositoryPort = dishMenuRepositoryPort;
         this.productRepositoryPort = productRepositoryPort;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
         this.dishMenuMapper = dishMenuMapper;
     }
 
@@ -35,10 +37,20 @@ public class EditDishMenuService implements EditDishMenuUseCase {
             if (dishMenuRepositoryPort.existsByNameAndIdNot(request.getName(), id)) {
                 throw new RuntimeException("Ya existe un plato con ese nombre: " + request.getName());
             }
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Plato",
-                    dishMenu.getName(),"nombre", dishMenu.getName(), request.getName().toUpperCase()
-            ));
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Plato",
+                            dishMenu.getId(),
+                            dishMenu.getName(),
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute","nombre",
+                                    "previousValue",dishMenu.getName(),
+                                    "newValue",request.getName().toUpperCase()
+                            )
+                    )
+            );
+
             dishMenu.setName(request.getName().toUpperCase());
         }
 

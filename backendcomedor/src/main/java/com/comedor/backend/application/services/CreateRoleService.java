@@ -2,15 +2,19 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.RoleMapper;
 import com.comedor.backend.application.ports.in.CreateRoleUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.PermissionRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.domain.exceptions.RoleAlreadyExistsException;
 import com.comedor.backend.domain.model.Permission;
 import com.comedor.backend.domain.model.Role;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.CreateRoleRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class CreateRoleService  implements CreateRoleUseCase {
@@ -20,10 +24,13 @@ public class CreateRoleService  implements CreateRoleUseCase {
 
     private final RoleMapper roleDTOMapper;
 
-    public CreateRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper) {
+    private final RegisterAuditUseCase registerAuditUseCase;
+
+    public CreateRoleService(RoleRepositoryPort roleRepository, PermissionRepositoryPort permissionRepository, RoleMapper roleDTOMapper, RegisterAuditUseCase registerAuditUseCase) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.roleDTOMapper = roleDTOMapper;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -52,6 +59,18 @@ public class CreateRoleService  implements CreateRoleUseCase {
         );
 
         Role savedRole = roleRepository.save(role);
+
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Rol",
+                        savedRole.getId(),
+                        savedRole.getName(),
+                        AuditAction.CREACION,
+                        Map.of(
+                                "Nombre", savedRole.getName()
+                        )
+                )
+        );
 
         return roleDTOMapper.toResponse(savedRole);
     }

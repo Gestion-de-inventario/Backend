@@ -1,25 +1,29 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ChangePasswordUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.User;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ChangePasswordRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Transactional
 public class ChangePasswordService implements ChangePasswordUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
     private final PasswordEncoder passwordEncoder;
-    private final RegisterModificationService registrarModificacionService;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public ChangePasswordService(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterModificationService registrarModificacionService) {
+    public ChangePasswordService(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterAuditUseCase registerAuditUseCase) {
         this.userRepositoryPort = userRepositoryPort;
         this.passwordEncoder = passwordEncoder;
-        this.registrarModificacionService = registrarModificacionService;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -37,9 +41,19 @@ public class ChangePasswordService implements ChangePasswordUseCase {
             );
         }
 
-        registrarModificacionService.registrar(new ModificationsRequestDTO(
-                "Usuario",user.getPersona().getName().concat(" "+user.getPersona().getLastname()) ,"password", "******", "******"
-        ));
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Usuario",
+                        user.getId(),
+                        user.getPersona().getName().concat(" " +  user.getPersona().getLastname()),
+                        AuditAction.MODIFICACION,
+                        Map.of(
+                                "attribute", "contraseña",
+                                "previousValue", "******",
+                                "newValue", "******"
+                        )
+                )
+        );
 
         String hashGenerado = passwordEncoder.encode(dto.getNewPassword());
         user.setPassword(hashGenerado);

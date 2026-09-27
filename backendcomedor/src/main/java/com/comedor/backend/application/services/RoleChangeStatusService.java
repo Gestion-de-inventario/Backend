@@ -1,17 +1,21 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.RoleMapper;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.in.RoleChangeStatusUseCase;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.domain.exceptions.RoleNotFoundException;
 import com.comedor.backend.domain.exceptions.RoleInUseException;
 import com.comedor.backend.domain.model.Role;
+import com.comedor.backend.domain.model.enums.AuditAction;
 import com.comedor.backend.domain.model.enums.ChangeStatus;
 import com.comedor.backend.domain.model.enums.Status;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.RolResponseDTO;
+
+import java.util.Map;
 
 public class RoleChangeStatusService implements RoleChangeStatusUseCase {
     private final RoleRepositoryPort roleRepository;
@@ -20,13 +24,13 @@ public class RoleChangeStatusService implements RoleChangeStatusUseCase {
 
     private final RoleMapper roleDTOMapper;
 
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public RoleChangeStatusService(RoleRepositoryPort roleRepository, UserRepositoryPort userRepository, RoleMapper roleDTOMapper, RegisterModificationUseCase registerModificationUseCase) {
+    public RoleChangeStatusService(RoleRepositoryPort roleRepository, UserRepositoryPort userRepository, RoleMapper roleDTOMapper, RegisterAuditUseCase registerAuditUseCase) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.roleDTOMapper = roleDTOMapper;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -50,14 +54,17 @@ public class RoleChangeStatusService implements RoleChangeStatusUseCase {
             Status oldStatus = existingRole.getStatus();
 
             existingRole.setStatus(newStatus);
-
-            registerModificationUseCase.registrar(
-                    new ModificationsRequestDTO(
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
                             "Role",
+                            id,
                             existingRole.getName(),
-                            "estado",
-                            oldStatus.name(),
-                            newStatus.name()
+                            AuditAction.MODIFICACION,
+                            Map.of(
+                                    "attribute", "estado",
+                                    "previousValue",  oldStatus.name(),
+                                    "newValue", newStatus.name()
+                            )
                     )
             );
 

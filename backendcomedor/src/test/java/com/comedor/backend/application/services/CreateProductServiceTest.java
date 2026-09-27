@@ -51,6 +51,7 @@ class CreateProductServiceTest {
 
     private CreateProductService service;
 
+    private RegisterAuditService registerAuditService;
     @BeforeEach
     void setUp() {
         productMapper = new ProductMapper();
@@ -59,7 +60,8 @@ class CreateProductServiceTest {
                 productRepositoryPort,
                 productMapper,
                 categoryRepositoryPort,
-                tagRepositoryPort
+                tagRepositoryPort,
+                registerAuditService
         );
     }
 

@@ -11,7 +11,7 @@ public enum ModuleCode {
     USER,
     ROLE,
     PERMISSION,
-    MODIFICATION,
+    AUDIT,
     DISH_MENU,
     PURCHASE,
     DONATION,

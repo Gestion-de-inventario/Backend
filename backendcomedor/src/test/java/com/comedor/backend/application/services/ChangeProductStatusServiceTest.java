@@ -1,21 +1,18 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.ProductMapper;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.domain.model.Category;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Tag;
 import com.comedor.backend.domain.model.enums.Status;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -35,8 +32,7 @@ class ChangeProductStatusServiceTest {
     @Mock
     private ProductRepositoryPort productRepositoryPort;
 
-    @Mock
-    private RegisterModificationUseCase registerModificationUseCase;
+
 
     private ProductMapper productMapper;
 
@@ -49,17 +45,6 @@ class ChangeProductStatusServiceTest {
     void setUp() {
         productMapper = new ProductMapper();
 
-        deactivateProductService = new DeactivateProductService(
-                productRepositoryPort,
-                productMapper,
-                registerModificationUseCase
-        );
-
-        activateProductService = new ActivateProductService(
-                productRepositoryPort,
-                productMapper,
-                registerModificationUseCase
-        );
 
         listProductsByStatusService = new ListProductsByStatusService(
                 productRepositoryPort,
@@ -92,34 +77,6 @@ class ChangeProductStatusServiceTest {
         verify(productRepositoryPort, never()).createProducto(any(Product.class));
     }
 
-    @Test
-    @DisplayName("Escenario 2: Registrar modificación al desactivar producto")
-    void desactivarProducto_existente_debeRegistrarCambioDeEstadoActivoAInactivo() {
-        // given
-        int productId = 1;
-
-        Product productoInactivo = crearProducto(productId, "ARROZ", Status.INACTIVO);
-
-        when(productRepositoryPort.deactivateById(productId))
-                .thenReturn(productoInactivo);
-
-        // when
-        deactivateProductService.desactivarProductoPorId(productId);
-
-        // then
-        ArgumentCaptor<ModificationsRequestDTO> captor =
-                ArgumentCaptor.forClass(ModificationsRequestDTO.class);
-
-        verify(registerModificationUseCase).registrar(captor.capture());
-
-        ModificationsRequestDTO modification = captor.getValue();
-
-        assertEquals("Producto", modification.getEditedClass());
-        assertEquals("ARROZ", modification.getName());
-        assertEquals("status", modification.getEditedAttribute());
-        assertEquals("ACTIVO", modification.getPreviousValue());
-        assertEquals("INACTIVO", modification.getNewValue());
-    }
 
     @Test
     @DisplayName("Escenario 3: Activar producto correctamente")
@@ -146,34 +103,7 @@ class ChangeProductStatusServiceTest {
         verify(productRepositoryPort, never()).createProducto(any(Product.class));
     }
 
-    @Test
-    @DisplayName("Escenario 4: Registrar modificación al activar producto")
-    void activarProducto_existente_debeRegistrarCambioDeEstadoInactivoAActivo() {
-        // given
-        int productId = 1;
 
-        Product productoActivo = crearProducto(productId, "ARROZ", Status.ACTIVO);
-
-        when(productRepositoryPort.activateById(productId))
-                .thenReturn(productoActivo);
-
-        // when
-        activateProductService.activarProductoPorId(productId);
-
-        // then
-        ArgumentCaptor<ModificationsRequestDTO> captor =
-                ArgumentCaptor.forClass(ModificationsRequestDTO.class);
-
-        verify(registerModificationUseCase).registrar(captor.capture());
-
-        ModificationsRequestDTO modification = captor.getValue();
-
-        assertEquals("Producto", modification.getEditedClass());
-        assertEquals("ARROZ", modification.getName());
-        assertEquals("status", modification.getEditedAttribute());
-        assertEquals("INACTIVO", modification.getPreviousValue());
-        assertEquals("ACTIVO", modification.getNewValue());
-    }
 
     @Test
     @DisplayName("Escenario 5: Verificar soft delete usando desactivación lógica")

@@ -2,7 +2,7 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.ProductMapper;
 import com.comedor.backend.application.ports.in.EditProductUseCase;
-import com.comedor.backend.application.ports.in.RegisterModificationUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.CategoryRepositoryPort;
 import com.comedor.backend.application.ports.out.ProductRepositoryPort;
 import com.comedor.backend.application.ports.out.TagRepositoryPort;
@@ -12,23 +12,25 @@ import com.comedor.backend.domain.exceptions.ProductAlreadyExistsException;
 import com.comedor.backend.domain.model.Category;
 import com.comedor.backend.domain.model.Product;
 import com.comedor.backend.domain.model.Tag;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditProductRequestDTO;
-import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ModificationsRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ProductResponseDTO;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class EditProductService implements EditProductUseCase {
 
     private final ProductRepositoryPort productRepositoryPort;
-    private final RegisterModificationUseCase registerModificationUseCase;
+    private final RegisterAuditUseCase registerAuditUseCase;
     private final CategoryRepositoryPort categoryRepositoryPort;
     private final TagRepositoryPort tagRepositoryPort;
     private final ProductMapper productMapper;
 
-    public EditProductService(ProductRepositoryPort productRepositoryPort, RegisterModificationUseCase registerModificationUseCase, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort, ProductMapper productMapper) {
+    public EditProductService(ProductRepositoryPort productRepositoryPort, RegisterAuditUseCase registerAuditUseCase, CategoryRepositoryPort categoryRepositoryPort, TagRepositoryPort tagRepositoryPort, ProductMapper productMapper) {
         this.productRepositoryPort = productRepositoryPort;
-        this.registerModificationUseCase = registerModificationUseCase;
+        this.registerAuditUseCase = registerAuditUseCase;
         this.categoryRepositoryPort = categoryRepositoryPort;
         this.tagRepositoryPort = tagRepositoryPort;
         this.productMapper = productMapper;
@@ -38,6 +40,8 @@ public class EditProductService implements EditProductUseCase {
     public ProductResponseDTO editar(Integer id, EditProductRequestDTO request) {
         Product product = productRepositoryPort.getProductoById(id);
         boolean tieneTransacciones = productRepositoryPort.tieneTransaccionesVinculadas(id);
+
+        String originalEntityName = product.getName();
 
         Integer actualTagId = product.getTag() != null
                 ? product.getTag().getId()
@@ -81,13 +85,13 @@ public class EditProductService implements EditProductUseCase {
             if (request.getReorderPoint() != null &&
                     request.getReorderPoint().compareTo(product.getReorderPoint()) != 0) {
 
-                registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                        "Producto",
-                        product.getName(),
+                registrarCambio(
+                        id,
+                        originalEntityName,
                         "punto de reorden",
                         product.getReorderPoint().toString(),
                         request.getReorderPoint().toString()
-                ));
+                );
 
                 product.setReorderPoint(request.getReorderPoint());
             }
@@ -106,13 +110,13 @@ public class EditProductService implements EditProductUseCase {
                 );
             }
 
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",
-                    product.getName(),
+            registrarCambio(
+                    id,
+                    originalEntityName,
                     "nombre",
                     product.getName(),
-                    request.getName()
-            ));
+                    nuevoNombre
+            );
 
             product.setName(request.getName());
         }
@@ -121,14 +125,13 @@ public class EditProductService implements EditProductUseCase {
             Category newcategory =
                     categoryRepositoryPort.getCategoryById(request.getCategoryId());
 
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",
-                    product.getName(),
+            registrarCambio(
+                    id,
+                    originalEntityName,
                     "categoría",
                     product.getCategory().getName(),
                     newcategory.getName()
-            ));
-
+            );
             product.setCategory(newcategory);
         }
 
@@ -140,38 +143,38 @@ public class EditProductService implements EditProductUseCase {
                     : "Sin etiqueta";
 
             if (requestedTagId == 0) {
-                registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                        "Producto",
-                        product.getName(),
+                registrarCambio(
+                        id,
+                        originalEntityName,
                         "etiqueta",
                         oldTagName,
                         "Sin etiqueta"
-                ));
+                );
 
                 product.setTag(null);
             } else {
                 Tag newtag = tagRepositoryPort.getTagById(requestedTagId);
 
-                registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                        "Producto",
-                        product.getName(),
+                registrarCambio(
+                        id,
+                        originalEntityName,
                         "etiqueta",
                         oldTagName,
                         newtag.getName()
-                ));
+                );
 
                 product.setTag(newtag);
             }
         }
 
         if (unitChanged) {
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",
-                    product.getName(),
+            registrarCambio(
+                    id,
+                    originalEntityName,
                     "unidad",
                     product.getUnit(),
                     unidadNormalizada
-            ));
+            );
 
             product.setUnit(unidadNormalizada);
         }
@@ -179,13 +182,13 @@ public class EditProductService implements EditProductUseCase {
         if (request.getReorderPoint() != null &&
                 request.getReorderPoint().compareTo(product.getReorderPoint()) != 0) {
 
-            registerModificationUseCase.registrar(new ModificationsRequestDTO(
-                    "Producto",
-                    product.getName(),
+            registrarCambio(
+                    id,
+                    originalEntityName,
                     "punto de reorden",
                     product.getReorderPoint().toString(),
                     request.getReorderPoint().toString()
-            ));
+            );
 
             product.setReorderPoint(request.getReorderPoint());
         }
@@ -208,4 +211,33 @@ public class EditProductService implements EditProductUseCase {
             default -> throw new InvalidProductUnitException("Unidad de medida no permitida");
         };
     }
+
+    private void registrarCambio(
+            Integer entityId,
+            String entityName,
+            String attribute,
+            String previousValue,
+            String newValue) {
+
+        registerAuditUseCase.registrar(
+                new AuditRequestDTO(
+                        "Producto",
+                        entityId,
+                        entityName,
+                        AuditAction.MODIFICACION,
+                        Map.of(
+                                "attribute", attribute,
+                                "previousValue",
+                                previousValue != null
+                                        ? previousValue
+                                        : "-",
+                                "newValue",
+                                newValue != null
+                                        ? newValue
+                                        : "-"
+                        )
+                )
+        );
+    }
+
 }

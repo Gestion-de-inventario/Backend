@@ -72,4 +72,16 @@ public class User {
     public void setPasswordChanged(boolean passwordChanged) {
         this.passwordChanged = passwordChanged;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role.getName() +
+                ", status=" + status +
+                ", passwordChanged=" + passwordChanged +
+                '}';
+    }
 }
