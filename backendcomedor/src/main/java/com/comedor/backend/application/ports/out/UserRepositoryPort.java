@@ -24,4 +24,9 @@ public interface UserRepositoryPort {
     User activateById(Integer id);
 
     boolean RoleIsAssignedToUser(int id);
+
+    boolean existsByPhone(String phone);
+    boolean existsByPhoneAndIdNot(String phone, int id);
+
+    Optional<String> getPhoneByUsername(String username);
 }

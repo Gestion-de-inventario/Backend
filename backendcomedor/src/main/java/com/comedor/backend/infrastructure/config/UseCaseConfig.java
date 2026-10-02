@@ -75,6 +75,18 @@ public class UseCaseConfig {
     }
 
     @Bean
+    public EditUserProfileService editarPerfilUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterAuditUseCase registerAuditUseCase, RoleRepositoryPort roleRepositoryPort)
+    {
+        return new EditUserProfileService(
+                userMapper,
+                userRepositoryPort,
+                personRepositoryPort,
+                registerAuditUseCase,
+                roleRepositoryPort
+        );
+    }
+
+    @Bean
     public ChangePasswordUseCase cambiarPasswordUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterAuditUseCase registerAuditUseCase) {
         return new ChangePasswordService(
                 userRepositoryPort,
@@ -510,6 +522,11 @@ public class UseCaseConfig {
     @Bean
     GetPurchaseByIdService getPurchaseByIdService(PurchaseRepositoryPort repository, PurchaseMapper mapper){
         return new GetPurchaseByIdService(repository,mapper);
+    }
+    @Bean
+    GetPhoneService getPhoneService(UserRepositoryPort userRepository)
+    {
+        return new GetPhoneService(userRepository);
     }
 
     @Bean

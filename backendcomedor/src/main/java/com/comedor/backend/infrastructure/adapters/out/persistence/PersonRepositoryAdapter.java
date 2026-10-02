@@ -6,6 +6,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.response.BasicUser
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.PersonEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.PersonJpaRepository;
+import com.comedor.backend.infrastructure.adapters.out.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,7 @@ public class PersonRepositoryAdapter implements PersonRepositoryPort {
     public boolean existsByDni(String dni) {
         return personJpaRepository.existsByDni(dni);
     }
+
 
     @Override
     public boolean existsByDniAndIdNot(String dni,int id) {

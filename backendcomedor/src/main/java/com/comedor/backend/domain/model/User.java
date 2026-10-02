@@ -7,15 +7,17 @@ public class User {
     private String username;
     private String password;
     private Role role;
+    private String phone;
     private Status status = Status.ACTIVO;
     private Person person;
     private boolean passwordChanged = false;
 
-    public User(Integer id, String username, String password, Role role, Status status, Person person, Boolean passwordChanged) {
+    public User(Integer id, String username, String password, Role role,String phone , Status status, Person person, Boolean passwordChanged) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.phone = phone;
         this.status = status;
         this.person = person;
         this.passwordChanged = passwordChanged;
@@ -38,6 +40,14 @@ public class User {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setId(Integer id) {
@@ -81,6 +91,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", role=" + role.getName() +
                 ", status=" + status +
+                ", phone= " + phone +
                 ", passwordChanged=" + passwordChanged +
                 '}';
     }

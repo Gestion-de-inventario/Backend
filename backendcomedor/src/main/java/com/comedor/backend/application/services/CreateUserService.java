@@ -42,11 +42,15 @@ public class CreateUserService implements CreateUserUseCase {
     public UsuarioResponseDTO crearUsuario(UserRequestDTO dto) {
 
         if (personRepositoryPort.existsByDni(dto.getDni())) {
-            throw new ExistingUserException("DNI ya registrado");
+            throw new ExistingUserException("El DNI:"+ dto.getDni()+ " ya esta registrado");
         }
 
         if (personRepositoryPort.existsByNameAndLastName(dto.getName().toUpperCase(), dto.getLastname().toUpperCase())) {
             throw new ExistingUserException("Nombre y apellido ya existe");
+        }
+
+        if (userRepositoryPort.existsByPhone(dto.getPhone())) {
+            throw new ExistingUserException("El número de teléfono " + dto.getPhone()+" ya esta registrado");
         }
 
         User user = userMapper.toDomain(dto);
@@ -72,7 +76,8 @@ public class CreateUserService implements CreateUserUseCase {
                                 "DNI", saved.getPersona().getDni(),
                                 "Nombre", saved.getPersona().getName(),
                                 "Apellido", saved.getPersona().getLastname(),
-                                "Rol", saved.getRol().getName()
+                                "Rol", saved.getRol().getName(),
+                                "Teléfono",saved.getPhone()
                         )
                 )
         );

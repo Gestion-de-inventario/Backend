@@ -7,6 +7,7 @@ import com.comedor.backend.application.ports.in.LogoutUseCase;
 import com.comedor.backend.application.ports.in.RefreshTokenUseCase;
 import com.comedor.backend.application.ports.out.RefreshTokenRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.application.services.GetPhoneService;
 import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
@@ -32,6 +33,7 @@ public class AuthController {
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final CreateRefreshTokenUseCase createRefreshTokenUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final GetPhoneService getPhoneService;
     private final UserRepositoryPort userRepository;
     private final AuthMapper authMapper;
     @Transactional
@@ -101,5 +103,11 @@ public class AuthController {
                 authMapper.toAuthResponseDTO(user, null);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("phone")
+    public ResponseEntity<String> phone()
+    {
+        return ResponseEntity.ok(getPhoneService.getPhoneByUsername());
     }
 }

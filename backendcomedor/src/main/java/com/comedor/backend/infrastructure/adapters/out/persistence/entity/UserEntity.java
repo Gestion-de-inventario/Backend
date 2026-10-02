@@ -28,6 +28,9 @@ public class UserEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
 
+    @Column(length = 9)
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVO;

@@ -8,4 +8,5 @@ public class EditUserRequestDTO {
     private String lastname;
     private String dni;
     private Integer role_id;
+    private String phone;
 }
