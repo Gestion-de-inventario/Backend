@@ -37,6 +37,8 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/auth/logout",
                                 "/auth/refresh",
+                                "/auth/forgot-password",
+                                "/auth/password-reset/**",
                                 "/health",
                                 "/error",
                                 "/swagger-ui/**",

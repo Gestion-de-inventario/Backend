@@ -165,6 +165,17 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>10.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vonage</groupId>
+            <artifactId>server-sdk</artifactId>
+            <version>9.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>

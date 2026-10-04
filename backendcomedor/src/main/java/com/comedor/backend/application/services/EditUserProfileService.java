@@ -1,13 +1,15 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.UserMapper;
+import com.comedor.backend.application.ports.in.EditUserProfileUseCase;
 import com.comedor.backend.application.ports.in.EditUserUseCase;
 import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.PersonRepositoryPort;
 import com.comedor.backend.application.ports.out.RoleRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
-import com.comedor.backend.domain.exceptions.RoleInactiveException;
 import com.comedor.backend.domain.exceptions.ExistingUserException;
+import com.comedor.backend.domain.exceptions.InvalidProfileUpdateException;
+import com.comedor.backend.domain.exceptions.RoleInactiveException;
 import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.Role;
@@ -17,10 +19,12 @@ import com.comedor.backend.domain.model.enums.Status;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditUserRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
+import java.util.Objects;
 
-public class EditUserService implements EditUserUseCase {
+public class EditUserProfileService implements EditUserProfileUseCase {
 
     private final UserMapper userMapper;
     private final UserRepositoryPort userRepositoryPort;
@@ -28,7 +32,7 @@ public class EditUserService implements EditUserUseCase {
     private final RegisterAuditUseCase registerAuditUseCase;
     private final RoleRepositoryPort roleRepositoryPort;
 
-    public EditUserService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterAuditUseCase registerAuditUseCase, RoleRepositoryPort roleRepositoryPort) {
+    public EditUserProfileService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterAuditUseCase registerAuditUseCase, RoleRepositoryPort roleRepositoryPort) {
         this.userMapper = userMapper;
         this.userRepositoryPort = userRepositoryPort;
         this.personRepositoryPort = personRepositoryPort;
@@ -37,17 +41,28 @@ public class EditUserService implements EditUserUseCase {
     }
 
     @Override
-    public UsuarioResponseDTO EditarUsuario(Integer id, EditUserRequestDTO dto) {
+    public UsuarioResponseDTO EditarPerfil(EditUserRequestDTO dto) {
 
-        User user = userRepositoryPort.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+        String username =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User user =
+                userRepositoryPort
+                        .findByUsername(username)
+                        .orElseThrow(() ->
+                                new UserNotFoundException(
+                                        "Usuario no encontrado: " + username
+                                )
+                        );
 
         Person person = user.getPersona();
 
         String newName = dto.getName() != null ? dto.getName() : person.getName();
         String newLastName = dto.getLastname() != null ? dto.getLastname() : person.getLastname();
         String newDni = dto.getDni() != null ? dto.getDni() : person.getDni();
-        int newRoleId = dto.getRole_id() != null ? dto.getRole_id() : user.getRol().getId();
         String newPhone = dto.getPhone() != null ? dto.getPhone() : user.getPhone();
 
         boolean existsFullName = personRepositoryPort
@@ -66,26 +81,16 @@ public class EditUserService implements EditUserUseCase {
             throw new ExistingUserException("El número de teléfono " + dto.getPhone()+" ya esta registrado");
         }
 
-        Role newRole = roleRepositoryPort.findById(newRoleId)
-                .orElseThrow(() -> new RuntimeException("Rol no existe"));
-
-        if(newRole.getStatus().equals(Status.INACTIVO))
-        {
-            throw new RoleInactiveException("No se puede asignar un rol inactivo");
-        }
-
         String actualName = person.getName();
         String actualLastName =  person.getLastname();
         String actualDni = person.getDni();
-        int actualRoleId = user.getRol().getId();
         String actualPhone = user.getPhone();
-        String actualRoleName = user.getRol().getName();
 
         person.setName(newName.toUpperCase());
         person.setLastname(newLastName.toUpperCase());
         person.setDni(newDni);
-        user.setRole(newRole);
         user.setPhone(newPhone);
+        user.setRole(user.getRol());
         user.setUsername(newDni);
         user.setPersona(person);
 
@@ -137,25 +142,6 @@ public class EditUserService implements EditUserUseCase {
                                     "attribute", "dni",
                                     "previousValue", actualDni,
                                     "newValue", newDni
-                            )
-                    )
-            );
-        }
-
-
-
-        if(newRoleId != actualRoleId) {
-            registerAuditUseCase.registrar(
-                    new AuditRequestDTO(
-                            "Usuario",
-                            user.getId(),
-                            person.getName()
-                                    .concat(" " + person.getLastname()),
-                            AuditAction.MODIFICACION,
-                            Map.of(
-                                    "attribute", "rol",
-                                    "previousValue", actualRoleName,
-                                    "newValue", newRole.getName()
                             )
                     )
             );

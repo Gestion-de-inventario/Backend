@@ -30,10 +30,10 @@ public class AuthService implements LoginUseCase {
     public AuthResponseDTO login(AuthRequestDTO request) {
 
         User user = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(InvalidCredentialsException::new);
+                .orElseThrow( () -> new InvalidCredentialsException("Credenciales inválidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Credenciales inválidas");
         }
 
         if(user.getStatus().equals(Status.INACTIVO))

@@ -75,6 +75,18 @@ public class UseCaseConfig {
     }
 
     @Bean
+    public EditUserProfileService editarPerfilUsuarioService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, PersonRepositoryPort personRepositoryPort, RegisterAuditUseCase registerAuditUseCase, RoleRepositoryPort roleRepositoryPort)
+    {
+        return new EditUserProfileService(
+                userMapper,
+                userRepositoryPort,
+                personRepositoryPort,
+                registerAuditUseCase,
+                roleRepositoryPort
+        );
+    }
+
+    @Bean
     public ChangePasswordUseCase cambiarPasswordUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder, RegisterAuditUseCase registerAuditUseCase) {
         return new ChangePasswordService(
                 userRepositoryPort,
@@ -511,6 +523,11 @@ public class UseCaseConfig {
     GetPurchaseByIdService getPurchaseByIdService(PurchaseRepositoryPort repository, PurchaseMapper mapper){
         return new GetPurchaseByIdService(repository,mapper);
     }
+    @Bean
+    GetPhoneService getPhoneService(UserRepositoryPort userRepository)
+    {
+        return new GetPhoneService(userRepository);
+    }
 
     @Bean
     GetDonationByIdService getDonationByIdService(DonationRepositoryPort repository, DonationMapper mapper){
@@ -525,6 +542,24 @@ public class UseCaseConfig {
     @Bean
     UpdateCompanyConfigService actualizarEmpresaConfigService(EmpresaConfigRepositoryPort repository,RegisterAuditUseCase registerAuditUseCase) {
         return new UpdateCompanyConfigService(repository,registerAuditUseCase);
+    }
+
+    @Bean
+    RequestPasswordResetService  RequestPasswordResetService(UserRepositoryPort usuarioRepository,PasswordResetTokenRepositoryPort tokenRepositoryPort,NotificationPort notificationPort){
+        return new RequestPasswordResetService(usuarioRepository,tokenRepositoryPort,notificationPort);
+
+    }
+
+    @Bean
+    ResetPasswordService resetPasswordService(PasswordResetTokenRepositoryPort tokenRepositoryPort,UserRepositoryPort userRepositoryPort,PasswordEncoder passwordEncoder)
+    {
+        return new ResetPasswordService(tokenRepositoryPort,userRepositoryPort,passwordEncoder);
+    }
+
+    @Bean
+    ValidatePasswordResetTokenService validatePasswordResetTokenService(PasswordResetTokenRepositoryPort tokenRepositoryPort)
+    {
+        return new ValidatePasswordResetTokenService(tokenRepositoryPort);
     }
 }
 

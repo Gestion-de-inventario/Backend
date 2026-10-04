@@ -24,6 +24,7 @@ public class UserEntityMapper {
                 entity.getUsername(),
                 entity.getPassword(),
                 rolMapper.toDomain(entity.getRole()),
+                entity.getPhone(),
                 entity.getStatus(),
                 personEntityMapper.toDomain(entity.getPersona()),
                 entity.isPasswordChanged()
@@ -38,6 +39,7 @@ public class UserEntityMapper {
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         entity.setRole(rolMapper.toEntity(user.getRol()));
+        entity.setPhone(user.getPhone());
         entity.setStatus(user.getStatus());
         entity.setPersona(personEntityMapper.toEntity(user.getPersona()));
         entity.setPasswordChanged(user.isPasswordChanged());

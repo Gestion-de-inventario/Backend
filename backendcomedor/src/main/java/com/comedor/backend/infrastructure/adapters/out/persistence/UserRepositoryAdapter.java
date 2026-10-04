@@ -46,13 +46,13 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User update(User user) {
-
         UserEntity entity = userJpaRepository.findById(user.getId())
                 .orElseThrow(() -> new UserNotFoundException("Usuario no existe"));
 
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         entity.setStatus(user.getStatus());
+        entity.setPhone(user.getPhone());
         entity.setRole(roleEntityMapper.toEntity(user.getRol()));
 
         entity.setPasswordChanged(user.isPasswordChanged());
@@ -71,7 +71,6 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         }
 
         UserEntity saved = userJpaRepository.save(entity);
-
         return userEntityMapper.toDomain(saved);
     }
 
@@ -103,4 +102,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     public boolean RoleIsAssignedToUser(int id) {
         return userJpaRepository.existsByRoleIdAndStatus(id, Status.ACTIVO);
     }
+
+    @Override
+    public boolean existsByPhone(String phone) {
+        return userJpaRepository.existsByPhone(phone);
+    }
+
+    @Override
+    public boolean existsByPhoneAndIdNot(String phone, int id) {
+        return userJpaRepository.existsByPhoneAndIdNot(phone,id);
+    }
+
+    @Override
+    public Optional<String> getPhoneByUsername(String username) {
+        return userJpaRepository.getPhoneByUsername(username);
+    }
+
 }

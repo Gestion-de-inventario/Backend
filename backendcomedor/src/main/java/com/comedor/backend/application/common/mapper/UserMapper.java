@@ -17,11 +17,11 @@ public class UserMapper {
 
         User user = new User();
         user.setUsername(dto.getDni());
+        user.setPhone(dto.getPhone());
         Person person = new Person();
         person.setName(dto.getName().toUpperCase());
         person.setLastname(dto.getLastname().toUpperCase());
         person.setDni(dto.getDni());
-
         person.setUser(user);
         user.setPersona(person);
         return user;
@@ -35,7 +35,7 @@ public class UserMapper {
 
         dto.setUser_id(u.getId());
         dto.setStatus(u.getStatus());
-
+        dto.setPhone(u.getPhone());
         if (u.getRol() != null) {
             dto.setRole(u.getRol().getName());
             dto.setRole_id(u.getRol().getId());
