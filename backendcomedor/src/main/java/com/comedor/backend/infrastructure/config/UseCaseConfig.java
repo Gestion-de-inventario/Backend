@@ -543,6 +543,24 @@ public class UseCaseConfig {
     UpdateCompanyConfigService actualizarEmpresaConfigService(EmpresaConfigRepositoryPort repository,RegisterAuditUseCase registerAuditUseCase) {
         return new UpdateCompanyConfigService(repository,registerAuditUseCase);
     }
+
+    @Bean
+    RequestPasswordResetService  RequestPasswordResetService(UserRepositoryPort usuarioRepository,PasswordResetTokenRepositoryPort tokenRepositoryPort,NotificationPort notificationPort){
+        return new RequestPasswordResetService(usuarioRepository,tokenRepositoryPort,notificationPort);
+
+    }
+
+    @Bean
+    ResetPasswordService resetPasswordService(PasswordResetTokenRepositoryPort tokenRepositoryPort,UserRepositoryPort userRepositoryPort,PasswordEncoder passwordEncoder)
+    {
+        return new ResetPasswordService(tokenRepositoryPort,userRepositoryPort,passwordEncoder);
+    }
+
+    @Bean
+    ValidatePasswordResetTokenService validatePasswordResetTokenService(PasswordResetTokenRepositoryPort tokenRepositoryPort)
+    {
+        return new ValidatePasswordResetTokenService(tokenRepositoryPort);
+    }
 }
 
 

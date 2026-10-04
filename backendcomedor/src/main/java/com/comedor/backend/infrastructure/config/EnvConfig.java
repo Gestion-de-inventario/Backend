@@ -15,5 +15,10 @@ public class EnvConfig {
         System.setProperty("DB_USER", dotenv.get("DB_USER"));
         System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
         System.setProperty("RENIEC_TOKEN", dotenv.get("RENIEC_TOKEN"));
+        System.setProperty("VONAGE_API_KEY",dotenv.get("VONAGE_API_KEY"));
+        System.setProperty("VONAGE_API_SECRET",dotenv.get("VONAGE_API_SECRET"));
+        System.setProperty("TWILIO_SID",dotenv.get("TWILIO_SID"));
+        System.setProperty("TWILIO_TOKEN",dotenv.get("TWILIO_TOKEN"));
+        System.setProperty("TWILIO_PHONE_NUMBER",dotenv.get("TWILIO_PHONE_NUMBER"));
     }
 }

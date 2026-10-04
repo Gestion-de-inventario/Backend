@@ -1,17 +1,19 @@
 package com.comedor.backend.infrastructure.adapters.in.web;
 
 import com.comedor.backend.application.common.mapper.AuthMapper;
-import com.comedor.backend.application.ports.in.CreateRefreshTokenUseCase;
-import com.comedor.backend.application.ports.in.LoginUseCase;
-import com.comedor.backend.application.ports.in.LogoutUseCase;
-import com.comedor.backend.application.ports.in.RefreshTokenUseCase;
+import com.comedor.backend.application.ports.in.*;
 import com.comedor.backend.application.ports.out.RefreshTokenRepositoryPort;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
 import com.comedor.backend.application.services.GetPhoneService;
 import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuthRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ForgotPasswordRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ResetPasswordConfirmRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuthResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.GenericAuthResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.ValidateResetTokenResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -36,6 +38,10 @@ public class AuthController {
     private final GetPhoneService getPhoneService;
     private final UserRepositoryPort userRepository;
     private final AuthMapper authMapper;
+    private final RequestPasswordResetUseCase requestPasswordResetUseCase;
+    private final ValidatePasswordResetTokenUseCase validatePasswordResetTokenUseCase;
+    private final ResetPasswordUseCase resetPasswordUseCase;
+
     @Transactional
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(
@@ -109,5 +115,41 @@ public class AuthController {
     public ResponseEntity<String> phone()
     {
         return ResponseEntity.ok(getPhoneService.getPhoneByUsername());
+    }
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<GenericAuthResponseDTO> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequestDTO requestDTO
+    ) {
+        requestPasswordResetUseCase.solicitarRecuperacionContrasena(requestDTO.getDni(), requestDTO.getPhone());
+
+        GenericAuthResponseDTO response = new GenericAuthResponseDTO();
+        response.setMessage("Si los datos coinciden con un usuario registrado, se enviará un enlace de recuperación por SMS.");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/password-reset/validate")
+    public ResponseEntity<ValidateResetTokenResponseDTO> validateResetToken(
+            @RequestParam("token") String token
+    ) {
+        boolean isValid = validatePasswordResetTokenUseCase.validarToken(token);
+
+        ValidateResetTokenResponseDTO response = new ValidateResetTokenResponseDTO();
+        response.setValid(isValid);
+        response.setMessage(isValid ? "Token válido" : "El enlace de recuperación es inválido o ha expirado.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/password-reset/confirm")
+    public ResponseEntity<GenericAuthResponseDTO> confirmResetPassword(
+            @Valid @RequestBody ResetPasswordConfirmRequestDTO requestDTO
+    ) {
+        resetPasswordUseCase.recuperarContraseña(requestDTO.getToken(), requestDTO.getNewPassword());
+
+        GenericAuthResponseDTO response = new GenericAuthResponseDTO();
+        response.setMessage("Contraseña restablecida exitosamente.");
+        return ResponseEntity.ok(response);
     }
 }
