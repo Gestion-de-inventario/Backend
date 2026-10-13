@@ -1,21 +1,21 @@
 package com.comedor.backend.domain.exceptions;
 
-import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MissingProductResponseDTO;
+import com.comedor.backend.domain.model.MissingProduct;
 
 import java.util.List;
 
 public class InsufficientStockException extends RuntimeException {
 
-    private final List<MissingProductResponseDTO> faltantes;
+    private final List<MissingProduct> faltantes;
 
     public InsufficientStockException(
-            List<MissingProductResponseDTO> faltantes
+            List<MissingProduct> faltantes
     ) {
         super("Stock insuficiente");
         this.faltantes = faltantes;
     }
 
-    public List<MissingProductResponseDTO> getFaltantes() {
+    public List<MissingProduct> getFaltantes() {
         return faltantes;
     }
 }

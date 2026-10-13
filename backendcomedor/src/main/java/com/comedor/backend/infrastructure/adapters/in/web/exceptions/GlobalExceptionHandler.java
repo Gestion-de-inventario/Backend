@@ -4,6 +4,7 @@ import com.comedor.backend.domain.exceptions.InvalidCredentialsException;
 import com.comedor.backend.domain.exceptions.InsufficientStockException;
 import com.comedor.backend.domain.exceptions.UserNotFoundException;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.InsufficientStockResponseDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.MissingProductResponseDTO;
 import com.comedor.backend.infrastructure.config.PeruTime;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,7 +50,13 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(
                         new InsufficientStockResponseDTO(
-                                ex.getFaltantes()
+                                ex.getFaltantes().stream().map(f -> new MissingProductResponseDTO(
+                                                f.getProductId(),
+                                                f.getProductName(),
+                                                f.getProductUnit(),
+                                                f.getQuantityNeeded()
+                                        ))
+                                        .toList()
                         )
                 );
     }

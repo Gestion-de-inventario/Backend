@@ -70,7 +70,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
         validarCocineras(request.getCooks());
 
         DishMenu dishMenu = dishMenuRepository.findById(request.getDishMenuId());
-        List<MissingProductResponseDTO> productosFaltantes = new ArrayList<>();
+        List<MissingProduct> productosFaltantes = new ArrayList<>();
         Integer usuarioId = currentUserService.getCurrentUser().getId();
         for (DishSupply supply : dishMenu.getSupplies()) {
 
@@ -84,7 +84,7 @@ public class CreateMenuReportService implements CreateMenuReportUseCase {
                 BigDecimal faltante =
                         requerido.subtract(product.getStock());
 
-                productosFaltantes.add(new MissingProductResponseDTO(product.getId(),product.getName(),product.getUnit(),faltante));
+                productosFaltantes.add(new MissingProduct(product.getId(),product.getName(),product.getUnit(),faltante));
             }
         }
 

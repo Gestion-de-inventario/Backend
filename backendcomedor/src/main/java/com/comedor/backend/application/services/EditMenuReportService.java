@@ -207,7 +207,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             BigDecimal nuevaCantidad
     ) {
 
-        List<MissingProductResponseDTO> faltantes =
+        List<MissingProduct> faltantes =
                 new ArrayList<>();
 
         for (DishSupply supply : nuevoMenu.getSupplies()) {
@@ -251,7 +251,7 @@ public class EditMenuReportService implements EditMenuReportUseCase {
             if (stockDisponible.compareTo(requeridoNuevo) < 0) {
 
                 faltantes.add(
-                        new MissingProductResponseDTO(
+                        new MissingProduct(
                                 product.getId(),
                                 product.getName(),
                                 product.getUnit(),
