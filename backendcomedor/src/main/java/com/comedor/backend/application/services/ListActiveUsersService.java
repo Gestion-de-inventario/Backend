@@ -3,6 +3,7 @@ package com.comedor.backend.application.services;
 import com.comedor.backend.application.common.mapper.UserMapper;
 import com.comedor.backend.application.ports.in.ListActiveUsersUseCase;
 import com.comedor.backend.application.ports.out.UserRepositoryPort;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioMinimalResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ListActiveUsersService implements ListActiveUsersUseCase {
     }
 
     @Override
-    public List<UsuarioResponseDTO> ListarUsuariosActivos() {
-        return userMapper.toListUsuarioResponseDto(userRepositoryPort.getAllUsuariosActivos());
+    public List<UsuarioMinimalResponseDTO> ListarUsuariosActivos() {
+        return userMapper.toListUsuarioMinimalResponseDto(userRepositoryPort.getAllUsuariosActivos());
     }
 }

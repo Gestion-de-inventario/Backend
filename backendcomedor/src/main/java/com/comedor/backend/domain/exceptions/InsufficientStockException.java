@@ -4,7 +4,7 @@ import com.comedor.backend.domain.model.MissingProduct;
 
 import java.util.List;
 
-public class InsufficientStockException extends RuntimeException {
+public class InsufficientStockException extends BusinessException {
 
     private final List<MissingProduct> faltantes;
 
