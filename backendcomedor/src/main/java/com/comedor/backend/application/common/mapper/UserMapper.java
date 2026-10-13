@@ -4,6 +4,7 @@ package com.comedor.backend.application.common.mapper;
 import com.comedor.backend.domain.model.Person;
 import com.comedor.backend.domain.model.User;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UserRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioMinimalResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import org.springframework.stereotype.Component;
 
@@ -50,8 +51,29 @@ public class UserMapper {
         return dto;
     }
 
+    public UsuarioMinimalResponseDTO  toUsuarioMinimalResponseDTO (User u) {
+        if (u == null) return null;
+
+        UsuarioMinimalResponseDTO dto = new UsuarioMinimalResponseDTO();
+
+        dto.setUser_id(u.getId());
+
+        if (u.getPersona() != null) {
+            dto.setDni(u.getPersona().getDni());
+            dto.setName(u.getPersona().getName());
+            dto.setLastname(u.getPersona().getLastname());
+        }
+
+        return dto;
+    }
+
     public List<UsuarioResponseDTO> toListUsuarioResponseDto(List<User> users) {
         return users.stream().map(this::toUsuarioResponseDTO).toList();
+    }
+
+    public List<UsuarioMinimalResponseDTO> toListUsuarioMinimalResponseDto(List<User> users)
+    {
+        return users.stream().map(this::toUsuarioMinimalResponseDTO).toList();
     }
 
 

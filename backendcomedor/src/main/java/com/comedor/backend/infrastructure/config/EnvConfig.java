@@ -20,5 +20,6 @@ public class EnvConfig {
         System.setProperty("TWILIO_SID",dotenv.get("TWILIO_SID"));
         System.setProperty("TWILIO_TOKEN",dotenv.get("TWILIO_TOKEN"));
         System.setProperty("TWILIO_PHONE_NUMBER",dotenv.get("TWILIO_PHONE_NUMBER"));
+        System.setProperty("AES_SECRET",dotenv.get("AES_SECRET"));
     }
 }

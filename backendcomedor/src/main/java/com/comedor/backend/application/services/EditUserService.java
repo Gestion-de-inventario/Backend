@@ -19,6 +19,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditUserRe
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class EditUserService implements EditUserUseCase {
 
@@ -48,8 +49,9 @@ public class EditUserService implements EditUserUseCase {
         String newLastName = dto.getLastname() != null ? dto.getLastname() : person.getLastname();
         String newDni = dto.getDni() != null ? dto.getDni() : person.getDni();
         int newRoleId = dto.getRole_id() != null ? dto.getRole_id() : user.getRol().getId();
-        String newPhone = dto.getPhone() != null ? dto.getPhone() : user.getPhone();
-
+        String newPhone = (dto.getPhone() != null && !dto.getPhone().isBlank())
+                ? dto.getPhone().trim()
+                : user.getPhone();
         boolean existsFullName = personRepositoryPort
                 .existsByNameAndLastNameAndIdNot(newName.toUpperCase(), newLastName.toUpperCase(), person.getId());
         if (existsFullName) {
@@ -62,8 +64,11 @@ public class EditUserService implements EditUserUseCase {
             throw new ExistingUserException("Ya existe un usuario con ese DNI");
         }
 
-        if (userRepositoryPort.existsByPhoneAndIdNot(dto.getPhone(),person.getId())) {
-            throw new ExistingUserException("El número de teléfono " + dto.getPhone()+" ya esta registrado");
+        // Validar unicidad de teléfono SOLO si se está enviando un valor válido
+        if (dto.getPhone() != null && !dto.getPhone().isBlank()) {
+            if (userRepositoryPort.existsByPhoneAndIdNot(dto.getPhone().trim(), person.getId())) {
+                throw new ExistingUserException("El número de teléfono " + dto.getPhone() + " ya está registrado");
+            }
         }
 
         Role newRole = roleRepositoryPort.findById(newRoleId)
@@ -161,18 +166,26 @@ public class EditUserService implements EditUserUseCase {
             );
         }
 
-        if(!newPhone.equals(actualPhone)) {
+        // Auditoría de Teléfono (Objects.equals compara de forma segura contra nulls)
+        if (!Objects.equals(newPhone, actualPhone)) {
+            String prevPhoneLabel = (actualPhone != null && !actualPhone.isBlank())
+                    ? actualPhone
+                    : "No tenía teléfono";
+
+            String newPhoneLabel = (newPhone != null && !newPhone.isBlank())
+                    ? newPhone
+                    : "Sin teléfono";
+
             registerAuditUseCase.registrar(
                     new AuditRequestDTO(
                             "Usuario",
                             user.getId(),
-                            person.getName()
-                                    .concat(" " + person.getLastname()),
+                            person.getName().concat(" " + person.getLastname()),
                             AuditAction.MODIFICACION,
                             Map.of(
                                     "attribute", "teléfono",
-                                    "previousValue", actualPhone,
-                                    "newValue", newPhone
+                                    "previousValue", prevPhoneLabel,
+                                    "newValue", newPhoneLabel
                             )
                     )
             );

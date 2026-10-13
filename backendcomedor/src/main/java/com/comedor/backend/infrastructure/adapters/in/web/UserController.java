@@ -7,6 +7,7 @@ import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ChangePass
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.EditUserRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.ForceChangePasswordRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.request.UserRequestDTO;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioMinimalResponseDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.UsuarioResponseDTO;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +41,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('USER_LIST_ACTIVE')")
     @GetMapping("/actived")
-    public List<UsuarioResponseDTO> listActivatedUsers() {
+    public List<UsuarioMinimalResponseDTO> listActivatedUsers() {
         return listActiveUsersUseCase.ListarUsuariosActivos();
     }
     @PreAuthorize("hasAuthority('USER_CREATE')")

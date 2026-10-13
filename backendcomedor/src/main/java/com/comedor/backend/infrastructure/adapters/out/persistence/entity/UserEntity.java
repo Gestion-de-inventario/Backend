@@ -1,6 +1,7 @@
 package com.comedor.backend.infrastructure.adapters.out.persistence.entity;
 
 import com.comedor.backend.domain.model.enums.Status;
+import com.comedor.backend.infrastructure.adapters.out.persistence.converters.PhoneCryptoConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,8 @@ public class UserEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
 
-    @Column(length = 9)
+    @Convert(converter = PhoneCryptoConverter.class)
+    @Column(name = "phone", length = 64)
     private String phone;
 
     @Enumerated(EnumType.STRING)
