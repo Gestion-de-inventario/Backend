@@ -1,6 +1,7 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ExportReportPDFUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
 import com.comedor.backend.application.ports.out.EmpresaConfigRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
@@ -8,6 +9,8 @@ import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.DishSupply;
 import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.domain.model.MenuReport;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.io.source.ByteArrayOutputStream;
@@ -29,17 +32,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 public class ExportReportPDFService implements ExportReportPDFUseCase {
 
     private final MenuReportRepositoryPort menuReportRepositoryPort;
     private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
     private final EmpresaConfigRepositoryPort empresaConfigRepositoryPort;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public ExportReportPDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort) {
+    public ExportReportPDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort, RegisterAuditUseCase registerAuditUseCase) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
         this.empresaConfigRepositoryPort = empresaConfigRepositoryPort;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -357,7 +363,28 @@ public class ExportReportPDFService implements ExportReportPDFUseCase {
             doc.add(firma);
 
             doc.close();
-            return baos.toByteArray();
+
+            byte[] out = baos.toByteArray();
+
+            String rangoPeriodo = (startDate != null ? startDate.toString() : "Inicio")
+                    + " a "
+                    + (endDate != null ? endDate.toString() : "Hoy");
+
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Reporte de Menú",
+                            reportes.size(),
+                            "Reporte consolidado de menús en PDF",
+                            AuditAction.EXPORTACION,
+                            Map.of(
+                                    "formato", "PDF",
+                                    "periodo", rangoPeriodo,
+                                    "totalRegistros", String.valueOf(reportes.size())
+                            )
+                    )
+            );
+
+            return out;
 
         } catch (Exception e) {
             throw new RuntimeException("Error al generar PDF: " + e.getMessage(), e);

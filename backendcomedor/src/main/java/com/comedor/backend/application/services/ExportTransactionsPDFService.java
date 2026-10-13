@@ -2,10 +2,13 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.TransactionMapper;
 import com.comedor.backend.application.ports.in.ExportTransactionsPDFUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.EmpresaConfigRepositoryPort;
 import com.comedor.backend.application.ports.out.TransactionRepositoryPort;
 import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.domain.model.Transactions;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.TransactionResponseDTO;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -26,18 +29,21 @@ import org.springframework.core.io.ClassPathResource;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCase {
 
     private final TransactionRepositoryPort repository;
     private final TransactionMapper mapper;
     private final EmpresaConfigRepositoryPort empresaConfigRepositoryPort;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
 
-    public ExportTransactionsPDFService(TransactionRepositoryPort repository, TransactionMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort) {
+    public ExportTransactionsPDFService(TransactionRepositoryPort repository, TransactionMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort, RegisterAuditUseCase registerAuditUseCase) {
         this.repository = repository;
         this.mapper = mapper;
         this.empresaConfigRepositoryPort = empresaConfigRepositoryPort;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -113,7 +119,28 @@ public class ExportTransactionsPDFService implements ExportTransactionsPDFUseCas
             doc.add(table);
             doc.add(new Paragraph("\nTotal de registros: " + transacciones.size()).setFontSize(10));
             doc.close();
-            return baos.toByteArray();
+
+            byte[] out = baos.toByteArray();
+
+            String rangoPeriodo = (fechaInicio != null ? fechaInicio.toString() : "Inicio")
+                    + " a "
+                    + (fechaFin != null ? fechaFin.toString() : "Hoy");
+
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Transacciones",
+                            transacciones.size(),
+                            "Reporte de transacciones en PDF",
+                            AuditAction.EXPORTACION,
+                            Map.of(
+                                    "formato", "PDF",
+                                    "periodo", rangoPeriodo,
+                                    "totalRegistros", String.valueOf(transacciones.size())
+                            )
+                    )
+            );
+
+            return out;
 
         } catch (Exception e) {
             throw new RuntimeException("Error al generar PDF: " + e.getMessage(), e);

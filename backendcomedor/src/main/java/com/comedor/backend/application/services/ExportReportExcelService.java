@@ -1,11 +1,14 @@
 package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.ports.in.ExportReportExcelUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPort;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.model.BeneficiaryControl;
 import com.comedor.backend.domain.model.DishSupply;
 import com.comedor.backend.domain.model.MenuReport;
+import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,15 +16,18 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class ExportReportExcelService implements ExportReportExcelUseCase {
 
     private final MenuReportRepositoryPort menuReportRepositoryPort;
     private final BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
-    public ExportReportExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
+    public ExportReportExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, RegisterAuditUseCase registerAuditUseCase) {
         this.menuReportRepositoryPort = menuReportRepositoryPort;
         this.beneficiaryControlRepositoryPort = beneficiaryControlRepositoryPort;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
 
@@ -409,7 +415,26 @@ public class ExportReportExcelService implements ExportReportExcelUseCase {
             }
 
             workbook.write(baos);
-            return baos.toByteArray();
+            byte[] out = baos.toByteArray();
+
+            String periodo = (startDate != null ? startDate.toString() : "Inicio")
+                    + " a "
+                    + (endDate != null ? endDate.toString() : "Hoy");
+
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Reporte de Menú",
+                            reportes.size(),
+                            "Reporte consolidado de menús en Excel",
+                            AuditAction.EXPORTACION,
+                            Map.of(
+                                    "formato", "EXCEL",
+                                    "periodo", periodo,
+                                    "totalRegistros", String.valueOf(reportes.size())
+                            )
+                    )
+            );
+            return out;
 
         } catch (Exception e) {
             throw new RuntimeException("Error al generar Excel: " + e.getMessage(), e);

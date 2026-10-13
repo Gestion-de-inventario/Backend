@@ -2,11 +2,13 @@ package com.comedor.backend.application.services;
 
 import com.comedor.backend.application.common.mapper.AuditMapper;
 import com.comedor.backend.application.ports.in.ExportAuditPDFUseCase;
+import com.comedor.backend.application.ports.in.RegisterAuditUseCase;
 import com.comedor.backend.application.ports.out.AuditRepositoryPort;
 import com.comedor.backend.application.ports.out.EmpresaConfigRepositoryPort;
 import com.comedor.backend.domain.model.Audit;
 import com.comedor.backend.domain.model.EmpresaConfig;
 import com.comedor.backend.domain.model.enums.AuditAction;
+import com.comedor.backend.infrastructure.adapters.in.web.dto.request.AuditRequestDTO;
 import com.comedor.backend.infrastructure.adapters.in.web.dto.response.AuditResponseDTO;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -40,15 +42,17 @@ public class ExportAuditPDFService implements ExportAuditPDFUseCase {
     private final AuditRepositoryPort auditRepositoryPort;
     private final AuditMapper auditMapper;
     private final EmpresaConfigRepositoryPort empresaConfigRepositoryPort;
+    private final RegisterAuditUseCase registerAuditUseCase;
 
     public ExportAuditPDFService(
             AuditRepositoryPort auditRepositoryPort,
             AuditMapper auditMapper,
-            EmpresaConfigRepositoryPort empresaConfigRepositoryPort) {
+            EmpresaConfigRepositoryPort empresaConfigRepositoryPort, RegisterAuditUseCase registerAuditUseCase) {
 
         this.auditRepositoryPort = auditRepositoryPort;
         this.auditMapper = auditMapper;
         this.empresaConfigRepositoryPort = empresaConfigRepositoryPort;
+        this.registerAuditUseCase = registerAuditUseCase;
     }
 
     @Override
@@ -320,7 +324,27 @@ public class ExportAuditPDFService implements ExportAuditPDFUseCase {
 
             doc.close();
 
-            return baos.toByteArray();
+            byte[] out = baos.toByteArray();
+
+            String rangoPeriodo = (fechaInicio != null ? fechaInicio.toString() : "Inicio")
+                    + " a "
+                    + (fechaFin != null ? fechaFin.toString() : "Hoy");
+
+            registerAuditUseCase.registrar(
+                    new AuditRequestDTO(
+                            "Auditoría",
+                            auditorias.size(),
+                            "Reporte de auditoría en PDF",
+                            AuditAction.EXPORTACION,
+                            Map.of(
+                                    "formato", "PDF",
+                                    "periodo", rangoPeriodo,
+                                    "totalRegistros", String.valueOf(auditorias.size())
+                            )
+                    )
+            );
+
+            return out;
 
         } catch (Exception e) {
 
@@ -341,6 +365,7 @@ public class ExportAuditPDFService implements ExportAuditPDFUseCase {
         return switch (action) {
             case CREACION -> "Creación";
             case MODIFICACION -> "Modificación";
+            case EXPORTACION -> "Exportación";
         };
     }
 
@@ -369,6 +394,16 @@ public class ExportAuditPDFService implements ExportAuditPDFUseCase {
             return "Se ha modificado: " + attribute
                     + "\nValor antes: " + previousValue
                     + "\nNuevo valor: " + newValue;
+        }
+
+        if (action == AuditAction.EXPORTACION) {
+            String formato = String.valueOf(details.getOrDefault("formato", "PDF"));
+            String periodo = String.valueOf(details.getOrDefault("periodo", "Todos"));
+            String total = String.valueOf(details.getOrDefault("totalRegistros", "-"));
+
+            return "Formato: " + formato
+                    + "\nPeríodo: " + periodo
+                    + "\nTotal extraído: " + total + " registros";
         }
 
         // CREACION

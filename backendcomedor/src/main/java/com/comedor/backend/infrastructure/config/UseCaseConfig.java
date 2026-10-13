@@ -456,13 +456,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ExportReportPDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
-        return new ExportReportPDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, empresaConfigRepositoryPort);
+    ExportReportPDFService exportarReportePDFService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort, EmpresaConfigRepositoryPort empresaConfigRepositoryPort,RegisterAuditUseCase registerAuditUseCase){
+        return new ExportReportPDFService(menuReportRepositoryPort, beneficiaryControlRepositoryPort, empresaConfigRepositoryPort,registerAuditUseCase);
     }
 
     @Bean
-    ExportReportExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort) {
-        return new ExportReportExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort);
+    ExportReportExcelService exportarReporteExcelService(MenuReportRepositoryPort menuReportRepositoryPort, BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort,RegisterAuditUseCase registerAuditUseCase) {
+        return new ExportReportExcelService(menuReportRepositoryPort, beneficiaryControlRepositoryPort,registerAuditUseCase);
     }
 
     @Bean
@@ -471,13 +471,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    ExportTransactionsPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
-        return new ExportTransactionsPDFService(repository, mapper, empresaConfigRepositoryPort);
+    ExportTransactionsPDFService exportarTransaccionesPDFService(TransactionRepositoryPort repository, TransactionMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort,RegisterAuditUseCase registerAuditUseCase){
+        return new ExportTransactionsPDFService(repository, mapper, empresaConfigRepositoryPort,registerAuditUseCase);
     }
 
     @Bean
-    ExportAuditPDFService exportarModificacionesPDFService(AuditRepositoryPort repository, AuditMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort){
-        return new ExportAuditPDFService(repository, mapper, empresaConfigRepositoryPort);
+    ExportAuditPDFService exportarModificacionesPDFService(AuditRepositoryPort repository, AuditMapper mapper, EmpresaConfigRepositoryPort empresaConfigRepositoryPort,RegisterAuditUseCase registerAuditUseCase){
+        return new ExportAuditPDFService(repository, mapper, empresaConfigRepositoryPort,registerAuditUseCase);
     }
 
     @Bean
