@@ -1,172 +1,130 @@
 package com.comedor.backend.chatbot.service;
 
+import com.comedor.backend.chatbot.dialog.DialogManager;
+import com.comedor.backend.chatbot.dialog.Reply;
+import com.comedor.backend.chatbot.dialog.TopicHandler;
+import com.comedor.backend.chatbot.dialog.Turn;
 import com.comedor.backend.chatbot.dto.ChatMessageRequest;
 import com.comedor.backend.chatbot.dto.ChatMessageResponse;
-import com.comedor.backend.chatbot.model.ChatIntent;
-import com.comedor.backend.chatbot.model.MenuCatalogContext;
-import com.comedor.backend.chatbot.model.ChatbotResolution;
-import lombok.RequiredArgsConstructor;
+import com.comedor.backend.chatbot.dto.ConversationState;
+import com.comedor.backend.chatbot.nlu.Catalog;
+import com.comedor.backend.chatbot.nlu.Intent;
+import com.comedor.backend.chatbot.nlu.NluEngine;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Asistente MIRA. Funciona completamente en el servidor, sin depender de servicios externos:
+ *
+ *   mensaje -> NluEngine (normaliza, reconoce datos y clasifica el tema con el modelo propio)
+ *           -> DialogManager (memoria de la conversación, preguntas aclaratorias)
+ *           -> TopicHandler del tema (consultas de solo lectura a la base, con permisos)
+ *           -> respuesta con texto, tabla, botones y la memoria para el próximo mensaje
+ *
+ * Gemini es opcional: solo redacta algunas recomendaciones de menú y tiene un cupo diario.
+ */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ChatbotService {
 
-    private static final String MENU_DISCLAIMER =
-            "Las recomendaciones son orientativas. Verifica el stock antes de registrar el menú.";
-    private static final String SYSTEM_DISCLAIMER =
-            "Consulta de solo lectura. Confirma cualquier operación dentro del módulo correspondiente.";
+    private static final ZoneId LIMA = ZoneId.of("America/Lima");
+    private static final String DISCLAIMER = "Consulta de solo lectura: no se modificó ningún dato.";
 
-    private final InventoryContextService inventoryContextService;
-    private final ChatPromptFactory promptFactory;
-    private final AiGateway aiGateway;
-    private final LocalMenuAdvisor localMenuAdvisor;
-    private final ChatIntentDetector intentDetector;
-    private final ChatbotAuthorizationService authorizationService;
-    private final ChatbotDataQueryService dataQueryService;
-    private final SystemKnowledgeService knowledgeService;
-    private final ChatPortionResolver portionResolver;
+    private final NluEngine nlu;
+    private final DialogManager dialog = new DialogManager();
+    private final Catalog catalog;
+    private final Map<Intent, TopicHandler> handlers = new EnumMap<>(Intent.class);
+
+    @Autowired
+    public ChatbotService(ChatbotCatalog catalog, List<TopicHandler> topicHandlers) {
+        this(NluEngine.fromDefaultDataset(), catalog, topicHandlers);
+    }
+
+    ChatbotService(NluEngine nlu, Catalog catalog, List<TopicHandler> topicHandlers) {
+        this.nlu = nlu;
+        this.catalog = catalog;
+        topicHandlers.forEach(handler -> handler.intents().forEach(intent -> handlers.put(intent, handler)));
+        Set<Intent> missing = EnumSet.allOf(Intent.class);
+        missing.remove(Intent.SEGUIMIENTO); // se resuelve como el tema anterior
+        missing.removeAll(handlers.keySet());
+        if (!missing.isEmpty()) {
+            throw new IllegalStateException("Temas del chatbot sin responder: " + missing);
+        }
+        log.info("Asistente MIRA listo: modelo entrenado con {} frases de ejemplo", nlu.trainingSize());
+    }
 
     public ChatMessageResponse chat(ChatMessageRequest request) {
-        ChatIntent intent = intentDetector.detect(request.message(), request.safeHistory());
-        return switch (intent) {
-            case PRODUCT_STOCK -> localResponse(request, dataQueryService.productStock(request.message()));
-            case LOW_STOCK -> localResponse(request, dataQueryService.lowStock());
-            case PICKUP_COUNT -> localResponse(request, dataQueryService.pickupCount(contextualMessage(request)));
-            case PICKUP_BENEFICIARIES -> localResponse(request, dataQueryService.pickupBeneficiaries(contextualMessage(request)));
-            case SYSTEM_FEATURES -> localResponse(request, knowledgeService.features());
-            case OPERATION_GUIDANCE -> localResponse(request, knowledgeService.guidance(request.message()));
-            case GENERAL_SYSTEM -> localResponse(request, knowledgeService.general());
-            case DISH_STOCK -> dishStockQuery(request);
-            case MENU_PLANNING -> withPortions(request, this::menuPlanning);
-        };
-    }
+        LocalDate today = LocalDate.now(LIMA);
+        NluEngine.Analysis analysis = nlu.analyze(request.message(), catalog, today);
+        DialogManager.Resolution resolution = dialog.resolve(request, analysis, catalog, today);
+        Turn turn = resolution.turn();
 
-    private ChatMessageResponse withPortions(
-            ChatMessageRequest request,
-            java.util.function.BiFunction<ChatMessageRequest, Integer, ChatMessageResponse> action
-    ) {
-        var portions = portionResolver.resolve(request);
-        if (portions.isEmpty()) {
-            return new ChatMessageResponse(
-                    "¿Para cuántas porciones deseas realizar el cálculo? Puedes responder, por ejemplo: 50.",
-                    "LOCAL",
-                    0,
-                    java.util.List.of(),
-                    SYSTEM_DISCLAIMER
-            );
-        }
-        return action.apply(request, portions.getAsInt());
-    }
-
-    private ChatMessageResponse dishStock(ChatMessageRequest request, int portions) {
-        if (!authorizationService.hasAll("DISH_MENU_LIST_ALL", "PRODUCT_LIST_BY_STATUS")) {
-            return localResponse(request, ChatbotResolution.text(
-                    "Tu usuario necesita permisos para consultar platos y productos."
-            ));
+        Reply reply;
+        if (turn == null) {
+            reply = resolution.clarification();
+        } else {
+            reply = answer(turn);
         }
 
-        MenuCatalogContext context = inventoryContextService.build(portions);
-        return localResponse(request, localMenuAdvisor.answerForDish(context, request.message()), portions);
+        // sin el texto del mensaje: puede contener datos personales
+        log.debug("chatbot tema={} seguridad={} final={}", analysis.intent(),
+                "%.2f".formatted(analysis.confidence()), turn == null ? "ACLARACION" : turn.intent());
+
+        ConversationState state = nextState(request.safeState(), turn, reply);
+        boolean query = turn != null && turn.intent().isQuery();
+        return new ChatMessageResponse(
+                reply.textValue(),
+                reply.generatedByValue(),
+                reply.portionsEvaluated(),
+                reply.suggestions(),
+                query ? DISCLAIMER : null,
+                reply.tableValue(),
+                reply.quickReplies(),
+                reply.sources(),
+                state,
+                turn == null ? "ACLARACION" : turn.intent().name(),
+                Math.round(analysis.confidence() * 100) / 100.0
+        );
     }
 
-    private ChatMessageResponse dishStockQuery(ChatMessageRequest request) {
-        if (portionResolver.resolve(request).isEmpty() && intentDetector.asksDishCapacity(request.message())) {
-            if (!authorizationService.hasAll("DISH_MENU_LIST_ALL", "PRODUCT_LIST_BY_STATUS")) {
-                return localResponse(request, ChatbotResolution.text(
-                        "Tu usuario necesita permisos para consultar platos y productos."
-                ));
-            }
-
-            MenuCatalogContext context = inventoryContextService.build(1);
-            return localResponse(request,
-                    localMenuAdvisor.answerForDishCapacity(context, request.message()),
-                    0);
-        }
-        return withPortions(request, this::dishStock);
-    }
-
-    private ChatMessageResponse menuPlanning(ChatMessageRequest request, int portions) {
-        if (!authorizationService.hasAll("DISH_MENU_LIST_ALL", "PRODUCT_LIST_BY_STATUS")) {
-            return localResponse(request, ChatbotResolution.text(
-                    "Tu usuario necesita permisos para consultar platos y productos antes de recibir recomendaciones de menú."
-            ));
-        }
-
-        MenuCatalogContext context = inventoryContextService.build(portions);
-        String generatedBy = "GEMINI";
-        String reply;
-
+    private Reply answer(Turn turn) {
         try {
-            reply = toPlainText(aiGateway.generate(promptFactory.create(request, context)));
-        } catch (RuntimeException exception) {
-            generatedBy = "LOCAL";
-            reply = localMenuAdvisor.answer(context);
-            log.warn("Chatbot AI unavailable; local inventory advisor was used: {}", exception.getMessage());
+            return handlers.get(turn.intent()).handle(turn);
+        } catch (RuntimeException e) {
+            log.error("El chatbot no pudo responder el tema {}", turn.intent(), e);
+            return Reply.text("Tuve un problema al consultar la información. Inténtalo de nuevo en unos segundos.")
+                    .option(turn.request().message());
         }
+    }
 
-        return new ChatMessageResponse(
-                reply,
-                generatedBy,
-                context.requestedPortions(),
-                context.suggestions(),
-                MENU_DISCLAIMER
+    /** Lo que el asistente recordará para el próximo mensaje. */
+    private static ConversationState nextState(ConversationState previous, Turn turn, Reply reply) {
+        if (turn == null || !turn.intent().isQuery()) {
+            // charla o aclaración: se conserva el tema anterior para poder retomarlo
+            return new ConversationState(previous.intent(), previous.productId(), previous.productName(),
+                    previous.dishId(), previous.dishName(), previous.periodStart(), previous.periodEnd(),
+                    previous.periodLabel(), previous.portions(), null);
+        }
+        return new ConversationState(
+                turn.intent().name(),
+                turn.product() != null ? turn.product().id() : null,
+                turn.product() != null ? turn.product().name() : null,
+                turn.dish() != null ? turn.dish().id() : null,
+                turn.dish() != null ? turn.dish().name() : null,
+                turn.period() != null ? turn.period().start() : null,
+                turn.period() != null ? turn.period().end() : null,
+                turn.period() != null ? turn.period().label() : null,
+                turn.portions(),
+                reply.awaitingValue() == null ? null : reply.awaitingValue().name()
         );
-    }
-
-    private ChatMessageResponse localResponse(ChatMessageRequest request, ChatbotResolution resolution) {
-        return localResponse(request, resolution, request.requestedPortions());
-    }
-
-    private ChatMessageResponse localResponse(
-            ChatMessageRequest request,
-            ChatbotResolution resolution,
-            int portionsEvaluated
-    ) {
-        return new ChatMessageResponse(
-                resolution.reply(),
-                "LOCAL",
-                portionsEvaluated,
-                resolution.suggestions(),
-                SYSTEM_DISCLAIMER
-        );
-    }
-
-    private String contextualMessage(ChatMessageRequest request) {
-        String current = request.message();
-        String normalized = ChatIntentDetector.normalize(current);
-        boolean hasOwnPeriod = normalized.contains("hoy")
-                || normalized.contains("ayer")
-                || normalized.contains("historico")
-                || normalized.contains("en total")
-                || normalized.matches(".*\\b\\d{4}-\\d{2}-\\d{2}\\b.*")
-                || normalized.matches(".*\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b.*");
-        if (hasOwnPeriod) {
-            return current;
-        }
-
-        String previousUserMessage = request.safeHistory().stream()
-                .filter(message -> "user".equals(message.role()))
-                .reduce((first, second) -> second)
-                .map(message -> message.content())
-                .orElse("");
-        return previousUserMessage.isBlank()
-                ? current
-                : previousUserMessage + " " + current;
-    }
-
-    private String toPlainText(String response) {
-        if (response == null) {
-            return "";
-        }
-        return response
-                .replaceAll("(?m)^\\s*#{1,6}\\s+", "")
-                .replaceAll("\\*\\*(.+?)\\*\\*", "$1")
-                .replaceAll("__(.+?)__", "$1")
-                .replaceAll("(?m)^\\s*[-*]\\s+", "• ")
-                .replace("`", "")
-                .strip();
     }
 }
