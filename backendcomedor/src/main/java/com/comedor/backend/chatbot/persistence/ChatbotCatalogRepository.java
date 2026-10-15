@@ -21,4 +21,12 @@ public interface ChatbotCatalogRepository extends JpaRepository<DishMenuEntity, 
             ORDER BY dish.name
             """)
     List<DishMenuEntity> findActiveDishesWithSupplies();
+
+    /** Solo id y nombre de los platos activos, para reconocerlos en los mensajes. */
+    @Query("""
+            SELECT dish.id, dish.name
+            FROM DishMenuEntity dish
+            WHERE dish.status = com.comedor.backend.domain.model.enums.Status.ACTIVO
+            """)
+    List<Object[]> findActiveDishNames();
 }

@@ -1,0 +1,161 @@
+# Set de evaluación del asistente MIRA.
+# Frases DISTINTAS a las de entrenamiento, escritas como podría escribir una socia del comedor:
+# con errores de tipeo, abreviaturas, sin signos, en mayúsculas, etc.
+# Formato:  TEMA_ESPERADO | frase
+
+SALUDO | holaaa
+SALUDO | Buenos días señora mira
+SALUDO | wenas tardes
+SALUDO | hola q tal
+SALUDO | ola buen dia
+SALUDO | BUENAS NOCHES
+
+GRACIAS | grasias
+GRACIAS | mil gracias!!
+GRACIAS | ok gracias mira
+GRACIAS | ya listo
+GRACIAS | chau gracias
+GRACIAS | gracias muy amable
+
+AYUDA | ayudaa
+AYUDA | q puedes hacer tu
+AYUDA | en q me ayudas
+AYUDA | no se q preguntarte
+AYUDA | como te uso
+AYUDA | que haces?
+AYUDA | no entiendo nada
+
+FUERA_DE_TEMA | cuentame algo gracioso
+FUERA_DE_TEMA | como estara el clima mañana en lima
+FUERA_DE_TEMA | quien gano el futbol
+FUERA_DE_TEMA | cual es la capital del peru
+
+STOCK_PRODUCTO | cuanto arroz hay
+STOCK_PRODUCTO | q tanto aseite nos keda
+STOCK_PRODUCTO | hay lentejas?
+STOCK_PRODUCTO | todavia tenemos azucar
+STOCK_PRODUCTO | cuantos kilos de arros quedan
+STOCK_PRODUCTO | CUANTO POLLO HAY
+STOCK_PRODUCTO | stock del atun
+STOCK_PRODUCTO | hay sal todavia
+STOCK_PRODUCTO | nos queda cebolla?
+STOCK_PRODUCTO | cuanta papa tenemos
+STOCK_PRODUCTO | ya no hay fideos?
+STOCK_PRODUCTO | dime cuanto azucar queda
+STOCK_PRODUCTO | quiero saber del aceite cuanto hay
+STOCK_PRODUCTO | revisa el arroz
+STOCK_PRODUCTO | cuanto atun en lata hay
+
+INVENTARIO | muestrame todo el inventario
+INVENTARIO | q productos hay en el almacen
+INVENTARIO | lista de todos los productos
+INVENTARIO | como esta el almacen hoy
+INVENTARIO | ver productos
+INVENTARIO | que insumos tenemos disponibles
+INVENTARIO | inventaryo
+
+STOCK_BAJO | q se esta acabando
+STOCK_BAJO | que tenemos que comprar
+STOCK_BAJO | q falta comprar para la semana
+STOCK_BAJO | que productos estan por acabarse
+STOCK_BAJO | hay algo agotado?
+STOCK_BAJO | que hay que reponer en el almacen
+STOCK_BAJO | de q hay poquito
+STOCK_BAJO | alerta de stock
+STOCK_BAJO | que nos esta faltando
+
+CONSUMO_PRODUCTO | cuanto arroz se uso esta semana
+CONSUMO_PRODUCTO | cuanto aceite gastamos el mes pasado
+CONSUMO_PRODUCTO | cuanta lenteja se consumio ayer
+CONSUMO_PRODUCTO | consumo de pollo en septiembre
+CONSUMO_PRODUCTO | q se gasto ayer
+CONSUMO_PRODUCTO | cuanto azucar usamos este mes
+
+PLATOS_DISPONIBLES | q plato puedo acer hoi
+PLATOS_DISPONIBLES | que cocinamos oy
+PLATOS_DISPONIBLES | que se puede preparar con lo q hay
+PLATOS_DISPONIBLES | recomiendame algo para cocinar
+PLATOS_DISPONIBLES | que menu hago para 80 personas
+PLATOS_DISPONIBLES | para cincuenta personas q cocino
+PLATOS_DISPONIBLES | que almuerzo podemos hacer
+PLATOS_DISPONIBLES | Q PLATO ALCANZA PARA 100
+PLATOS_DISPONIBLES | que hacemos de comer
+PLATOS_DISPONIBLES | dame ideas de menu
+PLATOS_DISPONIBLES | que plato sale con el stock que hay
+
+CAPACIDAD_PLATO | puedo hacer arroz con pollo para 60
+CAPACIDAD_PLATO | alcanza para tallarines rojos
+CAPACIDAD_PLATO | cuantas porciones de aji de gallina salen
+CAPACIDAD_PLATO | para cuantos alcanza el arroz con pollo
+CAPACIDAD_PLATO | que le falta al aji de gallina
+CAPACIDAD_PLATO | se puede hacer lentejas guisadas para 40 personas
+CAPACIDAD_PLATO | que lleva el arroz con pollo
+CAPACIDAD_PLATO | quiero hacer tallarines para 70
+CAPACIDAD_PLATO | cuanto rinde el aji de gallina
+
+RECOJOS_CONTEO | cuantos recogieron oy
+RECOJOS_CONTEO | kuantos rekojos ubo ayer
+RECOJOS_CONTEO | cuantas personas vinieron el lunes
+RECOJOS_CONTEO | cuantos menus se entregaron esta semana
+RECOJOS_CONTEO | cuanta gente recogio el 05/10
+RECOJOS_CONTEO | total de recojos del mes pasado
+RECOJOS_CONTEO | cuantos almuerzos se repartieron hoy
+RECOJOS_CONTEO | cuantos beneficiarios vinieron ayer
+
+RECOJOS_LISTA | quienes recogieron hoy
+RECOJOS_LISTA | kienes vinieron ayer
+RECOJOS_LISTA | dame los nombres de los que recogieron
+RECOJOS_LISTA | lista de los q recogieron el viernes
+RECOJOS_LISTA | a quienes les dimos menu hoy
+RECOJOS_LISTA | que señoras recogieron ayer
+
+BENEFICIARIO_BUSCAR | busca el dni 45678912
+BENEFICIARIO_BUSCAR | 45678912 ya recogio?
+BENEFICIARIO_BUSCAR | buscar a una beneficiaria
+BENEFICIARIO_BUSCAR | quiero buscar un beneficiario por su dni
+BENEFICIARIO_BUSCAR | cuantos beneficiarios tenemos registrados
+
+MENUS_PREPARADOS | q se cocino ayer
+MENUS_PREPARADOS | que menu se hizo el lunes
+MENUS_PREPARADOS | cuantos menus se prepararon hoy
+MENUS_PREPARADOS | cuanto sobro ayer
+MENUS_PREPARADOS | cual fue el menu de la semana pasada
+MENUS_PREPARADOS | que platos se hicieron en septiembre
+MENUS_PREPARADOS | cuanto se recaudo esta semana
+
+COMPRAS | que compras hicimos este mes
+COMPRAS | cuanto se gasto en compras en septiembre
+COMPRAS | q se compro la semana pasada
+COMPRAS | hay compras pendientes?
+COMPRAS | cuando fue la ultima compra
+COMPRAS | cuanta plata se gasto este mes
+
+DONACIONES | q donaciones llegaron este mes
+DONACIONES | que nos donaron la semana pasada
+DONACIONES | llegaron donaciones hoy?
+DONACIONES | hay donaciones por recibir
+DONACIONES | cuando fue la ultima donacion
+DONACIONES | que productos nos regalaron
+
+FUNCIONALIDADES | que modulos tiene el sistema
+FUNCIONALIDADES | a q tengo acceso yo
+FUNCIONALIDADES | que permisos tiene mi usuario
+FUNCIONALIDADES | que partes tiene la pagina
+
+GUIA_SISTEMA | como registro un recojo
+GUIA_SISTEMA | komo agrego un beneficiario nuevo
+GUIA_SISTEMA | como hago para registrar una donacion
+GUIA_SISTEMA | como cambio mi contraseña
+GUIA_SISTEMA | donde registro lo que compramos
+GUIA_SISTEMA | como creo un plato nuevo
+GUIA_SISTEMA | ensename a registrar el menu del dia
+GUIA_SISTEMA | como marco q la señora recogio
+
+SEGUIMIENTO | y el aceite?
+SEGUIMIENTO | y ayer?
+SEGUIMIENTO | y para 80?
+SEGUIMIENTO | y la lenteja
+SEGUIMIENTO | y el lunes
+SEGUIMIENTO | ahora el azucar
+SEGUIMIENTO | lo mismo pero de la semana pasada
+SEGUIMIENTO | y los tallarines rojos?

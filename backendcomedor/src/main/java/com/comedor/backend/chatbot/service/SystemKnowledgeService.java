@@ -34,7 +34,7 @@ public class SystemKnowledgeService {
             ),
             new ModuleGuide(
                     "Recojo de menú",
-                    List.of("recojo", "registrar recojo", "entrega de menu", "beneficiario recojo"),
+                    List.of("recojo", "recogio", "recogieron", "registrar recojo", "entrega de menu", "beneficiario recojo", "marco"),
                     Set.of("MENU_REPORT_LIST_ALL", "MENU_REPORT_ADD_BENEFICIARY", "MENU_REPORT_EDIT_BENEFICIARY"),
                     "Registra qué beneficiarios recibieron el menú y la cantidad entregada.",
                     List.of("Abre Registrar recojo en el menú lateral.",
@@ -69,7 +69,7 @@ public class SystemKnowledgeService {
             ),
             new ModuleGuide(
                     "Ingreso de insumos",
-                    List.of("ingreso de insumos", "orden de entrada", "compra", "donacion", "ingresar productos"),
+                    List.of("ingreso de insumos", "orden de entrada", "compra", "donacion", "ingresar productos", "ingreso productos", "cargo"),
                     Set.of("CREATE_ORDER_IN", "ORDER_IN_LIST_ALL", "PURCHASE_LIST_ALL", "DONATION_LIST_ALL"),
                     "Registra y consulta ingresos de productos provenientes de compras o donaciones.",
                     List.of("Abre Ingreso de insumos.",
@@ -122,7 +122,7 @@ public class SystemKnowledgeService {
             ),
             new ModuleGuide(
                     "Perfil",
-                    List.of("perfil", "mi perfil", "datos personales", "cambiar contrasena"),
+                    List.of("perfil", "mi perfil", "datos personales", "contrasena", "clave"),
                     Set.of(),
                     "Permite consultar la información de la cuenta y gestionar la contraseña.",
                     List.of("Abre tu tarjeta de perfil en el menú lateral.",
@@ -140,10 +140,12 @@ public class SystemKnowledgeService {
     }
 
     public ChatbotResolution guidance(String message) {
-        String normalized = ChatIntentDetector.normalize(message);
+        String normalized = com.comedor.backend.chatbot.nlu.TextNormalizer.normalize(message);
+        // gana el módulo con la coincidencia más larga: "ingreso productos" es más específico que "producto"
         ModuleGuide guide = GUIDES.stream()
                 .filter(item -> item.aliases().stream().anyMatch(normalized::contains))
-                .findFirst()
+                .max(java.util.Comparator.comparingInt(item -> item.aliases().stream()
+                        .filter(normalized::contains).mapToInt(String::length).max().orElse(0)))
                 .orElse(null);
 
         if (guide == null) {

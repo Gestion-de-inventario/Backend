@@ -1,0 +1,510 @@
+# ==========================================================================
+# Frases de entrenamiento del asistente MIRA
+#
+# Cómo mejorar al asistente sin programar:
+#  - Si alguien escribió algo que MIRA no entendió, agregue esa frase debajo del tema correcto.
+#  - Una frase por línea. Las líneas que empiezan con # son comentarios.
+#  - No hace falta poner tildes, signos ni mayúsculas: el sistema los ignora.
+#  - Use estos marcadores en lugar de datos concretos:
+#      {producto}  cualquier producto del inventario (arroz, aceite...)
+#      {plato}     cualquier plato registrado (arroz con pollo...)
+#      {fecha}     hoy, ayer, el lunes, esta semana, en septiembre, 05/10...
+#      {numero}    una cantidad (50, cincuenta...)
+#      {dni}       un DNI de 8 dígitos
+#  - Después de editar, reinicie el backend: el modelo se vuelve a entrenar solo.
+# ==========================================================================
+
+[SALUDO]
+hola
+hola mira
+holaa buenas
+buenos dias
+buenas tardes
+buenas noches
+buenas
+hola como estas
+hola buen dia
+que tal
+hola que tal mira
+hey hola
+hola amiga
+saludos
+buen dia mira
+hola necesito ayuda
+ola
+
+[GRACIAS]
+gracias
+muchas gracias
+gracias mira
+ok gracias
+listo gracias
+perfecto gracias
+genial
+excelente
+muy bien
+vale
+ok
+okey
+entendido
+ya entendi
+chau
+adios
+hasta luego
+nos vemos
+gracias por la ayuda
+buenisimo gracias
+dios te bendiga
+
+[AYUDA]
+como uso este asistente
+como te debo usar
+como te utilizo
+como hablo contigo
+como te pregunto algo
+como se usa este chat
+ayuda
+ayudame
+que puedes hacer
+que sabes hacer
+en que me puedes ayudar
+para que sirves
+que te puedo preguntar
+no se que preguntar
+no se como usarte
+como funcionas
+que cosas haces
+me ayudas
+necesito ayuda
+dame opciones
+que opciones hay
+menu de opciones
+no entiendo
+no te entiendo
+no entendi
+explicame que haces
+quien eres
+que eres
+
+[FUERA_DE_TEMA]
+dime algo gracioso
+cuentame algo
+hablame de futbol
+que opinas de la politica
+cuentame un chiste
+como esta el clima
+va a llover hoy
+quien gano el partido
+cual es la capital de francia
+dime una receta de torta
+cuanto es 2 mas 2
+quien es el presidente
+pon musica
+te quiero
+eres un robot
+que hora es
+cuantos anos tienes
+recomiendame una pelicula
+como se hace un pastel de chocolate
+
+[SEGUIMIENTO]
+y {producto}
+y el {producto}
+y la {producto}
+y de {producto}
+y {fecha}
+y el de {fecha}
+y los de {fecha}
+y para {numero}
+y para {numero} personas
+y si son {numero}
+y {plato}
+y el {plato}
+y que tal {producto}
+y {producto} cuanto
+y {producto} que tal
+ahora {producto}
+ahora de {fecha}
+lo mismo pero de {fecha}
+lo mismo para {producto}
+y con {producto}
+y para {fecha}
+y {fecha} cuantos
+otra vez pero {fecha}
+el de {fecha}
+de {producto}
+{producto}
+{fecha}
+{numero}
+{numero} porciones
+para {numero}
+
+[STOCK_PRODUCTO]
+cuanto {producto} hay
+cuanto {producto} queda
+cuanto {producto} tenemos
+cuanto hay de {producto}
+cuanto queda de {producto}
+cuanta {producto} hay
+cuantos kilos de {producto} hay
+hay {producto}
+tenemos {producto}
+queda {producto}
+nos queda {producto}
+todavia hay {producto}
+aun tenemos {producto}
+stock de {producto}
+el stock de {producto}
+cual es el stock de {producto}
+cantidad de {producto}
+cuanto {producto} nos queda
+hay suficiente {producto}
+nos alcanza el {producto}
+ver {producto}
+revisar {producto}
+dime cuanto {producto} hay
+quiero saber cuanto {producto} hay
+existencias de {producto}
+cuanto hay de {producto} en almacen
+se acabo el {producto}
+ya no hay {producto}
+tenemos {producto} en el almacen
+cuantas bolsas de {producto} quedan
+
+[INVENTARIO]
+inventario
+ver inventario
+ver el inventario
+muestrame el inventario
+que productos hay
+que productos tenemos
+que hay en el almacen
+que tenemos en el almacen
+lista de productos
+todos los productos
+dame la lista de productos
+el stock
+ver stock
+stock general
+como esta el inventario
+como esta el almacen
+cuantos productos hay
+que insumos tenemos
+que insumos hay
+productos disponibles
+mostrar productos
+inventario completo
+quiero ver todo el stock
+que hay disponible
+
+[STOCK_BAJO]
+que tenemos que reponer
+que hay que comprar ya
+que nos toca comprar
+que debemos reponer
+que toca reponer en el almacen
+que productos hay que volver a comprar
+que productos se estan acabando
+que se esta acabando
+que falta comprar
+que hay que comprar
+que necesitamos comprar
+que productos faltan
+que productos estan bajos
+stock bajo
+productos con stock bajo
+alertas de stock
+hay alertas
+que esta por terminarse
+que se va a acabar
+que productos hay poco
+de que hay poco
+que se agoto
+que productos estan agotados
+que hay que reponer
+lista de compras
+que debo comprar
+que nos falta
+productos por agotarse
+productos que estan por acabarse
+hay algo que se este acabando
+avisame que falta
+que productos tienen poco stock
+
+[CONSUMO_PRODUCTO]
+cuanto {producto} se uso {fecha}
+cuanto {producto} gastamos {fecha}
+cuanto {producto} se gasto {fecha}
+cuanto {producto} usamos {fecha}
+cuanto {producto} se consumio {fecha}
+consumo de {producto} {fecha}
+cuanto se uso de {producto}
+cuanto se gasto de {producto} {fecha}
+cuanto {producto} se ocupo {fecha}
+gasto de {producto}
+cuanto {producto} sale por semana
+cuanto {producto} se cocino {fecha}
+cuanto {producto} se ha usado
+uso de {producto} {fecha}
+cuanto se consumio {fecha}
+que se uso {fecha}
+que productos se usaron {fecha}
+que se gasto {fecha}
+cuanto se uso {fecha}
+consumo {fecha}
+movimientos de {producto}
+salidas de {producto}
+
+[PLATOS_DISPONIBLES]
+que plato puedo hacer hoy
+que plato puedo preparar
+que plato podemos cocinar
+que cocinamos hoy
+que cocino hoy
+que hago de comer hoy
+que preparo hoy
+que podemos preparar
+que se puede cocinar
+que se puede preparar con lo que hay
+que alcanza para cocinar
+que menu puedo hacer
+que menu hacemos
+que menu me recomiendas
+recomiendame un plato
+recomienda un menu
+sugiereme un plato
+que plato alcanza para {numero}
+que puedo cocinar para {numero} personas
+que plato sale para {numero}
+para {numero} personas que cocino
+que menu alcanza para {numero} porciones
+que comida hacemos
+que hacemos de almuerzo
+que almuerzo preparo
+que platos alcanzan
+que platos puedo hacer con el stock
+con lo que hay que cocino
+que plato me conviene hacer
+ideas de menu
+
+[CAPACIDAD_PLATO]
+que le falta a {plato}
+que necesita el {plato}
+que insumos le faltan al {plato}
+puedo hacer {plato}
+podemos hacer {plato}
+alcanza para {plato}
+alcanza para hacer {plato}
+me alcanza para {plato} para {numero}
+puedo preparar {plato} para {numero}
+puedo hacer {plato} para {numero} personas
+cuantas porciones de {plato} salen
+cuantos platos de {plato} puedo hacer
+para cuantos alcanza {plato}
+para cuantas personas alcanza el {plato}
+cuanto rinde {plato}
+cuantas raciones de {plato}
+que necesito para {plato}
+que lleva el {plato}
+ingredientes de {plato}
+insumos de {plato}
+que me falta para {plato}
+que falta para hacer {plato}
+hay para hacer {plato}
+se puede hacer {plato}
+alcanza el stock para {plato}
+cuantos {plato} puedo hacer
+hay insumos para {plato}
+{plato} para {numero}
+quiero hacer {plato}
+quiero cocinar {plato} para {numero}
+
+[RECOJOS_CONTEO]
+cuantos recogieron {fecha}
+cuantos recogieron hoy
+cuantas personas recogieron {fecha}
+cuantos recojos hubo {fecha}
+cuantos recojos hay {fecha}
+cuantos menus se entregaron {fecha}
+cuantos menus se repartieron {fecha}
+cuantas raciones se entregaron {fecha}
+cuantos vinieron {fecha}
+cuantos vinieron a recoger
+cuanta gente recogio {fecha}
+cuantos beneficiarios recogieron {fecha}
+total de recojos {fecha}
+numero de recojos
+cantidad de recojos {fecha}
+cuantos menus salieron {fecha}
+cuanto se entrego {fecha}
+cuantos almuerzos se dieron {fecha}
+cuantos almuerzos repartimos {fecha}
+recojos {fecha}
+cuantas entregas hubo {fecha}
+
+[RECOJOS_LISTA]
+que personas vinieron {fecha}
+que mamas recogieron {fecha}
+que senores vinieron a recoger
+quienes recogieron {fecha}
+quienes recogieron hoy
+quien recogio {fecha}
+lista de los que recogieron {fecha}
+que beneficiarios recogieron {fecha}
+nombres de los que recogieron
+quienes vinieron {fecha}
+quienes vinieron a recoger {fecha}
+dame la lista de recojos {fecha}
+lista de beneficiarios que recogieron
+a quienes se entrego {fecha}
+a quien se le dio menu {fecha}
+quienes recibieron menu {fecha}
+que personas recogieron {fecha}
+mostrar quienes recogieron
+lista de recojos
+quienes ya recogieron
+
+[BENEFICIARIO_BUSCAR]
+buscar beneficiario {dni}
+busca el dni {dni}
+dni {dni}
+quien es {dni}
+datos del beneficiario {dni}
+el beneficiario {dni} recogio
+ya recogio el {dni}
+recogio {dni} {fecha}
+esta registrado el dni {dni}
+buscar beneficiario
+buscar a un beneficiario
+busca a una persona
+busca a la senora
+ya recogio la senora
+recogio el senor
+esta inscrita
+esta registrado
+buscar por dni
+consultar beneficiario
+ver datos de un beneficiario
+cuantos beneficiarios hay
+cuantos beneficiarios tenemos
+
+[MENUS_PREPARADOS]
+que se cocino {fecha}
+que se cocino hoy
+que se preparo {fecha}
+que menu se hizo {fecha}
+que menu hubo {fecha}
+que plato se hizo {fecha}
+que comimos {fecha}
+cuantos menus se prepararon {fecha}
+cuantos platos se cocinaron {fecha}
+cuantas porciones se prepararon {fecha}
+cuanto se preparo {fecha}
+cuantos menus sobraron {fecha}
+cuanto sobro {fecha}
+menus de {fecha}
+reporte de menu {fecha}
+menu del dia
+menu de hoy
+cual fue el menu {fecha}
+que se hizo de almuerzo {fecha}
+historial de menus
+que platos se hicieron esta semana
+cuanto se gano {fecha}
+cuanto se recaudo {fecha}
+
+[COMPRAS]
+cuanta plata se fue en compras {fecha}
+cuanto dinero salio {fecha}
+gasto de dinero {fecha}
+cuanta plata gastamos en compras
+cuanto dinero gastamos {fecha}
+cuanto se pago en compras {fecha}
+que compras se hicieron {fecha}
+compras de {fecha}
+compras {fecha}
+cuanto se gasto en compras {fecha}
+cuanto gastamos en compras
+cuanto se compro {fecha}
+que se compro {fecha}
+que compramos {fecha}
+cuanto dinero se gasto {fecha}
+gastos de compras
+ordenes de compra
+compras pendientes
+hay compras pendientes
+ultima compra
+cuando fue la ultima compra
+lista de compras realizadas
+cuanto invertimos {fecha}
+cuanto se compro de {producto}
+
+[DONACIONES]
+que donaciones llegaron {fecha}
+donaciones de {fecha}
+donaciones {fecha}
+cuantas donaciones hubo {fecha}
+que nos donaron {fecha}
+que donaron {fecha}
+recibimos donaciones {fecha}
+llegaron donaciones
+hay donaciones pendientes
+donaciones pendientes
+ultima donacion
+cuando fue la ultima donacion
+que productos nos donaron
+cuanto nos donaron {fecha}
+lista de donaciones
+donativos {fecha}
+nos regalaron algo {fecha}
+cuanto {producto} nos donaron
+
+[FUNCIONALIDADES]
+que modulos tiene el sistema
+que funciones tiene el sistema
+que puedo hacer en el sistema
+que opciones tiene el sistema
+para que sirve el sistema
+que secciones hay
+que hay en el menu del sistema
+que me deja hacer mi usuario
+que permisos tengo
+a que tengo acceso
+funcionalidades
+modulos del sistema
+partes del sistema
+
+[GUIA_SISTEMA]
+como marco el recojo de una persona
+como registro que una senora recogio su menu
+donde marco quien recogio
+como registro un recojo
+como registro un producto
+como registro una compra
+como registro una donacion
+como registro un beneficiario
+como agrego un beneficiario
+como creo un plato
+como agrego un producto
+como hago el reporte de menu
+como registro el menu del dia
+como se registra un ingreso de insumos
+como cambio mi contrasena
+como creo un usuario
+como asigno permisos
+como exporto un reporte
+como edito un producto
+como desactivo un producto
+donde registro las compras
+donde veo los recojos
+donde registro los beneficiarios
+donde cambio la contrasena
+que pasos sigo para registrar un recojo
+como se usa el modulo de inventario
+como ingreso productos
+como cargo una donacion
+como marco que alguien recogio
+como pongo el stock minimo
+explicame como registrar un menu
+ensename a registrar un recojo
+no se como registrar un producto
