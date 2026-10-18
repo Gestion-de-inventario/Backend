@@ -148,4 +148,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
                 productJpaRepository.getProductosBajoStockMinimo()
         );
     }
+
+    @Override
+    public List<Product> getTop5LowStock() {
+        return productEntityMapper.toListDomain(productJpaRepository.findTop5LowStock());
+    }
+
+    @Override
+    public List<Product> getTop5HighStock() {
+        return productEntityMapper.toListDomain(productJpaRepository.findTop5HighStock());
+    }
 }

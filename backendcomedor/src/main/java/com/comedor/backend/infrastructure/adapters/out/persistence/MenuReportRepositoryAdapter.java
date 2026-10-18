@@ -3,6 +3,8 @@ package com.comedor.backend.infrastructure.adapters.out.persistence;
 import com.comedor.backend.application.ports.out.MenuReportRepositoryPort;
 import com.comedor.backend.domain.exceptions.MenuReportNotFoundException;
 import com.comedor.backend.domain.model.MenuReport;
+import com.comedor.backend.domain.model.records.DailySoldMenusSummary;
+import com.comedor.backend.domain.model.records.MonthlyFinancialSummary;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.mapper.MenuReportEntityMapper;
 import com.comedor.backend.infrastructure.adapters.out.persistence.repository.MenuReportJpaRepository;
@@ -141,5 +143,15 @@ public class MenuReportRepositoryAdapter implements MenuReportRepositoryPort {
 
         return menuReportEntityMapper
                 .toDomain(entity);
+    }
+
+    @Override
+    public List<MonthlyFinancialSummary> getMonthlyFinancialSummaryByYear(int year) {
+        return menuReportJpaRepository.getMonthlyFinancialSummaryByYear(year);
+    }
+
+    @Override
+    public List<DailySoldMenusSummary> getDailySoldMenusInRange(LocalDate startDate, LocalDate endDate) {
+        return menuReportJpaRepository.getDailySoldMenusInRange(startDate, endDate);
     }
 }

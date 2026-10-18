@@ -19,4 +19,7 @@ public interface ProductRepositoryPort {
     boolean existByNameAndIdNot(String nombre, int id);
 
     List<Product> getProductosBajoStockMinimo();
+
+    List<Product> getTop5LowStock();
+    List<Product> getTop5HighStock();
 }

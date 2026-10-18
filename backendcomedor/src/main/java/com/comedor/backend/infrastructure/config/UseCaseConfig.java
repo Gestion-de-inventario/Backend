@@ -561,6 +561,34 @@ public class UseCaseConfig {
     {
         return new ValidatePasswordResetTokenService(tokenRepositoryPort);
     }
+
+    @Bean
+    GetTopLowStockProductsService getTopLowStockProductsService(ProductRepositoryPort productRepositoryPort) {
+        return new GetTopLowStockProductsService(productRepositoryPort);
+    }
+
+    @Bean
+    GetTopHighStockProductsService getTopHighStockProductsService(ProductRepositoryPort productRepositoryPort) {
+        return new GetTopHighStockProductsService(productRepositoryPort);
+    }
+
+    @Bean
+    GetTopConsumersService getTopConsumersService(BeneficiaryControlRepositoryPort beneficiaryControlRepositoryPort)
+    {
+        return new GetTopConsumersService(beneficiaryControlRepositoryPort);
+    }
+
+    @Bean
+    GetYearlyFinancialSummaryService getYearlyFinancialSummaryService(MenuReportRepositoryPort menuReportRepositoryPort)
+    {
+        return new GetYearlyFinancialSummaryService(menuReportRepositoryPort);
+    }
+
+    @Bean
+    GetWeeklySoldMenusService getWeeklySoldMenusService(MenuReportRepositoryPort menuReportRepositoryPort)
+    {
+        return new GetWeeklySoldMenusService(menuReportRepositoryPort);
+    }
 }
 
 

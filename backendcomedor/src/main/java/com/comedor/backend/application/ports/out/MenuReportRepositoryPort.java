@@ -1,6 +1,8 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.MenuReport;
+import com.comedor.backend.domain.model.records.DailySoldMenusSummary;
+import com.comedor.backend.domain.model.records.MonthlyFinancialSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +26,7 @@ public interface MenuReportRepositoryPort {
             LocalDate endDate
     );
     MenuReport findById(int id);
+
+    List<MonthlyFinancialSummary> getMonthlyFinancialSummaryByYear(int year);
+    List<DailySoldMenusSummary> getDailySoldMenusInRange(LocalDate startDate, LocalDate endDate);
 }
