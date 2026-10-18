@@ -4,6 +4,7 @@ import com.comedor.backend.application.ports.out.BeneficiaryControlRepositoryPor
 import com.comedor.backend.domain.exceptions.BeneficiaryAlreadyRegisteredException;
 import com.comedor.backend.domain.exceptions.BeneficiaryControlNotFoundException;
 import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.records.TopBeneficiarySummary;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.BeneficiaryControlEntity;
 import com.comedor.backend.infrastructure.adapters.out.persistence.entity.MenuReportEntity;
@@ -16,6 +17,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 @Component
 @RequiredArgsConstructor
@@ -24,10 +26,6 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
     private final BeneficiaryControlJpaRepository beneficiaryControlJpaRepository;
 
     private final BeneficiaryControlEntityMapper beneficiaryControlEntityMapper;
-
-    private final BeneficiaryTypeEntityMapper beneficiaryTypeEntityMapper;
-
-    private final BeneficiaryJpaRepository beneficiaryJpaRepository;
 
     @PersistenceContext private EntityManager entityManager;
 
@@ -113,24 +111,6 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
     }
 
     @Override
-    public void eliminarBeneficiario(int reporteId,int controlId) {
-        BeneficiaryControlEntity entity = beneficiaryControlJpaRepository.findById(controlId)
-                .orElseThrow(()-> new BeneficiaryControlNotFoundException("Control no encontrado")) ;
-
-        if(entity.getReport().getId() != reporteId)
-        {
-            throw new IllegalArgumentException(
-                    "El registro no pertenece al reporte"
-            );
-        }
-
-        beneficiaryControlJpaRepository.deleteById(controlId);
-
-        beneficiaryControlJpaRepository.flush();
-
-    }
-
-    @Override
     public BeneficiaryControl findById(int controlId) {
 
         return beneficiaryControlEntityMapper.toDomain(
@@ -156,5 +136,10 @@ public class BeneficiaryControlRepositoryAdapter implements BeneficiaryControlRe
                         beneficiaryControlJpaRepository
                                 .findByReportId(reporteId)
                 );
+    }
+
+    @Override
+    public List<TopBeneficiarySummary> findTop5ConsumersByDateRange(LocalDate startDate, LocalDate endDate) {
+        return beneficiaryControlJpaRepository.findTop5ConsumersByDateRange(startDate,endDate);
     }
 }

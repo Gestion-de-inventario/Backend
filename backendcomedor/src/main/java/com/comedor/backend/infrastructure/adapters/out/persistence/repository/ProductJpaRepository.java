@@ -22,4 +22,19 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Integ
             "WHERE p.stock <= p.reorderPoint " +
             "AND p.status = com.comedor.backend.domain.model.enums.Status.ACTIVO")
     List<ProductEntity> getProductosBajoStockMinimo();
+
+    // CA 4: Top 5 productos con MENOS stock (sin contar los que tienen 0)
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE p.status = com.comedor.backend.domain.model.enums.Status.ACTIVO " +
+            "AND p.stock > 0 " +
+            "ORDER BY p.stock ASC " +
+            "LIMIT 5")
+    List<ProductEntity> findTop5LowStock();
+
+    // CA 5: Top 5 productos con MÁS stock
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE p.status = com.comedor.backend.domain.model.enums.Status.ACTIVO " +
+            "ORDER BY p.stock DESC " +
+            "LIMIT 5")
+    List<ProductEntity> findTop5HighStock();
 }

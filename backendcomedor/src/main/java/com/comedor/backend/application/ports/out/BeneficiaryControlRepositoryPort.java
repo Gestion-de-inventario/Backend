@@ -1,7 +1,9 @@
 package com.comedor.backend.application.ports.out;
 
 import com.comedor.backend.domain.model.BeneficiaryControl;
+import com.comedor.backend.domain.model.records.TopBeneficiarySummary;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BeneficiaryControlRepositoryPort {
@@ -9,9 +11,11 @@ public interface BeneficiaryControlRepositoryPort {
 
     BeneficiaryControl actualizarBeneficiario(int reporteId, int controlId, BeneficiaryControl control);
 
-    void eliminarBeneficiario(int reporteId,int controlId);
 
     BeneficiaryControl findById(int controlId);
 
     List<BeneficiaryControl> findByReporteId(int reporteId);
+
+    List<TopBeneficiarySummary> findTop5ConsumersByDateRange(LocalDate startDate, LocalDate endDate);
+
 }
